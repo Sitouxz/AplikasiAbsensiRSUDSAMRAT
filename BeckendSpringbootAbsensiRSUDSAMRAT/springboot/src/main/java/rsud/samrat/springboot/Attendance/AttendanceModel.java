@@ -23,7 +23,7 @@ public class AttendanceModel {
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
-    @JsonBackReference // Prevents infinite recursion during JSON serialization
+    @JsonBackReference
     private ScheduleModel schedule;
     private LocalDate attendance_date;
     private LocalDateTime clock_in;
