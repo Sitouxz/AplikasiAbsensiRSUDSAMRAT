@@ -1,6 +1,5 @@
 # AplikasiAbsensiRSUDSAMRAT
-Aplikasi Absensi RSUD SAMRAT
 
-Kennie Mandolang > BE
+Aplikasi Absensi RSUD SAMRAT
 
 
