@@ -43,14 +43,14 @@ const App = () => {
       ))} */}
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <Stack.Screen
+          <Stack.Screen
             name='SplashScreen'
             component={SplashScreen}
           />
           <Stack.Screen
             name='Login'
             component={Login}
-          /> */}
+          />
           <Stack.Screen
             name='Home'
             component={Home}

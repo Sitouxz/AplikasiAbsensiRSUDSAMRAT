@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
 import React from 'react'
-import { Logo } from '../../assets/images'
+import { Ilustration, Logo } from '../../assets/images'
 
 const SplashScreen = ({navigation}: any) => {
 
@@ -12,6 +12,9 @@ const SplashScreen = ({navigation}: any) => {
             <View style={styles.screenContainer}>
                 <Image source={Logo} style={styles.logo}/>
                 <Text style={styles.text}>ABSENSI TENAGA HARIAN LEPAS RSUD DR SAM RATULANGI TONDANO</Text>
+            </View>
+            <View style={styles.ilustrationContainer}>
+                <Image source={Ilustration}/>
             </View>
         </SafeAreaView>
     )
@@ -41,4 +44,10 @@ const styles = StyleSheet.create({
         width: 289,
         marginTop: 10,
     },
+    ilustrationContainer:{
+        flex: 1,
+        position: 'absolute',
+        height: '100%',
+        justifyContent: 'flex-end'
+    }
 })

@@ -34,7 +34,7 @@ const Home = () => {
                 <View style={styles.announcementContainer}>
                     <Text style={styles.text1}>Announcement</Text>
                     <AnnouncementCard title="HOLIDAY HUT RI-78" desc="Agustus 16-17 Akan libur bersama dalam rangka HUT RI ke-78" date="Kamis, 17 Agustus 2023"/>
-                    <AnnouncementCard title="HOLIDAY HUT RI-78" desc="September Akan pindah ke rumah sakit baru Seluruh Staff MANAJEMEN" date="Senin, 1 Agustus 2023"/>
+                    <AnnouncementCard title="RELOKASI RSUD SAM RATULANGI TONDANO" desc="September Akan pindah ke rumah sakit baru Seluruh Staff MANAJEMEN" date="Senin, 1 Agustus 2023"/>
                 </View>
             </ScrollView>
         </SafeAreaView>
