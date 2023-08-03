@@ -1,8 +1,12 @@
 import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
 import React from 'react'
-import { Logo } from '../../assets/image'
+import { Logo } from '../../assets/images'
 
-const SplashScreen = () => {
+const SplashScreen = ({navigation}: any) => {
+
+    setTimeout(() => {
+        navigation.replace('Login')
+    }, 3000);
     return (
         <SafeAreaView style={styles.page}>
             <View style={styles.screenContainer}>

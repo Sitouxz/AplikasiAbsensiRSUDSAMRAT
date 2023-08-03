@@ -9,10 +9,14 @@ import { useEffect, useState } from 'react';
 import { getEmployee } from './src/config/employees/employees.api';
 import { Employee } from './src/config/employees/employee.interface';
 import { View, Text } from 'react-native';
-import { SplashScreen } from './src/pages';
+import { Login, SplashScreen } from './src/pages';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const App = () => {
   const [employee, setEmployee] = useState<Employee[]>([]);
+
+  const Stack = createNativeStackNavigator();
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -36,7 +40,18 @@ const App = () => {
           <Text>Role: {emp.role}</Text>
         </View>
       ))} */}
-      <SplashScreen />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name='SplashScreen'
+            component={SplashScreen}
+          />
+          <Stack.Screen
+            name='Login'
+            component={Login}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   )
 };
