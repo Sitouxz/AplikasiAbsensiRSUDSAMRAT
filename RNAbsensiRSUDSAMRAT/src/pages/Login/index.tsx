@@ -1,12 +1,10 @@
-import { Image, StyleSheet, Text, View, SafeAreaView, TextInput, Alert } from 'react-native'
+import { Image, StyleSheet, Text, View, SafeAreaView, TextInput} from 'react-native'
 import React, { useState } from 'react'
 import { Logo } from '../../assets/images'
 import Button from '../../components/Button'
 import Gap from '../../components/Gap'
-import { IconHide } from '../../assets'
 
-
-const Login = () => {
+const Login = ({navigation}: any) => {
     const [nik, setNik] = useState('')
     const [password, setPassword] = useState('')
 
@@ -31,7 +29,7 @@ const Login = () => {
                 placeholder='Kata Sandi'
             />
             <Gap height={82}/>
-            <Button title="Log in"/>
+            <Button title="Log in" onPress={() => navigation.replace('Home')}/> 
         </SafeAreaView>
     )
 }
@@ -39,11 +37,6 @@ const Login = () => {
 export default Login
 
 const styles = StyleSheet.create({
-    svg:{
-        width:50,
-        height:50,
-        backgroundColor: '#000000'
-    },
     page:{
         flex: 1,
         alignItems: 'center'
