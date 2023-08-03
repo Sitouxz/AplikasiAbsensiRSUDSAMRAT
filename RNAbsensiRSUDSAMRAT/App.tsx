@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { getEmployee } from './src/config/employees/employees.api';
 import { Employee } from './src/config/employees/employee.interface';
 import { View, Text } from 'react-native';
+import { SplashScreen } from './src/pages';
 
 const App = () => {
   const [employee, setEmployee] = useState<Employee[]>([]);
@@ -28,14 +29,15 @@ const App = () => {
 
 
   return (
-    <View>
-      {employee.map((emp) => (
+    <>
+      {/* {employee.map((emp) => (
         <View key={emp.employeeId}>
           <Text>Name: {emp.name}</Text>
           <Text>Role: {emp.role}</Text>
         </View>
-      ))}
-    </View>
+      ))} */}
+      <SplashScreen />
+    </>
   )
 };
 
