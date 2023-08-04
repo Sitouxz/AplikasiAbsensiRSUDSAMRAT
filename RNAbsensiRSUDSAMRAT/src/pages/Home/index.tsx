@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from 'react-native'
 import React, { useState } from 'react'
-import { Ilustration1, Ilustration2, ProfilePicture } from '../../assets/images'
+import { Ilustration1, ProfilePicture } from '../../assets/images'
 import AttendanceCard from '../../components/AttendanceCard';
 import AnnouncementCard from '../../components/AnnouncementCard';
 
@@ -24,11 +24,11 @@ const Home = () => {
                 <View style={styles.contentContainer}>
                     <Text style={styles.text1}>Today Attendance</Text>
                     <View style={styles.cardContainer}>
-                        <AttendanceCard title="Check In" time="08.00 am" addInfo="On Time"/>
-                        <AttendanceCard title="Check Out" time="16.00 am" addInfo="Go Home"/>
+                        <AttendanceCard icon={require('./../../assets/icons/Signin.png')} title="Check In" time="08.00 am" addInfo="On Time"/>
+                        <AttendanceCard icon={require('./../../assets/icons/Signout.png')} title="Check Out" time="16.00 am" addInfo="Go Home"/>
                     </View>
                     <View style={styles.additionalCard}>
-                        <AttendanceCard title="Total Days" time="28" addInfo="Working Days"/>
+                        <AttendanceCard icon={require('./../../assets/icons/MiniCalendar.png')} title="Total Days" time="28" addInfo="Working Days"/>
                     </View>
                 </View>
                 <View style={styles.announcementContainer}>
@@ -46,6 +46,7 @@ export default Home
 const styles = StyleSheet.create({
     page:{
         flex:1,
+        backgroundColor: '#ffffff'
     },
     ilustration:{
         position: 'absolute'
@@ -98,6 +99,6 @@ const styles = StyleSheet.create({
     announcementContainer:{
         marginTop: 20,
         paddingHorizontal: 20,
-        marginBottom: 50
+        marginBottom: 170
     }
 })

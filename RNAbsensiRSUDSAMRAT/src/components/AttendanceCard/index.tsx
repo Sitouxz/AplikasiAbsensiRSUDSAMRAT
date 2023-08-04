@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
 const AttendanceCard = ({icon, title, time, addInfo}: any) => {
@@ -6,8 +6,7 @@ const AttendanceCard = ({icon, title, time, addInfo}: any) => {
         <View style={styles.container}>
             <View style={styles.secContainer}>
                 <View style={styles.icon}>
-                    {icon}
-                    <Text>icon</Text>
+                    <Image source={icon} style={{height: 20, width: 20, tintColor: '#01A7A3'}} />
                 </View>
                 <Text style={styles.title}>{title}</Text>
             </View>
@@ -27,6 +26,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingTop: 9,
         paddingLeft: 10,
+        shadowColor: '#000000',
+        shadowOffset: {width:0, height:2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 5,
     },
     icon:{
         width: 39,

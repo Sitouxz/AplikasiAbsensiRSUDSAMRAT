@@ -37,7 +37,7 @@ const Login = ({navigation}: any) => {
                         placeholder='Kata Sandi'
                         />
                     <Gap height={82}/>
-                    <Button title="Log in" onPress={() => navigation.replace('Home')}/> 
+                    <Button title="Log in" onPress={() => navigation.replace('Tabs')}/> 
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
     input:{
         height: 40,
-        width: 350,
+        width: 320,
         borderBottomWidth: 2,
         borderColor: '#4E7674',
     }
