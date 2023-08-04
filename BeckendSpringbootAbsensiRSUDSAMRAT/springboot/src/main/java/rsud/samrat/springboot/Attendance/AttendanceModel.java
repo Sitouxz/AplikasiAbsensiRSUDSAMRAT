@@ -10,7 +10,6 @@ import rsud.samrat.springboot.Schedule.ScheduleModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,9 +31,6 @@ public class AttendanceModel {
     private Double location_long;
     private String selfie_url;
 
-
-
-
-
+    @Enumerated(EnumType.STRING)
+    private AttendanceStatus status;
 }
-
