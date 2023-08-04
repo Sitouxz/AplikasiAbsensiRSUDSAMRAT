@@ -15,6 +15,7 @@ import rsud.samrat.springboot.Shift.ShiftModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -36,6 +37,9 @@ public class ScheduleModel {
     )
     @JsonBackReference // Prevents infinite recursion during JSON serialization
     private List<EmployeeModel> employees;
+    public List<EmployeeModel> getEmployees() {
+        return employees != null ? employees : Collections.emptyList();
+    }
 
     @ManyToOne
     @JoinColumn(name = "shift_id")
@@ -46,6 +50,9 @@ public class ScheduleModel {
     @OneToMany(mappedBy = "schedule")
     @JsonIgnoreProperties("schedule") // Ignore the 'schedule' property in AttendanceModel during serialization
     private List<AttendanceModel> attendances = new ArrayList<>();
+
+
+
 
 
 }
