@@ -12,5 +12,5 @@ public class CreateEmployeeResponseDTO {
     private Long employeeId;
     private String name;
     private String role;
-    private PlacementCreateResponseDTO placement; // Change the property name to 'placement' and update the type to PlacementCreateResponseDTO
+    private PlacementCreateResponseDTO placement;
 }
