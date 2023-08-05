@@ -1,50 +1,29 @@
-import { useEffect, useState } from "react";
-import { getEmployee } from "./config/axios/employee/employee.api.js";
+import "./App.css";
+import { useReducer, useState } from "react";
+import LeftSide from "./component/LeftSide";
+import Dashboard from "./component/MainBody";
+import { reducer, initialState } from "./component/reducer";
 
-const App = () => {
-  const [employee, setEmployee] = useState([]);
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [activeButtonId, setActiveButtonId] = useState(2);
 
-  useEffect(() => {
-    const fetchEmployeeData = async () => {
-      try {
-        const response = await getEmployee();
-        setEmployee(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchEmployeeData();
-  }, []);
+  const handleClick = (id) => {
+    dispatch({ type: "CLICK_BUTTON", payload: id });
+    setActiveButtonId(id);
+  };
 
   return (
-    <div>
-      <div className="justify-center items-center h-screen">
-        <p className="text text-7xl font-bold">ABSENSI RSUD SAMRAT</p>
-        <table className="table table-lg">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Bagian</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employee.map((employes) => (
-              <tr key={employes.employeeId}>
-                <td>{employes.employeeId}</td>
-                <td>{employes.name}</td>
-                <td>{employes.placement.name}</td>
-                <td>{employes.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="App">
+      <LeftSide
+        state={state}
+        dispatch={dispatch}
+        activeButtonId={activeButtonId}
+        handleClick={handleClick}
+      />
+      <Dashboard activeButtonId={activeButtonId} />
     </div>
   );
-};
+}
 
 export default App;
