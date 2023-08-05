@@ -8,10 +8,15 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { getEmployee } from './src/config/employees/employees.api';
 import { Employee } from './src/config/employees/employee.interface';
-import { View, Text } from 'react-native';
+import { SplashScreen, Login, Attendance, Home } from './src/pages';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Tabs from './src/navigation';
 
 const App = () => {
   const [employee, setEmployee] = useState<Employee[]>([]);
+
+  const Stack = createNativeStackNavigator();
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -28,14 +33,38 @@ const App = () => {
 
 
   return (
-    <View>
-      {employee.map((emp) => (
+    <>
+      {/* {employee.map((emp) => (
         <View key={emp.employeeId}>
           <Text>Name: {emp.name}</Text>
           <Text>Role: {emp.role}</Text>
         </View>
-      ))}
-    </View>
+      ))} */}
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name='SplashScreen'
+            component={SplashScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Login'
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Tabs'
+            component={Tabs}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='Home'
+            component={Home}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   )
 };
 
