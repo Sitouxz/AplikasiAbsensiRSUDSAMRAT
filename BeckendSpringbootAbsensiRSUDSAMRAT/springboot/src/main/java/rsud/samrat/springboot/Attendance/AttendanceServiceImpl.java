@@ -8,6 +8,8 @@ import rsud.samrat.springboot.Attendance.DTOs.AttendanceCreateResponseDTO;
 import rsud.samrat.springboot.Employee.EmployeeModel;
 import rsud.samrat.springboot.Employee.EmployeeRepository;
 import rsud.samrat.springboot.Exception.NotFoundException;
+import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
+import rsud.samrat.springboot.Locations.LocationModel;
 import rsud.samrat.springboot.Schedule.ScheduleModel;
 import rsud.samrat.springboot.Schedule.ScheduleRepository;
 
@@ -67,7 +69,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         // Set the default status to PRESENT
         attendance.setStatus(AttendanceStatus.PRESENT);
 
-        // Set other properties
         attendance.setAttendance_date(requestDTO.getAttendanceDate());
         attendance.setClock_in(requestDTO.getClockIn());
         attendance.setClock_out(requestDTO.getClockOut());
@@ -75,24 +76,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setLocation_long(requestDTO.getLocationLong());
         attendance.setSelfie_url(requestDTO.getSelfieUrl());
 
-        // Save the attendance to the database
         AttendanceModel savedAttendance = attendanceRepository.save(attendance);
-
-        // Update the scheduleDate in the response DTO
-        LocalDate scheduleDate = savedAttendance.getSchedule().getSchedule_date();
 
         // Convert the saved attendance entity to the response DTO using ModelMapper
         AttendanceCreateResponseDTO responseDTO = modelMapper.map(savedAttendance, AttendanceCreateResponseDTO.class);
-        responseDTO.setScheduleDate(scheduleDate);
 
         // Return the response DTO
         return responseDTO;
     }
-
-
-
-
-
 
 
 }
