@@ -70,20 +70,20 @@ function Tabs() {
                                 height: 38,
                                 tintColor: focused ? '#339993' : '#343435'
                             }}
-                        />
+                            />
                         <Text
                             style={{
                                 color: focused ? '#339993' : '#343435',
                                 fontSize: 10
                             }}
-                        >History</Text>
+                            >History</Text>
                         <View
                             style={{
                                 borderWidth: 1,
                                 borderColor: focused ? '#339993' : '#EDEFF5',
                                 width: 40
                             }}
-                        ></View>
+                            ></View>
                     </View>
                 )
             }}/>
