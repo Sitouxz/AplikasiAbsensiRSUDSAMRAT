@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -49,53 +51,9 @@ public class ScheduleModel {
     @OneToMany(mappedBy = "schedule")
     @JsonIgnoreProperties("schedule")
     private List<AttendanceModel> attendances = new ArrayList<>();
-
-    public LocationModel getLocation() {
-        return location;
-    }
-
-    public void setLocation(LocationModel location) {
-        this.location = location;
-    }
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "schedule")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "schedule", fetch = FetchType.EAGER)
     private LocationModel location;
 
-    public Long getSchedule_id() {
-        return schedule_id;
-    }
-
-    public void setSchedule_id(Long schedule_id) {
-        this.schedule_id = schedule_id;
-    }
-
-    public void setEmployees(List<EmployeeModel> employees) {
-        this.employees = employees;
-    }
-
-    public ShiftModel getShift() {
-        return shift;
-    }
-
-    public void setShift(ShiftModel shift) {
-        this.shift = shift;
-    }
-
-    public LocalDate getSchedule_date() {
-        return schedule_date;
-    }
-
-    public void setSchedule_date(LocalDate schedule_date) {
-        this.schedule_date = schedule_date;
-    }
-
-    public List<AttendanceModel> getAttendances() {
-        return attendances;
-    }
-
-    public void setAttendances(List<AttendanceModel> attendances) {
-        this.attendances = attendances;
-    }
 }
 
 

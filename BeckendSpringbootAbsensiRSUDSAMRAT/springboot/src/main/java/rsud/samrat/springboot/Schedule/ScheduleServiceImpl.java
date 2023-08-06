@@ -1,17 +1,26 @@
 package rsud.samrat.springboot.Schedule;
 
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rsud.samrat.springboot.Attendance.DTOs.AttendanceCreateResponseDTO;
+import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
+import rsud.samrat.springboot.Employee.EmployeeModel;
 import rsud.samrat.springboot.Employee.EmployeeRepository;
 import rsud.samrat.springboot.Exception.NotFoundException;
+import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
 import rsud.samrat.springboot.Locations.LocationModel;
 import rsud.samrat.springboot.Locations.LocationRepository;
 import rsud.samrat.springboot.Schedule.DTOs.AddEmptyScheduleRequestDTO;
 import rsud.samrat.springboot.Schedule.DTOs.ScheduleResponseDTO;
+import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 import rsud.samrat.springboot.Shift.ShiftModel;
 import rsud.samrat.springboot.Shift.ShiftRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +43,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.employeeRepository = employeeRepository;
         this.modelMapper = modelMapper;
         this.locationRepository = locationRepository;
+
+
+
+
+
+
     }
 
     @Override
@@ -62,7 +77,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDTO getScheduleById(Long scheduleId) {
-        ScheduleModel schedule = scheduleRepository.findByIdWithEmployeesAndLocation(scheduleId)
+        ScheduleModel schedule = scheduleRepository.findByIdWithAttendances(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
 
         return modelMapper.map(schedule, ScheduleResponseDTO.class);
@@ -75,6 +90,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .map(schedule -> modelMapper.map(schedule, ScheduleResponseDTO.class))
                 .collect(Collectors.toList());
     }
+
 
 
 }

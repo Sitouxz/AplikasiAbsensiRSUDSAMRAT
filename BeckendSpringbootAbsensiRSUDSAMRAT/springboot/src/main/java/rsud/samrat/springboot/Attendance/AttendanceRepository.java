@@ -11,5 +11,5 @@ import java.util.List;
 public interface AttendanceRepository extends JpaRepository<AttendanceModel,Long>{
 
 
-    List<AttendanceModel> findByEmployee(EmployeeModel employee);
+
 }

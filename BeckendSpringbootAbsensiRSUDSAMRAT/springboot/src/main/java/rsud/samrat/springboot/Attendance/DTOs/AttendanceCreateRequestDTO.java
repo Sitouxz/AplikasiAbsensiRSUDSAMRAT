@@ -17,8 +17,11 @@ public class AttendanceCreateRequestDTO {
     private LocalDate attendanceDate;
     private LocalDateTime clockIn;
     private LocalDateTime clockOut;
-    private Double locationLat;
-    private Double locationLong;
-    private String selfieUrl;
+    private Double locationLatIn;
+    private Double locationLongIn;
+    private Double locationLatOut;
+    private Double locationLongOut;
+    private String selfieUrlCheckIn;
+    private String selfieUrlCheckOut;
     private AttendanceStatus status;
 }

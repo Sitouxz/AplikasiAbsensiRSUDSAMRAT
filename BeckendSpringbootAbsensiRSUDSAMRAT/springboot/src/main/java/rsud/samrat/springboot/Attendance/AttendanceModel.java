@@ -38,8 +38,10 @@ public class AttendanceModel {
     private LocalDate attendance_date;
     private LocalDateTime clock_in;
     private LocalDateTime clock_out;
-    private Double location_lat;
-    private Double location_long;
+    private Double location_lat_In;
+    private Double location_long_In;
+    private Double Location_lat_Out;
+    private Double Location_Long_Out;
     private String selfieUrlCheckIn;
     private String selfieUrlCheckOut;
 
