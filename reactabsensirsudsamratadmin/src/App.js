@@ -1,12 +1,17 @@
 import "./App.css";
-import { useReducer, useState } from "react";
+import { useReducer, useState, useEffect } from "react";
 import LeftSide from "./component/LeftSide";
 import Dashboard from "./component/MainBody";
 import { reducer, initialState } from "./component/reducer";
+import EdtAccountModal from "./component/akun/EditAccountModal";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [activeButtonId, setActiveButtonId] = useState(2);
+  const [activeButtonId, setActiveButtonId] = useState(null);
+
+  useEffect(() => {
+    handleClick(2);
+  }, []);
 
   const handleClick = (id) => {
     dispatch({ type: "CLICK_BUTTON", payload: id });

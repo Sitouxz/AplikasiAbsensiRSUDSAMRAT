@@ -12,12 +12,14 @@ code {
     monospace;
 } */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* 
 #root,
 html,
 body {
   height: 100%;
   margin: 0;
   font-family: "Inter", sans-serif;
-}
-
-
+} */

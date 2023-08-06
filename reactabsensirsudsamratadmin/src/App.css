@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+.modalbgImage {
+  background-image: url("../src/img/Modal-Background.png");
+}
+
 .main-body {
   flex-grow: 1;
   min-height: 100vh;
@@ -180,23 +184,23 @@
 
 /* src/TableComponent.css */
 
-.table-container {
+/* .table-container {
   padding: 2rem;
-}
+} */
 
-.table {
+/* .table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-}
+} */
 
-.table th,
+/* .table th,
 .table td {
   border: none;
   padding: 8px;
   text-align: left;
   background-color: #ffffff;
-}
+} */
 
 .table th {
   background-color: transparent;
@@ -246,33 +250,6 @@
   text-align: center;
 }
 
-/* src/CreateAkun.css */
-
-.CreateAccount-mainContainer {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-  gap: 14px;
-  padding: 2rem;
-}
-
-.CreateAccount {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.CreateAccount p {
-  color: #01a7a3;
-}
-
-.CreateAccount-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .CreateAccount-search-bar {
   flex-grow: 1;
   margin-top: 20px;
@@ -292,198 +269,3 @@
 }
 
 /* src/CreateAkunTable.css */
-
-.CreateAccount-button button {
-  background: none;
-  border: none;
-}
-
-/* src/CreateAkunTable.css */
-
-.CreateAccount-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.CreateAccount-table th,
-.CreateAccount-table td {
-  border: none;
-  padding: 8px;
-  text-align: left;
-  background-color: #ffffff;
-}
-
-.CreateAccount-table th {
-  background-color: transparent;
-  border: none;
-}
-
-.CreateAccount-table td:nth-child(1),
-.CreateAccount-table th:nth-child(1) {
-  width: 3%;
-}
-
-.CreateAccount-table td:nth-child(2),
-.CreateAccount-table th:nth-child(2) {
-  width: 15%;
-  text-align: left;
-}
-
-.CreateAccount-table td:nth-child(3),
-.CreateAccount-table th:nth-child(3) {
-  width: 10%;
-}
-
-.CreateAccount-table td:nth-child(4),
-.CreateAccount-table th:nth-child(4) {
-  width: 15%;
-}
-
-.CreateAccount-table td:nth-child(5),
-.CreateAccount-table th:nth-child(5) {
-  width: 15%;
-}
-
-.CreateAccount-table td:last-child,
-.CreateAccount-table th:last-child {
-  width: 15%;
-  text-align: center;
-}
-
-/* src/AccountModal.css */
-body.active-modal {
-  overflow-y: hidden;
-}
-
-.btn-modal {
-  padding: 10px 20px;
-  display: block;
-  margin: 100px auto 0;
-  font-size: 18px;
-}
-
-.modal,
-.overlay {
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: fixed;
-}
-
-.overlay {
-  background: rgba(49, 49, 49, 0.8);
-}
-
-.modal-content {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1.4;
-  background: #f1f1f1;
-  border-radius: 3px;
-  display: flex;
-  padding: 2rem;
-  margin: 0.5rem;
-  gap: 7rem;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 25rem;
-  min-width: 25rem;
-  background-color: #fafafa;
-  background-image: url("./img/Modal-Background.png");
-  background-size: cover;
-  padding-bottom: 2.5rem;
-}
-
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 7px;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 1rem;
-  margin-bottom: 10rem;
-}
-
-.input-container input {
-  flex-grow: 1;
-  width: 15rem;
-  padding-left: 2px;
-  padding: 0.4rem;
-  background-color: transparent;
-  border: 0.1px solid black; /* Adjust the border thickness as needed */
-  border-radius: 10px;
-  padding-left: 1rem;
-}
-
-/* .input-container input::placeholder {
-  padding-left: 1rem;
-} */
-
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5rem;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.CreateAccount-profile-picture {
-  width: 8.5rem;
-  height: 9.5rem;
-}
-
-.picture-and-upload-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.picture-and-upload-container button {
-  background: none;
-  border: none;
-}
-
-.CreateAccount-upload-logo {
-  width: 2rem;
-  height: 2rem;
-  padding: 0.4rem;
-  background-color: #00afef;
-  border-radius: 50px;
-}
-
-.CreateAccount-create-button {
-  padding: 0.7rem 3.5rem;
-  background-color: #01a7a3;
-  color: #ffffff;
-  border: none;
-  border-radius: 7px;
-}
-
-.CreateAccount-password {
-  display: flex;
-  align-items: center;
-}
-
-.CreateAccount-password input {
-  background-color: transparent;
-  border: 0.1px solid black; /* Adjust the border thickness as needed */
-  border-radius: 10px;
-}
-
-.CreateAccount-password button {
-  background: none;
-  border: none;
-  transform: translateX(-100%);
-}

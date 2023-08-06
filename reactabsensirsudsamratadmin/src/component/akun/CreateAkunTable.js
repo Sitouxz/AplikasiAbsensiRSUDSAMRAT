@@ -3,8 +3,8 @@ import TableBody from "./CreateAkunTableComponent";
 
 const CreateAkunTable = () => {
   return (
-    <div className="table-container">
-      <table className="CreateAccount-table">
+    <div className=" p-8">
+      <table className=" table table-lg text-center w-full border-collapse mt-5">
         <thead>
           <tr>
             <th></th>

@@ -1,6 +1,6 @@
 import "../../App.css";
 import trash from "../../img/Trash.png";
-import edit from "../../img/Edit_fill.png";
+import edit from "../../img/edit.png";
 const CreateAkunTableComponent = () => {
   const tableData = [
     {
@@ -39,13 +39,15 @@ const CreateAkunTableComponent = () => {
           <td>{row.password}</td>
           <td>{row.nik}</td>
           <td>{row.Bidang}</td>
-          <td className="CreateAccount-tableAction">
-            <button className="CreateAccount-buttonTableEdit">
-              <img src={edit} alt="edit-logo" />
-            </button>
-            <button className="CreateAccount-buttonTableTrash">
-              <img src={trash} alt="trash-logo" />
-            </button>
+          <td className="">
+            <div className="flex justify-center items-center gap-2">
+              <button>
+                <img src={edit} alt="edit-logo" className=" h-7 w-7" />
+              </button>
+              <button className="flex justify-center items-center">
+                <img src={trash} alt="trash-logo" className=" h-9 w-9" />
+              </button>
+            </div>
           </td>
         </tr>
       ))}
