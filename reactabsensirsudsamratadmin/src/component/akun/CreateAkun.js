@@ -1,6 +1,8 @@
-import "../../App.css"; // We'll create this file to add custom styles
+import "../../App.css";
 import CreateAkunLogo from "../../img/Vector.png";
-import AccountModal from "./AccountModal";
+import CrtAccountModal from "./CreateAccountModal";
+import EdtAccountModal from "./EditAccountModal";
+import CrtAnnouncementModal from "./CreateAnnouncementModal";
 import React, { useState } from "react";
 
 const CreateAkun = () => {
@@ -11,16 +13,16 @@ const CreateAkun = () => {
   };
 
   return (
-    <div className="CreateAccount-mainContainer">
-      <div className="CreateAccount">
+    <div className="flex flex-col mt-10 gap-5">
+      <div className="flex justify-between items-center pl-4 pr-4">
         <h1>Account Users</h1>
-        <div className="CreateAccount-button">
+        <div className="flex flex-col justify-between items-center">
           <button onClick={setModal}>
             <img src={CreateAkunLogo} alt="logo-create-akun" />
           </button>
-          <p>Create Akun</p>
+          <p className=" text-teal-500">Create Akun</p>
         </div>
-        {isOpen && <AccountModal setModal={setModal} />}
+        {isOpen && <CrtAccountModal setModal={setModal} />}
       </div>
       <input
         type="text"
