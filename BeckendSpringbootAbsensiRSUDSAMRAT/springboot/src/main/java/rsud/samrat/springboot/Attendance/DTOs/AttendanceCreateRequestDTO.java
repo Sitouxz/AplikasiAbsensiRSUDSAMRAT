@@ -20,5 +20,5 @@ public class AttendanceCreateRequestDTO {
     private Double locationLat;
     private Double locationLong;
     private String selfieUrl;
-    private AttendanceStatus status; // Include the status field in the request
+    private AttendanceStatus status;
 }

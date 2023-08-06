@@ -1,12 +1,10 @@
 package rsud.samrat.springboot.Attendance.DTOs;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import rsud.samrat.springboot.Attendance.AttendanceStatus;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
 import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
-import rsud.samrat.springboot.Schedule.ScheduleModel;
 import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 
 import java.time.LocalDate;

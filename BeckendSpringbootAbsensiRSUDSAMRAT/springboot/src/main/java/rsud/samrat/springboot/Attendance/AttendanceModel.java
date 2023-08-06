@@ -40,7 +40,8 @@ public class AttendanceModel {
     private LocalDateTime clock_out;
     private Double location_lat;
     private Double location_long;
-    private String selfie_url;
+    private String selfieUrlCheckIn;
+    private String selfieUrlCheckOut;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
