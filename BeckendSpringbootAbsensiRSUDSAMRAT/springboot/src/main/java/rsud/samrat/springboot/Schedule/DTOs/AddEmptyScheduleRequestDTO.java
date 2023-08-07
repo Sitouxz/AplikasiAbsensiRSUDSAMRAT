@@ -13,4 +13,5 @@ import java.time.LocalDate;
 public class AddEmptyScheduleRequestDTO {
     private Long shiftId;
     private LocalDate scheduleDate;
+    private Long locationId;
 }

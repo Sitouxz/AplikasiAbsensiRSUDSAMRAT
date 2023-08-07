@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import rsud.samrat.springboot.Attendance.DTOs.AttendanceCreateResponseDTO;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
+import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
 import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 
 import java.time.LocalDate;
@@ -21,5 +22,6 @@ public class ScheduleResponseDTO {
     private ShiftResponseDTO shift;
     private LocalDate scheduleDate;
     private List<AttendanceCreateResponseDTO> attendances;
+    private LocationsCreateResponseDTO location;
 
 }
