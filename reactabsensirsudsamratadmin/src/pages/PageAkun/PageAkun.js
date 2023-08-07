@@ -4,16 +4,18 @@ import {
   HiSearch,
   HiOutlinePencil,
   HiOutlineTrash,
-} from "react-icons/hi";
-import DataTable from "react-data-table-component";
-import ModalCreate from "./ModalCreate";
-import ModalEdit from "./ModalEdit";
-import { useState } from "react";
+} from 'react-icons/hi';
+import DataTable from 'react-data-table-component';
+import ModalCreate from './ModalCreate';
+import ModalEdit from './ModalEdit';
+import { useState, useEffect } from 'react';
+import axiosInstance from '../../config/axios/index';
 
 export default function PageAkun() {
   const [modalOpenCreate, setModalOpenCreate] = useState(false);
   const [modalOpenEdit, setModalOpenEdit] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [dataTable, setDataTable] = useState([]);
 
   const openModalCreate = () => {
     setModalOpenCreate(true);
@@ -32,19 +34,42 @@ export default function PageAkun() {
   const tableData = [
     {
       id: 1,
-      name: "John Doe",
-      password: "123456",
-      nik: "123456789",
-      bidang: "Marketing",
+      name: 'John Doe',
+      password: '123456',
+      nik: '123456789',
+      bidang: 'Marketing',
     },
     {
       id: 2,
-      name: "Jane Smith",
-      password: "abcdef",
-      nik: "987654321",
-      bidang: "Finance",
+      name: 'Jane Smith',
+      password: 'abcdef',
+      nik: '987654321',
+      bidang: 'Finance',
     },
   ];
+
+  async function getData() {
+    try {
+      const response = await axiosInstance.get('/api/v1/dev/employees');
+      const dataMap = response.data.map((item) => {
+        return {
+          id: item.employeeId,
+          name: item.name,
+          password: 'Example Password',
+          //if have password : item.password.replace(/./g, '*')
+          nik: 'Example NIK',
+          bidang: item.role,
+        };
+      });
+      setDataTable(dataMap);
+    } catch (error) {
+      console.error('Terjadi kesalahan saat mengambil data:', error.message);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div>
@@ -80,11 +105,11 @@ export default function PageAkun() {
                 <th>Actions</th>
               </tr>
             </thead>
-            {tableData.map((data) => (
+            {dataTable.map((data) => (
               <tbody>
                 <tr key={data.id}>
                   <td>{data.name}</td>
-                  <td>{data.password}</td>
+                  <td>{data.password.replace(/./g, '*')}</td>
                   <td>{data.nik}</td>
                   <td>{data.bidang}</td>
                   <td>

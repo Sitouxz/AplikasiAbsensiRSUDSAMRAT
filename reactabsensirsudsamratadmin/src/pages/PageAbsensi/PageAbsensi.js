@@ -1,23 +1,25 @@
 import React from 'react';
 import { HiSearch, HiOutlineEye } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
+import { useState, useEffect } from 'react';
+import axiosInstance from '../../config/axios';
 
 const columns = [
   {
     name: 'Nama',
-    selector: (row) => row.name
+    selector: (row) => row.name,
   },
   {
     name: 'Waktu',
-    selector: (row) => row.time
+    selector: (row) => row.time,
   },
   {
     name: 'Sif',
-    selector: (row) => row.shift
+    selector: (row) => row.shift,
   },
   {
     name: 'Kategori',
-    selector: (row) => row.category
+    selector: (row) => row.category,
   },
   {
     name: 'Presensi',
@@ -35,18 +37,19 @@ const columns = [
             : 'bg-transparent'
         }`}
       />
-    )
+    ),
   },
   {
     name: 'Bukti',
     cell: (row) => (
       <button
-        type='button'
-        className='btn btn-sm bg-primary-2 text-white hover:bg-primary-3'>
+        type="button"
+        className="btn btn-sm bg-primary-2 text-white hover:bg-primary-3"
+      >
         <HiOutlineEye />
       </button>
-    )
-  }
+    ),
+  },
 ];
 
 const data = [
@@ -56,7 +59,7 @@ const data = [
     time: 'Selasa 1 Agustus 2023, 16:39',
     shift: 'pagi',
     category: 'WFO',
-    presence: 'red'
+    presence: 'red',
   },
   {
     id: 2,
@@ -64,7 +67,7 @@ const data = [
     time: 'Selasa 1 Agustus 2023, 16:39',
     shift: 'pagi',
     category: 'WFO',
-    presence: 'green'
+    presence: 'green',
   },
   {
     id: 3,
@@ -72,7 +75,7 @@ const data = [
     time: 'Selasa 1 Agustus 2023, 16:39',
     shift: 'pagi',
     category: 'WFO',
-    presence: 'yellow'
+    presence: 'yellow',
   },
   {
     id: 4,
@@ -80,8 +83,8 @@ const data = [
     time: 'Selasa 1 Agustus 2023, 16:39',
     shift: 'pagi',
     category: 'WFO',
-    presence: 'blue'
-  }
+    presence: 'blue',
+  },
 ];
 
 const customStyles = {
@@ -92,9 +95,9 @@ const customStyles = {
   // },
   headCells: {
     style: {
-      fontWeight: 'bold'
-    }
-  }
+      fontWeight: 'bold',
+    },
+  },
   // cells: {
   //   style: {
   //     paddingLeft: '8px', // override the cell padding for data cells
@@ -104,37 +107,70 @@ const customStyles = {
 };
 
 export default function PageAbsensi() {
+  // async function getAbsensi() {
+  //   try {
+  //     const response = await axiosInstance.get('/api/v1/dev/schedule');
+  //     const jadwalData = response.data.map((jadwal) => {
+  //       // Mendapatkan employee name dari setiap jadwal
+  //       const employeeNames = jadwal.employee.map((employee) => employee.name);
+
+  //       // Mendapatkan schedule date dari setiap jadwal
+  //       const scheduleDate = jadwal.scheduleDate;
+
+  //       // Mendapatkan attendance status dari setiap jadwal
+  //       const attendanceStatus = jadwal.attendances.map(
+  //         (attendance) => attendance.status
+  //       );
+
+  //       return {
+  //         employeeNames,
+  //         scheduleDate,
+  //         attendanceStatus,
+  //       };
+  //     });
+
+  //     // console.log(jadwalData);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getAbsensi();
+  // }, []);
+
   return (
     <div>
-      <h1 className='text-xl font-medium'>Absensi</h1>
-      <div className='flex flex-col gap-3'>
-        <div className='flex justify-end items-center gap-3'>
-          <div className='w-fit'>
+      <h1 className="text-xl font-medium">Absensi</h1>
+      <div className="flex flex-col gap-3">
+        <div className="flex justify-end items-center gap-3">
+          <div className="w-fit">
             Tanggal:
-            <div className='flex justify-center items-center gap-2'>
+            <div className="flex justify-center items-center gap-2">
               {/* Aug 21, 2021 */}
               <input
-                type='date'
+                type="date"
                 defaultValue={new Date().toISOString().slice(0, 10)}
               />
             </div>
           </div>
           <button
-            type='button'
-            className='bg-primary-2 py-3 px-10 rounded-md font-semibold text-white'>
+            type="button"
+            className="bg-primary-2 py-3 px-10 rounded-md font-semibold text-white"
+          >
             Print PDF
           </button>
         </div>
         {/* Search Bar */}
-        <div className='flex items-center relative w-full'>
-          <HiSearch className='absolute left-4' />
+        <div className="flex items-center relative w-full">
+          <HiSearch className="absolute left-4" />
           <input
-            type='text'
-            placeholder='Type here'
-            className='input input-bordered w-full pl-10'
+            type="text"
+            placeholder="Type here"
+            className="input input-bordered w-full pl-10"
           />
         </div>
-        <p className='text-xs text-slate-500'>12 Absen</p>
+        <p className="text-xs text-slate-500">12 Absen</p>
         <div>
           <DataTable
             columns={columns}
