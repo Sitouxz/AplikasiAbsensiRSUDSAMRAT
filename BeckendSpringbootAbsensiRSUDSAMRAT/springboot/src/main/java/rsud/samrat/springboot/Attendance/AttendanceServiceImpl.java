@@ -17,6 +17,10 @@ import rsud.samrat.springboot.Schedule.ScheduleRepository;
 import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 import rsud.samrat.springboot.Shift.ShiftModel;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
@@ -115,6 +119,30 @@ public class AttendanceServiceImpl implements AttendanceService {
         return responseDTO;
     }
 
+
+    @Override
+    public List<AttendanceCreateResponseDTO> getAllAttendanceByDate(LocalDate attendanceDate) {
+        List<AttendanceModel> attendanceRecords = attendanceRepository.findAllByAttendanceDate(attendanceDate);
+
+        List<AttendanceCreateResponseDTO> attendanceList = new ArrayList<>();
+
+        for (AttendanceModel attendance : attendanceRecords) {
+            AttendanceCreateResponseDTO responseDTO = modelMapper.map(attendance, AttendanceCreateResponseDTO.class);
+            responseDTO.setScheduleId(attendance.getSchedule().getSchedule_id());
+            responseDTO.setEmployee(modelMapper.map(attendance.getEmployees().get(0), CreateEmployeeResponseDTO.class));
+            responseDTO.setShift(modelMapper.map(attendance.getSchedule().getShift(), ShiftResponseDTO.class));
+
+            LocationModel location = attendance.getSchedule().getLocation();
+            if (location != null) {
+                LocationsCreateResponseDTO locationDTO = modelMapper.map(location, LocationsCreateResponseDTO.class);
+                responseDTO.setLocation(locationDTO);
+            }
+
+            attendanceList.add(responseDTO);
+        }
+
+        return attendanceList;
+    }
 
 
 
