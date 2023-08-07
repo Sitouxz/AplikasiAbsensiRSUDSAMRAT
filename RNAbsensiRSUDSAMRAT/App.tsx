@@ -12,6 +12,7 @@ import { SplashScreen, Login, Attendance, Home } from './src/pages';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Tabs from './src/navigation';
+import AttendanceConfirmation from './src/pages/AttendanceConfirmation';
 
 const App = () => {
   const [employee, setEmployee] = useState<Employee[]>([]);

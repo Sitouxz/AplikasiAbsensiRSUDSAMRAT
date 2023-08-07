@@ -4,6 +4,7 @@ import ProfilePicture from './ProfilePicture.png';
 import Ilustration2 from './Ilustration2.png';
 import Ilustration from './Ilustration.png';
 import Ilustration3 from './Ilustration3.png';
+import confirmationPhoto from './confirmationPhoto.png';
 
 export {
     Logo,
@@ -11,5 +12,6 @@ export {
     Ilustration,
     Ilustration1,
     Ilustration2,
-    Ilustration3
+    Ilustration3,
+    confirmationPhoto
 }
