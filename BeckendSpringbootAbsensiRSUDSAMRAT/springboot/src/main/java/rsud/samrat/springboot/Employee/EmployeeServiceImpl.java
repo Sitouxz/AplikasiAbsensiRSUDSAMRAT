@@ -8,6 +8,8 @@ import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeRequestDTO;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
 import rsud.samrat.springboot.Employee.DTOs.GetAllEmployeeResponseDTO;
 import rsud.samrat.springboot.Exception.NotFoundException;
+import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
+import rsud.samrat.springboot.Locations.LocationModel;
 import rsud.samrat.springboot.Placement.DTOs.PlacementCreateResponseDTO;
 import rsud.samrat.springboot.Placement.PlacementModel;
 import rsud.samrat.springboot.Placement.PlacementRepository;
@@ -75,17 +77,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeModel employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NotFoundException("Employee not found with id: " + employeeId));
 
-        ScheduleModel schedule = scheduleRepository.findByIdWithEmployees(scheduleId)
+        ScheduleModel schedule = scheduleRepository.findByIdWithEmployeesAndLocation(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
 
         schedule.getEmployees().add(employee);
         ScheduleModel updatedSchedule = scheduleRepository.save(schedule);
 
-        // Convert the updated schedule entity to the response DTO using ModelMapper
+        // Manually map the LocationModel to LocationResponseDTO
+        LocationsCreateResponseDTO locationResponseDTO = null;
+        LocationModel location = updatedSchedule.getLocation();
+        if (location != null) {
+            locationResponseDTO = new LocationsCreateResponseDTO();
+            locationResponseDTO.setLocationId(location.getLocationId());
+            locationResponseDTO.setLocationName(location.getLocationName());
+            locationResponseDTO.setLatitude(location.getLatitude());
+            locationResponseDTO.setLongitude(location.getLongitude());
+        }
+
         ScheduleResponseDTO responseDTO = modelMapper.map(updatedSchedule, ScheduleResponseDTO.class);
+
+
+        responseDTO.setLocation(locationResponseDTO);
 
         return responseDTO;
     }
+
 
 
 
