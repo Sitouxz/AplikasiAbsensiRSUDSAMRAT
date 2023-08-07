@@ -12,9 +12,22 @@ class ModuleJWT {
 
   static verify(token) {
     try {
-      return jwt.verify(token, Config.SERVER_TOKEN_SECRET);
+      const parsedToken = jwt.verify(token, Config.SERVER_TOKEN_SECRET);
+
+      // delete unused information
+      delete parsedToken['iat'];
+      delete parsedToken['exp'];
+      delete parsedToken['iss'];
+
+      return {
+        valid: true,
+        data: parsedToken,
+      };
     } catch (ignore) {
-      return '';
+      return {
+        valid: false,
+        data: undefined,
+      };
     }
   }
 }

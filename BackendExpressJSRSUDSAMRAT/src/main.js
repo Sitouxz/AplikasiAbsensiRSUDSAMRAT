@@ -1,7 +1,9 @@
 const express = require('express');
 const http = require('http');
-const ModuleDatabase = require('./src/modules/database');
+const ModuleDatabase = require('./modules/database');
 const path = require('path');
+const Config = require('./config/config');
+const MiddlewareVerifyToken = require('./middleware/verify-token');
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +27,7 @@ io.on('connection', (socket) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './src/views/index.html'));
+  res.sendFile(path.join(__dirname, './views/index.html'));
 });
 
 app.use('/api', [], RouterApi);
@@ -45,15 +47,16 @@ app.use('/api', [], RouterApi);
     });
 
     //ping
-    RouterApi.get('/ping', (req, res) => {
+    RouterApi.get('/ping', MiddlewareVerifyToken, (req, res) => {
       res.send('pong');
     });
 
-    //start server on port 3000
-    server.listen(3000, () => {
-      console.log('[server_ok] Server berjalan di port 3000');
+    RouterApi.use('/auth', require('./routes/auth').RouterAdmin);
+
+    server.listen(Config.HTTP_PORT, () => {
+      console.log(`[server_ok] Server berjalan di port ${Config.HTTP_PORT}`);
     });
   } catch (err) {
-    console.log('error');
+    console.log(err);
   }
 })();

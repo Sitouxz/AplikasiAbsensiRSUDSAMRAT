@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
 
 const adminScheme = new mongoose.Schema({
-  email: {
+  nik: {
     type: String,
     require: true,
+    default: '',
   },
   password: {
     type: String,
     require: true,
+    default: '',
+  },
+  access_token: {
+    type: String,
+    require: true,
+    default: '',
   },
 });
 

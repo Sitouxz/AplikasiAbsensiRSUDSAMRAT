@@ -6,8 +6,11 @@ const MiddlewareVerifyToken = (req, res, next) => {
   const parsedToken = ModuleJWT.verify(token);
 
   try {
+    if (!token) {
+      throw new Error('AUTH_TOKEN_NOT_FOUND');
+    }
     if (!parsedToken.valid) {
-      throw new Error(getLang('AUTH_TOKEN_INVALID'));
+      throw new Error('AUTH_TOKEN_INVALID');
     }
     next();
   } catch (err) {
