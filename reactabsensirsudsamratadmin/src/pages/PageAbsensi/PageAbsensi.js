@@ -2,147 +2,148 @@ import React from 'react';
 import { HiSearch, HiOutlineEye } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
-import axiosInstance from '../../config/axios';
-
-const columns = [
-  {
-    name: 'Nama',
-    selector: (row) => row.name,
-  },
-  {
-    name: 'Waktu',
-    selector: (row) => row.time,
-  },
-  {
-    name: 'Sif',
-    selector: (row) => row.shift,
-  },
-  {
-    name: 'Kategori',
-    selector: (row) => row.category,
-  },
-  {
-    name: 'Presensi',
-    cell: (row) => (
-      <div
-        className={`w-3 rounded-full h-3   ${
-          row.presence === 'red'
-            ? 'bg-red-600'
-            : row.presence === 'green'
-            ? 'bg-green-600'
-            : row.presence === 'yellow'
-            ? 'bg-yellow-600'
-            : row.presence === 'blue'
-            ? 'bg-blue-600'
-            : 'bg-transparent'
-        }`}
-      />
-    ),
-  },
-  {
-    name: 'Bukti',
-    cell: (row) => (
-      <button
-        type="button"
-        className="btn btn-sm bg-primary-2 text-white hover:bg-primary-3"
-      >
-        <HiOutlineEye />
-      </button>
-    ),
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    name: 'John Doe',
-    time: 'Selasa 1 Agustus 2023, 16:39',
-    shift: 'pagi',
-    category: 'WFO',
-    presence: 'red',
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    time: 'Selasa 1 Agustus 2023, 16:39',
-    shift: 'pagi',
-    category: 'WFO',
-    presence: 'green',
-  },
-  {
-    id: 3,
-    name: 'John Doe',
-    time: 'Selasa 1 Agustus 2023, 16:39',
-    shift: 'pagi',
-    category: 'WFO',
-    presence: 'yellow',
-  },
-  {
-    id: 4,
-    name: 'John Doe',
-    time: 'Selasa 1 Agustus 2023, 16:39',
-    shift: 'pagi',
-    category: 'WFO',
-    presence: 'blue',
-  },
-];
-
-const customStyles = {
-  // rows: {
-  //   style: {
-  //     minHeight: '72px' // override the row height
-  //   }
-  // },
-  headCells: {
-    style: {
-      fontWeight: 'bold',
-    },
-  },
-  // cells: {
-  //   style: {
-  //     paddingLeft: '8px', // override the cell padding for data cells
-  //     paddingRight: '8px'
-  //   }
-  // }
-};
+import api from '../../config/axios';
 
 export default function PageAbsensi() {
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredData = data.filter((data) =>
+  const [absences, setAbsences] = useState([]);
+  const columns = [
+    {
+      name: 'Nama',
+      selector: (row) => row.name,
+    },
+    {
+      name: 'Waktu',
+      selector: (row) => row.time,
+    },
+    {
+      name: 'Sif',
+      selector: (row) => row.shift,
+    },
+    {
+      name: 'Kategori',
+      selector: (row) => row.category,
+    },
+    {
+      name: 'Presensi',
+      cell: (row) => (
+        <div
+          className={`w-3 rounded-full h-3   ${
+            row.presence === 'red'
+              ? 'bg-red-600'
+              : row.presence === 'green'
+              ? 'bg-green-600'
+              : row.presence === 'yellow'
+              ? 'bg-yellow-600'
+              : row.presence === 'blue'
+              ? 'bg-blue-600'
+              : 'bg-transparent'
+          }`}
+        />
+      ),
+    },
+    {
+      name: 'Bukti',
+      cell: (row) => (
+        <button
+          type="button"
+          className="btn btn-sm bg-primary-2 text-white hover:bg-primary-3"
+        >
+          <HiOutlineEye />
+        </button>
+      ),
+    },
+  ];
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: 'bold',
+      },
+    },
+  };
+
+  const filteredData = absences.filter((data) =>
     data.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // async function getAbsensi() {
-  //   try {
-  //     const response = await axiosInstance.get('/api/v1/dev/schedule');
-  //     const jadwalData = response.data.map((jadwal) => {
-  //       // Mendapatkan employee name dari setiap jadwal
-  //       const employeeNames = jadwal.employee.map((employee) => employee.name);
+  useEffect(() => {
+    const fetchAbsences = async () => {
+      try {
+        const response = await api.get(
+          '/api/v1/dev/attendances/all-with-schedule'
+        );
+        const data = response.data;
 
-  //       // Mendapatkan schedule date dari setiap jadwal
-  //       const scheduleDate = jadwal.scheduleDate;
+        const ExtractData = data.map((attendance) => {
+          const shiftStartTime = attendance.shift.start_time;
+          const shiftEndTime = attendance.shift.end_time;
 
-  //       // Mendapatkan attendance status dari setiap jadwal
-  //       const attendanceStatus = jadwal.attendances.map(
-  //         (attendance) => attendance.status
-  //       );
+          const clockIn = attendance.attendances[0]?.clockIn
+            ? new Date(attendance.attendances[0].clockIn)
+            : null;
+          const clockOut = attendance.attendances[0]?.clockOut
+            ? new Date(attendance.attendances[0].clockOut)
+            : null;
 
-  //       return {
-  //         employeeNames,
-  //         scheduleDate,
-  //         attendanceStatus,
-  //       };
-  //     });
+          const formatWaktu = (waktu) => {
+            const options = {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            };
+            return waktu.toLocaleTimeString('en-US', options);
+          };
+          const clockInTime = clockIn ? formatWaktu(clockIn) : null;
+          const clockOutTime = clockOut ? formatWaktu(clockOut) : null;
 
-  //     // console.log(jadwalData);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+          let statusPenilaian = 'red'; // Default: Tidak ada data clock in atau clock out
 
-  // useEffect(() => {
-  //   getAbsensi();
-  // }, []);
+          if (clockInTime && clockOutTime) {
+            if (clockInTime <= shiftStartTime && clockOutTime >= shiftEndTime) {
+              statusPenilaian = 'green'; // Clock in sebelum start_time dan clock out setelah end_time
+            } else if (clockInTime > shiftStartTime) {
+              statusPenilaian = 'yellow'; // Clock in setelah start_time
+            }
+          } else if (clockInTime) {
+            if (clockInTime > shiftStartTime) {
+              statusPenilaian = 'yellow'; // Clock in setelah start_time
+            }
+          }
+
+          const employeeNamesString = attendance.attendances
+            .map((attendance) => attendance.employee.name)
+            .join(', ')
+            .replace(
+              /\w\S*/g,
+              (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+            );
+
+          return {
+            clockInTime: clockInTime,
+            clockOutTime: clockOutTime,
+            shiftStartTime: shiftStartTime,
+            shiftEndTime: shiftEndTime,
+            presence: statusPenilaian,
+            id: attendance.scheduleId,
+            category: attendance.attendances.map(
+              (attendance) => attendance.attendanceType
+            ),
+            name: employeeNamesString,
+            time: attendance.scheduleDate,
+            shift: attendance.shift.name,
+          };
+        });
+
+        setAbsences(ExtractData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchAbsences();
+  }, []);
 
   return (
     <div>
