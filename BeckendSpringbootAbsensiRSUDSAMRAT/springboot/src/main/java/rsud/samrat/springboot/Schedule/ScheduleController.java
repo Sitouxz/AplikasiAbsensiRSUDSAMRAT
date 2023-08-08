@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rsud.samrat.springboot.Schedule.DTOs.AddEmptyScheduleRequestDTO;
-import rsud.samrat.springboot.Schedule.DTOs.ScheduleAndEmployeeResponseDTO;
-import rsud.samrat.springboot.Schedule.DTOs.ScheduleResponseDTO;
+import rsud.samrat.springboot.Schedule.DTOs.*;
 
 import java.util.List;
 
@@ -27,6 +25,18 @@ public class ScheduleController {
         }
     }
 
+    @PostMapping("/add-schedule-with-time-range")
+    public ResponseEntity<List<ScheduleResponseDTO>> addScheduleWithTimeRange(
+            @RequestBody AddScheduleWithTimeRangeRequestDTO requestDTO) {
+        List<ScheduleResponseDTO> addedSchedules = scheduleService.addScheduleWithTimeRange(requestDTO);
+        if (!addedSchedules.isEmpty()) {
+            return new ResponseEntity<>(addedSchedules, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleAndEmployeeResponseDTO> getScheduleById(@PathVariable Long id) {
         ScheduleAndEmployeeResponseDTO responseDTO = scheduleService.getScheduleById(id);
@@ -46,4 +56,29 @@ public class ScheduleController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/schedule_detail/{id}")
+    public ResponseEntity<ScheduleAndEmployeeResponseDTO> updateSchedule(@PathVariable Long id,
+                                                                         @RequestBody ScheduleUpdateRequestDTO requestDTO) {
+        requestDTO.setScheduleId(id);
+        ScheduleAndEmployeeResponseDTO responseDTO = scheduleService.updateSchedule(requestDTO);
+        if (responseDTO != null) {
+            return ResponseEntity.ok(responseDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/{scheduleId}/removeEmployee/{employeeId}")
+    public ResponseEntity<String> removeEmployeeFromSchedule(@PathVariable Long scheduleId, @PathVariable Long employeeId) {
+        scheduleService.removeEmployeeFromSchedule(scheduleId, employeeId);
+        return new ResponseEntity<>("Employee removed from schedule.", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<String> deleteScheduleById(@PathVariable Long scheduleId) {
+        scheduleService.deleteScheduleById(scheduleId);
+        return new ResponseEntity<>("Schedule deleted successfully.", HttpStatus.OK);
+    }
+
+
 }

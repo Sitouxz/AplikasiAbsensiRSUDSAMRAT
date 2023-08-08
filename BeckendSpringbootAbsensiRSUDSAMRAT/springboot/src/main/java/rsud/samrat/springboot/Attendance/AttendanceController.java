@@ -82,4 +82,28 @@ public class AttendanceController {
         List<AttendanceScheduleIdDTO> attendanceWithScheduleId = attendanceService.getAllAttendanceWithScheduleId();
         return new ResponseEntity<>(attendanceWithScheduleId, HttpStatus.OK);
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<AttendanceScheduleIdDTO>> filterAttendances(@RequestParam(required = false) String employeeName,
+                                                                         @RequestParam(required = false) String scheduleDate,
+                                                                         @RequestParam(required = false) Long shiftId,
+                                                                         @RequestParam(required = false) String placementName) {
+        AttendanceFilterDTO filterDTO = new AttendanceFilterDTO();
+        filterDTO.setEmployeeName(employeeName);
+
+        if (scheduleDate != null) {
+            filterDTO.setScheduleDate(LocalDate.parse(scheduleDate));
+        }
+
+        filterDTO.setShiftId(shiftId);
+        filterDTO.setPlacementName(placementName);
+
+        List<AttendanceScheduleIdDTO> filteredAttendances = attendanceService.filterAttendances(filterDTO);
+
+        if (!filteredAttendances.isEmpty()) {
+            return new ResponseEntity<>(filteredAttendances, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

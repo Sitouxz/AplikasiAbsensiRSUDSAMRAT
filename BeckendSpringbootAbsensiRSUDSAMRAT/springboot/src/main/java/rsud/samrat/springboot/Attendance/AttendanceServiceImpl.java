@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
@@ -292,6 +293,57 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         return new ArrayList<>(scheduleIdMap.values());
     }
+
+    @Override
+    public List<AttendanceScheduleIdDTO> filterAttendances(AttendanceFilterDTO filterDTO) {
+        List<AttendanceModel> filteredAttendances = attendanceRepository.findAll().stream()
+                .filter(attendance -> matchesFilter(attendance, filterDTO))
+                .collect(Collectors.toList());
+
+        List<AttendanceScheduleIdDTO> result = new ArrayList<>();
+        Map<Long, AttendanceScheduleIdDTO> scheduleIdToDtoMap = new HashMap<>();
+
+        for (AttendanceModel attendance : filteredAttendances) {
+            Long scheduleId = attendance.getSchedule().getSchedule_id();
+            AttendanceScheduleIdDTO dto = scheduleIdToDtoMap.getOrDefault(scheduleId, new AttendanceScheduleIdDTO());
+            dto.setScheduleId(scheduleId);
+
+            // Create the AttendanceCreateResponseDTO and manually set the values
+            AttendanceCreateResponseDTO attendanceDTO = new AttendanceCreateResponseDTO();
+            attendanceDTO.setAttendanceId(attendance.getAttendance_id());
+            attendanceDTO.setScheduleId(scheduleId);
+            attendanceDTO.setEmployee(mapEmployeeToCreateEmployeeResponseDTO(attendance.getEmployees().get(0)));
+            attendanceDTO.setScheduleDate(attendance.getAttendance_date());
+            attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
+            attendanceDTO.setStatus(attendance.getStatus());
+            attendanceDTO.setClockIn(attendance.getClock_in());
+            attendanceDTO.setClockOut(attendance.getClock_out());
+            attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
+            attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
+            attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
+            attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
+            attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
+            attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
+
+            dto.getAttendances().add(attendanceDTO);
+
+            scheduleIdToDtoMap.put(scheduleId, dto);
+        }
+
+        result.addAll(scheduleIdToDtoMap.values());
+        return result;
+    }
+
+
+    private boolean matchesFilter(AttendanceModel attendance, AttendanceFilterDTO filterDTO) {
+        return (filterDTO.getEmployeeName() == null || attendance.getEmployees().stream()
+                .anyMatch(employee -> employee.getName().contains(filterDTO.getEmployeeName())))
+                && (filterDTO.getScheduleDate() == null || filterDTO.getScheduleDate().equals(attendance.getSchedule().getSchedule_date()))
+                && (filterDTO.getShiftId() == null || filterDTO.getShiftId().equals(attendance.getSchedule().getShift().getShift_id()))
+                && (filterDTO.getPlacementName() == null || attendance.getEmployees().stream()
+                .anyMatch(employee -> employee.getPlacement().getName().contains(filterDTO.getPlacementName())));
+    }
+
 
 
 }

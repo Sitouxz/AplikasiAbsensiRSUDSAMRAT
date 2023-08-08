@@ -38,9 +38,6 @@ public class ScheduleModel {
     )
     @JsonBackReference
     private List<EmployeeModel> employees;
-    public List<EmployeeModel> getEmployees() {
-        return employees != null ? employees : Collections.emptyList();
-    }
 
     @ManyToOne
     @JoinColumn(name = "shift_id")
@@ -48,12 +45,14 @@ public class ScheduleModel {
 
     private LocalDate schedule_date;
 
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("schedule")
     private List<AttendanceModel> attendances = new ArrayList<>();
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "schedule", fetch = FetchType.EAGER)
     private LocationModel location;
 
 }
+
 
 

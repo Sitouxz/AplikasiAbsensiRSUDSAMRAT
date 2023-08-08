@@ -14,5 +14,7 @@ public interface AttendanceService {
 
     List<AttendanceScheduleDTO> getAllAttendanceWithSchedule();
     List<AttendanceScheduleIdDTO> getAllAttendanceWithScheduleId();
+
+    List<AttendanceScheduleIdDTO> filterAttendances(AttendanceFilterDTO filterDTO);
 }
 
