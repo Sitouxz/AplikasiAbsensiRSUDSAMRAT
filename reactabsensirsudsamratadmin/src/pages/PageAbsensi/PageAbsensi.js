@@ -7,6 +7,16 @@ import api from '../../config/axios';
 export default function PageAbsensi() {
   const [searchTerm, setSearchTerm] = useState('');
   const [absences, setAbsences] = useState([]);
+
+  const filteredData = absences.filter((data) => {
+    const nameLower = data.name.toLowerCase();
+    const searchTermLower = searchTerm.toLowerCase();
+
+    // Menggunakan ekspresi reguler untuk pencocokan yang lebih akurat
+    const searchRegex = new RegExp(searchTermLower, 'g');
+    return nameLower.match(searchRegex);
+  });
+
   const columns = [
     {
       name: 'Nama',
@@ -63,9 +73,8 @@ export default function PageAbsensi() {
     },
   };
 
-  const filteredData = absences.filter((data) =>
-    data.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  console.log(filteredData);
+  console.log(searchTerm);
 
   useEffect(() => {
     const fetchAbsences = async () => {
@@ -135,6 +144,7 @@ export default function PageAbsensi() {
             shift: attendance.shift.name,
           };
         });
+        console.log(ExtractData);
 
         setAbsences(ExtractData);
       } catch (error) {
@@ -173,10 +183,12 @@ export default function PageAbsensi() {
           <input
             type="text"
             placeholder="Type here"
-            className="input input-bordered w-full pl-10"
+            className="w-full pl-10 input input-bordered"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <p className="text-xs text-slate-500">12 Absen</p>
+        <p className="text-xs text-slate-500">{absences.length}</p>
         <div>
           <DataTable
             columns={columns}
