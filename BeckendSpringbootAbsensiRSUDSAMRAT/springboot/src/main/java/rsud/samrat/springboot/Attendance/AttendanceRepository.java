@@ -15,4 +15,9 @@ public interface AttendanceRepository extends JpaRepository<AttendanceModel,Long
 
     @Query("SELECT a FROM AttendanceModel a WHERE a.attendance_date = :attendanceDate")
     List<AttendanceModel> findAllByAttendanceDate(@Param("attendanceDate") LocalDate attendanceDate);
+
+
+    @Query("SELECT a FROM AttendanceModel a JOIN a.employees e WHERE a.attendance_date = :attendanceDate AND e.employee_id = :employeeId")
+    List<AttendanceModel> findAllByAttendanceDateAndEmployeeId(@Param("attendanceDate") LocalDate attendanceDate, @Param("employeeId") Long employeeId);
+
 }

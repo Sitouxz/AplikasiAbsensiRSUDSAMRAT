@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rsud.samrat.springboot.Schedule.DTOs.AddEmptyScheduleRequestDTO;
+import rsud.samrat.springboot.Schedule.DTOs.ScheduleAndEmployeeResponseDTO;
 import rsud.samrat.springboot.Schedule.DTOs.ScheduleResponseDTO;
 
 import java.util.List;
@@ -27,22 +28,22 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDTO> getScheduleById(@PathVariable Long id) {
-        ScheduleResponseDTO responseDTO = scheduleService.getScheduleById(id);
+    public ResponseEntity<ScheduleAndEmployeeResponseDTO> getScheduleById(@PathVariable Long id) {
+        ScheduleAndEmployeeResponseDTO responseDTO = scheduleService.getScheduleById(id);
         if (responseDTO != null) {
-            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+            return ResponseEntity.ok(responseDTO);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping()
-    public ResponseEntity<List<ScheduleResponseDTO>> getAllSchedules() {
-        List<ScheduleResponseDTO> responseDTOList = scheduleService.getAllSchedules();
+    public ResponseEntity<List<ScheduleAndEmployeeResponseDTO>> getAllSchedules() {
+        List<ScheduleAndEmployeeResponseDTO> responseDTOList = scheduleService.getAllSchedules();
         if (!responseDTOList.isEmpty()) {
-            return new ResponseEntity<>(responseDTOList, HttpStatus.OK);
+            return ResponseEntity.ok(responseDTOList);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 }

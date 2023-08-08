@@ -3,8 +3,7 @@ package rsud.samrat.springboot.Attendance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rsud.samrat.springboot.Attendance.DTOs.AttendanceCreateRequestDTO;
-import rsud.samrat.springboot.Attendance.DTOs.AttendanceCreateResponseDTO;
+import rsud.samrat.springboot.Attendance.DTOs.*;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
 import rsud.samrat.springboot.Employee.EmployeeModel;
 import rsud.samrat.springboot.Employee.EmployeeRepository;
@@ -19,7 +18,9 @@ import rsud.samrat.springboot.Shift.ShiftModel;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
@@ -144,6 +145,56 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendanceList;
     }
 
+    @Override
+    public List<AttendanceCreateResponseDTO> getAllAttendanceByDateAndEmployee(LocalDate attendanceDate, Long employeeId) {
+        List<AttendanceModel> attendanceRecords = attendanceRepository.findAllByAttendanceDateAndEmployeeId(attendanceDate, employeeId);
+
+        List<AttendanceCreateResponseDTO> attendanceList = new ArrayList<>();
+
+        for (AttendanceModel attendance : attendanceRecords) {
+            AttendanceCreateResponseDTO responseDTO = modelMapper.map(attendance, AttendanceCreateResponseDTO.class);
+            responseDTO.setScheduleId(attendance.getSchedule().getSchedule_id());
+            responseDTO.setEmployee(modelMapper.map(attendance.getEmployees().get(0), CreateEmployeeResponseDTO.class));
+            responseDTO.setShift(modelMapper.map(attendance.getSchedule().getShift(), ShiftResponseDTO.class));
+
+            LocationModel location = attendance.getSchedule().getLocation();
+            if (location != null) {
+                LocationsCreateResponseDTO locationDTO = modelMapper.map(location, LocationsCreateResponseDTO.class);
+                responseDTO.setLocation(locationDTO);
+            }
+
+            attendanceList.add(responseDTO);
+        }
+
+        return attendanceList;
+    }
+
+
+    @Override
+    public AttendanceCreateResponseDTO updateAttendanceStatusAndCheckoutDetails(AttendanceUpdateRequestDTO requestDTO) {
+        Long attendanceId = requestDTO.getAttendanceId();
+
+        // Fetch the AttendanceModel using the provided attendanceId
+        AttendanceModel attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new NotFoundException("Attendance not found with id: " + attendanceId));
+
+        // Update the attendance status to "ONTIME"
+        attendance.setStatus(AttendanceStatus.ONTIME);
+
+        // Update checkout details
+        attendance.setClock_out(requestDTO.getClockOut());
+        attendance.setLocation_lat_Out(requestDTO.getLocationLatOut());
+        attendance.setLocation_Long_Out(requestDTO.getLocationLongOut());
+        attendance.setSelfieUrlCheckOut(requestDTO.getSelfieUrlCheckOut());
+
+        // Save the updated attendance record
+        AttendanceModel updatedAttendance = attendanceRepository.save(attendance);
+
+        // Map the updated attendance record to AttendanceCreateResponseDTO
+        AttendanceCreateResponseDTO responseDTO = modelMapper.map(updatedAttendance, AttendanceCreateResponseDTO.class);
+
+        return responseDTO;
+    }
 
 
     private ShiftResponseDTO mapShiftToShiftResponseDTO(ShiftModel shift) {
@@ -161,15 +212,86 @@ public class AttendanceServiceImpl implements AttendanceService {
         return employeeDTO;
     }
 
+    @Override
+    public List<AttendanceScheduleDTO> getAllAttendanceWithSchedule() {
+        List<AttendanceModel> attendanceRecords = attendanceRepository.findAll();
+
+        List<AttendanceScheduleDTO> result = new ArrayList<>();
+
+        for (AttendanceModel attendance : attendanceRecords) {
+            // Skip attendance records with no schedule
+            if (attendance.getSchedule() == null) {
+                continue;
+            }
+
+            // Create a new AttendanceScheduleDTO for each schedule
+            AttendanceScheduleDTO scheduleDTO = new AttendanceScheduleDTO();
+            scheduleDTO.setScheduleId(attendance.getSchedule().getSchedule_id());
+            scheduleDTO.setScheduleDate(attendance.getSchedule().getSchedule_date());
+            scheduleDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
+
+            // Fetch and set location information if available
+            LocationModel location = attendance.getSchedule().getLocation();
+            if (location != null) {
+                LocationsCreateResponseDTO locationDTO = modelMapper.map(location, LocationsCreateResponseDTO.class);
+                scheduleDTO.setLocation(locationDTO);
+            }
+
+            // Add attendance details to the scheduleDTO
+            AttendanceCreateResponseDTO attendanceDTO = modelMapper.map(attendance, AttendanceCreateResponseDTO.class);
+            attendanceDTO.setScheduleId(attendance.getSchedule().getSchedule_id());
+            attendanceDTO.setEmployee(mapEmployeeToCreateEmployeeResponseDTO(attendance.getEmployees().get(0)));
+            scheduleDTO.getAttendances().add(attendanceDTO);
+
+            result.add(scheduleDTO);
+        }
+
+        return result;
+    }
 
 
+    public List<AttendanceScheduleIdDTO> getAllAttendanceWithScheduleId() {
+        List<AttendanceModel> attendanceRecords = attendanceRepository.findAll();
 
+        Map<Long, AttendanceScheduleIdDTO> scheduleIdMap = new HashMap<>();
 
+        for (AttendanceModel attendance : attendanceRecords) {
+            // Skip attendance records with no schedule
+            if (attendance.getSchedule() == null) {
+                continue;
+            }
 
+            Long scheduleId = attendance.getSchedule().getSchedule_id();
+            AttendanceScheduleIdDTO scheduleIdDTO = scheduleIdMap.getOrDefault(scheduleId, new AttendanceScheduleIdDTO());
 
+            if (scheduleIdDTO.getScheduleId() == null) {
+                scheduleIdDTO.setScheduleId(scheduleId);
+            }
 
+            // Create the AttendanceCreateResponseDTO and manually set the values
+            AttendanceCreateResponseDTO attendanceDTO = new AttendanceCreateResponseDTO();
+            attendanceDTO.setAttendanceId(attendance.getAttendance_id());
+            attendanceDTO.setScheduleId(scheduleId);
+            attendanceDTO.setEmployee(mapEmployeeToCreateEmployeeResponseDTO(attendance.getEmployees().get(0)));
+            attendanceDTO.setScheduleDate(attendance.getAttendance_date());
+            attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
+            attendanceDTO.setStatus(attendance.getStatus());
+            attendanceDTO.setClockIn(attendance.getClock_in());
+            attendanceDTO.setClockOut(attendance.getClock_out());
+            attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
+            attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
+            attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
+            attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
+            attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
+            attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
 
+            scheduleIdDTO.getAttendances().add(attendanceDTO);
 
+            scheduleIdMap.put(scheduleId, scheduleIdDTO);
+        }
+
+        return new ArrayList<>(scheduleIdMap.values());
+    }
 
 
 }
