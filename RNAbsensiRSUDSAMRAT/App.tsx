@@ -8,10 +8,11 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { getEmployee } from './src/config/employees/employees.api';
 import { Employee } from './src/config/employees/employee.interface';
-import { SplashScreen, Login, Attendance, Home } from './src/pages';
+import { SplashScreen, Login, Attendance, Home, AttendanceDone } from './src/pages';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Tabs from './src/navigation';
+import AttendanceConfirmation from './src/pages/AttendanceConfirmation';
 
 const App = () => {
   const [employee, setEmployee] = useState<Employee[]>([]);
@@ -56,6 +57,11 @@ const App = () => {
             name='Tabs'
             component={Tabs}
             options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name='AttendanceDone'
+            component={AttendanceDone}
+            options={{headerShown:false}}
           />
         </Stack.Navigator>
       </NavigationContainer>

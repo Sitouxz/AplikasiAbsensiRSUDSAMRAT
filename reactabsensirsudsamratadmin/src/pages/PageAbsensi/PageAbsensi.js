@@ -107,6 +107,11 @@ const customStyles = {
 };
 
 export default function PageAbsensi() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredData = data.filter((data) =>
+    data.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // async function getAbsensi() {
   //   try {
   //     const response = await axiosInstance.get('/api/v1/dev/schedule');
@@ -174,7 +179,7 @@ export default function PageAbsensi() {
         <div>
           <DataTable
             columns={columns}
-            data={data}
+            data={filteredData}
             customStyles={customStyles}
           />
         </div>
