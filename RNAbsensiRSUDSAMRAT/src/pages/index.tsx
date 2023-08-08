@@ -5,6 +5,8 @@ import Attendance from "./Attendance";
 import History from "./History";
 import Notification from "./Notification";
 import Profile from "./Profile";
+import AttendanceDone from "./AttendanceDone";
+import AttendanceConfirmation from "./AttendanceConfirmation";
 
 export {
     SplashScreen,
@@ -13,5 +15,7 @@ export {
     Attendance,
     History,
     Notification,
-    Profile
+    Profile,
+    AttendanceConfirmation,
+    AttendanceDone
 }
