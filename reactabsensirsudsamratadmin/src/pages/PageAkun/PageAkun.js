@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from 'react';
 import {
   HiOutlinePlusSm,
   HiSearch,
   HiOutlinePencil,
   HiOutlineTrash,
-} from "react-icons/hi";
-import ModalAkun from "./ModalAkun";
-import DataTable from "react-data-table-component";
-import api from "../../config/axios";
+} from 'react-icons/hi';
+import ModalAkun from './ModalAkun';
+import DataTable from 'react-data-table-component';
+import api from '../../config/axios';
 
 export default function PageAkun() {
-  const [modalAkunType, setModalAkunType] = useState(""); // ['create', 'edit']
+  const [modalAkunType, setModalAkunType] = useState(''); // ['create', 'edit']
   const [akunData, setAkunData] = useState([]);
   const [selectedAkun, setSelectedAkun] = useState(null);
   const [reloadApi, setReloadApi] = useState(false);
   const modalAkun = useRef(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const filteredAkunData = akunData.filter((akun) =>
     akun.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -23,28 +23,28 @@ export default function PageAkun() {
 
   const columns = [
     {
-      name: "ID",
+      name: 'ID',
       selector: (row) => row.employeeId,
-      width: "50px",
+      width: '50px',
     },
     {
-      name: "Name",
+      name: 'Name',
       selector: (row) => row.name,
     },
     {
-      name: "Password",
+      name: 'Password',
       selector: (row) => row.password,
     },
     {
-      name: "NIK",
+      name: 'NIK',
       selector: (row) => row.nik,
     },
     {
-      name: "Bidang/Jabatan",
+      name: 'Bidang/Jabatan',
       selector: (row) => row.role,
     },
     {
-      name: "Action",
+      name: 'Action',
       cell: (row) => (
         <div>
           <button
@@ -69,7 +69,7 @@ export default function PageAkun() {
   useEffect(() => {
     // Fetch data from API
     api
-      .get("/api/v1/dev/employees")
+      .get('/api/v1/dev/employees')
       .then((res) => {
         console.log(res.data);
         setAkunData(res.data);
@@ -80,7 +80,7 @@ export default function PageAkun() {
   }, [reloadApi]);
 
   const handleEdit = (id) => {
-    setModalAkunType("edit");
+    setModalAkunType('edit');
     // Find the selected akun
     const selectedAkun = akunData.find((akun) => akun.employeeId === id);
     setSelectedAkun(selectedAkun);
@@ -101,7 +101,7 @@ export default function PageAkun() {
           modalAkun.current.close();
           setReloadApi(!reloadApi);
           setSelectedAkun(null);
-          console.log("Modal closed");
+          console.log('Modal closed');
         }}
       />
       <div>
@@ -111,7 +111,7 @@ export default function PageAkun() {
             <button
               type="button"
               onClick={() => {
-                setModalAkunType("create");
+                setModalAkunType('create');
                 modalAkun.current.open();
               }}
               className="flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-primary-2"
@@ -138,7 +138,7 @@ export default function PageAkun() {
               customStyles={{
                 headCells: {
                   style: {
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   },
                 },
               }}

@@ -1,5 +1,6 @@
-import Logo from "../../assets/LOGORS2.png";
-import bg from "../../assets/abstract_wavy_line_geometric1.png";
+import Logo from '../../assets/LOGORS2.png';
+import bg from '../../assets/abstract_wavy_line_geometric1.png';
+import React from 'react';
 
 export default function LoginPage() {
   return (
@@ -52,7 +53,12 @@ export default function LoginPage() {
                   </button>
                 </div>
                 <div className="form-control mt-6">
-                  <button className="btn bg-[#01A7A3] border-none text-white">
+                  <button
+                    className="btn bg-[#01A7A3] border-none text-white"
+                    onClick={() => {
+                      window.location.href = '/';
+                    }}
+                  >
                     Log in
                   </button>
                 </div>
