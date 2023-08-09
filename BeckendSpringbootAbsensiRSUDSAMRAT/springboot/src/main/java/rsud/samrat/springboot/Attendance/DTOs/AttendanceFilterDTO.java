@@ -14,6 +14,7 @@ public class AttendanceFilterDTO {
     private LocalDate scheduleDate;
     private Long shiftId;
     private String placementName;
+
 }
 
 

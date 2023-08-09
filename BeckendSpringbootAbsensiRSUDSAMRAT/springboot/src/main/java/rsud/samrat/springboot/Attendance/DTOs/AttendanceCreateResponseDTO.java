@@ -21,6 +21,7 @@ public class AttendanceCreateResponseDTO {
     private LocalDate scheduleDate;
     private ShiftResponseDTO shift;
     private AttendanceStatus status;
+    private AttendanceType attendanceType;
     private LocalDateTime clockIn;
     private LocalDateTime clockOut;
     private Double locationLatIn;
@@ -30,4 +31,5 @@ public class AttendanceCreateResponseDTO {
     private String selfieUrlCheckIn;
     private String selfieUrlCheckOut;
     private LocationsCreateResponseDTO location;
+
 }

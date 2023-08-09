@@ -24,4 +24,5 @@ public class AttendanceCreateRequestDTO {
     private String selfieUrlCheckIn;
     private String selfieUrlCheckOut;
     private AttendanceStatus status;
+    private AttendanceType attendanceType;
 }

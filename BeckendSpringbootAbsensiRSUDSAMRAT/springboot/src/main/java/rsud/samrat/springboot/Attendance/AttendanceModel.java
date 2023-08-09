@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rsud.samrat.springboot.Attendance.DTOs.AttendanceType;
 import rsud.samrat.springboot.Employee.EmployeeModel;
 import rsud.samrat.springboot.Schedule.ScheduleModel;
 
@@ -47,4 +48,6 @@ public class AttendanceModel {
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
+    @Enumerated(EnumType.STRING)
+    private AttendanceType attendanceType;
 }

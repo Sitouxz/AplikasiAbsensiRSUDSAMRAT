@@ -85,6 +85,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setLocation_Long_Out(requestDTO.getLocationLongOut());
         attendance.setSelfieUrlCheckIn(requestDTO.getSelfieUrlCheckIn());
         attendance.setSelfieUrlCheckOut(requestDTO.getSelfieUrlCheckOut());
+        attendance.setAttendanceType(requestDTO.getAttendanceType());
 
         AttendanceModel savedAttendance = attendanceRepository.save(attendance);
 
@@ -96,6 +97,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         responseDTO.setScheduleDate(savedAttendance.getAttendance_date());
         responseDTO.setShift(mapShiftToShiftResponseDTO(schedule.getShift()));
         responseDTO.setStatus(savedAttendance.getStatus());
+        responseDTO.setAttendanceType(savedAttendance.getAttendanceType());
         responseDTO.setClockIn(savedAttendance.getClock_in());
         responseDTO.setClockOut(savedAttendance.getClock_out());
         responseDTO.setLocationLatIn(savedAttendance.getLocation_lat_In());
@@ -277,6 +279,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceDTO.setScheduleDate(attendance.getAttendance_date());
             attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
             attendanceDTO.setStatus(attendance.getStatus());
+            attendanceDTO.setAttendanceType(attendance.getAttendanceType());
             attendanceDTO.setClockIn(attendance.getClock_in());
             attendanceDTO.setClockOut(attendance.getClock_out());
             attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
@@ -316,6 +319,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceDTO.setScheduleDate(attendance.getAttendance_date());
             attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
             attendanceDTO.setStatus(attendance.getStatus());
+            attendanceDTO.setAttendanceType(attendance.getAttendanceType());
             attendanceDTO.setClockIn(attendance.getClock_in());
             attendanceDTO.setClockOut(attendance.getClock_out());
             attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
