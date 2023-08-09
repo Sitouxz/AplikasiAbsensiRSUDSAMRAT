@@ -10,11 +10,20 @@ import {
   HiOutlineUser,
   HiOutlineInformationCircle,
   HiOutlineDocumentAdd,
+<<<<<<< HEAD
   HiUser,
 } from "react-icons/hi";
 import PageAkun from "./pages/PageAkun/PageAkun";
 import PagePengumuman from "./pages/PagePengumuman/PagePengumuman";
 import LoginPage from "./pages/PageLogin/PageLogin";
+=======
+  HiUser
+} from 'react-icons/hi';
+import PageAkun from './pages/PageAkun/PageAkun';
+import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
+import LoginPage from './pages/PageLogin/PageLogin';
+import PageShift from './pages/PageShift/PageShift';
+>>>>>>> 5336a41aa548918d5ebdb86f7ab784ad470cb7ed
 
 export default function App() {
   // make active link
@@ -74,12 +83,20 @@ export default function App() {
                   Pengumuman
                 </Link>
                 <Link
+<<<<<<< HEAD
                   to="/create"
                   onClick={() => setActiveLink("/create")}
                   className={`flex items-center gap-3 text-lg ${
                     activeLink === "create" ? "text-primary-2" : ""
                   }`}
                 >
+=======
+                  to='/shift'
+                  onClick={() => setActiveLink('/shift')}
+                  className={`flex items-center gap-3 text-lg ${
+                    activeLink === 'shift' ? 'text-primary-2' : ''
+                  }`}>
+>>>>>>> 5336a41aa548918d5ebdb86f7ab784ad470cb7ed
                   <HiOutlineDocumentAdd />
                   Buat sif THL
                 </Link>
@@ -117,11 +134,20 @@ export default function App() {
             )}
             <div className={`${activeLink === "/login" ? "" : "p-3"}`}>
               <Routes>
+<<<<<<< HEAD
                 <Route exact path="/" element={<PageDashboard />} />
                 <Route exact path="/absensi" element={<PageAbsensi />} />
                 <Route exact path="/akun" element={<PageAkun />} />
                 <Route exact path="/pengumuman" element={<PagePengumuman />} />
                 <Route exact path="/login" element={<LoginPage />} />
+=======
+                <Route exact path='/' element={<PageDashboard />} />
+                <Route exact path='/absensi' element={<PageAbsensi />} />
+                <Route exact path='/akun' element={<PageAkun />} />
+                <Route exact path='/pengumuman' element={<PagePengumuman />} />
+                <Route exact path='/shift' element={<PageShift />} />
+                <Route exact path='/login' element={<LoginPage />} />
+>>>>>>> 5336a41aa548918d5ebdb86f7ab784ad470cb7ed
               </Routes>
             </div>
           </div>
