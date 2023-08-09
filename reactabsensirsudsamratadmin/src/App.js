@@ -15,6 +15,7 @@ import {
 import PageAkun from './pages/PageAkun/PageAkun';
 import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
 import LoginPage from './pages/PageLogin/PageLogin';
+import PageShift from './pages/PageShift/PageShift';
 
 export default function App() {
   // make active link
@@ -70,10 +71,10 @@ export default function App() {
                   Pengumuman
                 </Link>
                 <Link
-                  to='/create'
-                  onClick={() => setActiveLink('/create')}
+                  to='/shift'
+                  onClick={() => setActiveLink('/shift')}
                   className={`flex items-center gap-3 text-lg ${
-                    activeLink === 'create' ? 'text-primary-2' : ''
+                    activeLink === 'shift' ? 'text-primary-2' : ''
                   }`}>
                   <HiOutlineDocumentAdd />
                   Buat sif THL
@@ -114,6 +115,7 @@ export default function App() {
                 <Route exact path='/absensi' element={<PageAbsensi />} />
                 <Route exact path='/akun' element={<PageAkun />} />
                 <Route exact path='/pengumuman' element={<PagePengumuman />} />
+                <Route exact path='/shift' element={<PageShift />} />
                 <Route exact path='/login' element={<LoginPage />} />
               </Routes>
             </div>
