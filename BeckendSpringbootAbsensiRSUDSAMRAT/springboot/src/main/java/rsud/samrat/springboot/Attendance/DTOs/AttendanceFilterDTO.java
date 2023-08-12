@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AttendanceFilterDTO {
     private String employeeName;
+    private Long employeeId;
     private LocalDate scheduleDate;
     private Long shiftId;
     private String placementName;

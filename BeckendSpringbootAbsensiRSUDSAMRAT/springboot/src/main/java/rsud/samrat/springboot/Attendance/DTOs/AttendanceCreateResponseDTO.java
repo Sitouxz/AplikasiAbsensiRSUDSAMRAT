@@ -3,6 +3,7 @@ package rsud.samrat.springboot.Attendance.DTOs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rsud.samrat.springboot.Attendance.AttendanceState;
 import rsud.samrat.springboot.Attendance.AttendanceStatus;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
 import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
@@ -31,5 +32,7 @@ public class AttendanceCreateResponseDTO {
     private String selfieUrlCheckIn;
     private String selfieUrlCheckOut;
     private LocationsCreateResponseDTO location;
+    private AttendanceState attendanceState;
+
 
 }

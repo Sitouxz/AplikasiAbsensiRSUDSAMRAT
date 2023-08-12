@@ -50,4 +50,6 @@ public class AttendanceModel {
     private AttendanceStatus status;
     @Enumerated(EnumType.STRING)
     private AttendanceType attendanceType;
+    @Enumerated(EnumType.STRING)
+    private AttendanceState attendanceState;
 }

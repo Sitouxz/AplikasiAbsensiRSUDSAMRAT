@@ -11,6 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttendanceScheduleIdDTO {
+
+
+    //todo : remove null value in response payload
     private Long scheduleId;
     private List<AttendanceCreateResponseDTO> attendances = new ArrayList<>();
 }

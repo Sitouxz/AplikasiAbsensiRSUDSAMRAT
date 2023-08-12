@@ -17,6 +17,8 @@ import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 import rsud.samrat.springboot.Shift.ShiftModel;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,48 +50,64 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public AttendanceCreateResponseDTO addAttendanceToSchedule(AttendanceCreateRequestDTO requestDTO) {
-        // Fetch the ScheduleModel using the provided scheduleId
         Long scheduleId = requestDTO.getScheduleId();
         ScheduleModel schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
 
-        // Fetch the EmployeeModel using the provided employeeId
         Long employeeId = requestDTO.getEmployeeId();
         EmployeeModel employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NotFoundException("Employee not found with id: " + employeeId));
 
-        // Check if the employee is assigned to the schedule
         if (!schedule.getEmployees().contains(employee)) {
             throw new IllegalArgumentException("Employee is not assigned to the schedule with id: " + scheduleId);
         }
 
-        // Check if the schedule contains the employee
         if (!employee.getSchedules().contains(schedule)) {
             throw new IllegalArgumentException("Schedule does not contain the employee with id: " + employeeId);
         }
 
-        // Create the AttendanceModel from the request DTO
+        LocalDate attendanceDate = requestDTO.getAttendanceDate();
+        LocalDate scheduleDate = schedule.getSchedule_date();
+
+        // Check if attendance date is the same as the schedule date
+        if (!attendanceDate.isEqual(scheduleDate)) {
+            throw new IllegalArgumentException("Attendance date must match the schedule date.");
+        }
+
+        LocalTime shiftStartTime = schedule.getShift().getStart_time();
+        LocalTime fifteenMinutesBeforeShift = shiftStartTime.minusMinutes(15);
+        LocalTime currentClockInTime = requestDTO.getClockIn().toLocalTime();
+
+        // Check if clock-in is at least 15 minutes before shift start time
+        if (currentClockInTime.isBefore(fifteenMinutesBeforeShift)) {
+            throw new IllegalArgumentException("Clock-in time cannot be less than 15 minutes before shift start time.");
+        }
+
         AttendanceModel attendance = new AttendanceModel();
         attendance.setSchedule(schedule);
         attendance.getEmployees().add(employee);
 
-        // Set the default status to PRESENT
-        attendance.setStatus(AttendanceStatus.PRESENT);
+        // Set the default status to CheckIn
+        attendance.setStatus(AttendanceStatus.CheckIn);
 
-        attendance.setAttendance_date(requestDTO.getAttendanceDate());
+        attendance.setAttendance_date(attendanceDate);
         attendance.setClock_in(requestDTO.getClockIn());
         attendance.setClock_out(requestDTO.getClockOut());
+
+        // Set default values to other attributes (null by default)
         attendance.setLocation_lat_In(requestDTO.getLocationLatIn());
         attendance.setLocation_long_In(requestDTO.getLocationLongIn());
-        attendance.setLocation_lat_Out(requestDTO.getLocationLatOut());
-        attendance.setLocation_Long_Out(requestDTO.getLocationLongOut());
+        attendance.setLocation_lat_Out(null);
+        attendance.setLocation_Long_Out(null);
         attendance.setSelfieUrlCheckIn(requestDTO.getSelfieUrlCheckIn());
-        attendance.setSelfieUrlCheckOut(requestDTO.getSelfieUrlCheckOut());
+        attendance.setSelfieUrlCheckOut(null);
         attendance.setAttendanceType(requestDTO.getAttendanceType());
+
+        // Set the default attendance state to null
+        attendance.setAttendanceState(null);
 
         AttendanceModel savedAttendance = attendanceRepository.save(attendance);
 
-        // Create the AttendanceCreateResponseDTO and manually set the values
         AttendanceCreateResponseDTO responseDTO = new AttendanceCreateResponseDTO();
         responseDTO.setAttendanceId(savedAttendance.getAttendance_id());
         responseDTO.setScheduleId(scheduleId);
@@ -119,9 +137,10 @@ public class AttendanceServiceImpl implements AttendanceService {
             responseDTO.setLocation(locationDTO);
         }
 
-
         return responseDTO;
     }
+
+
 
 
     @Override
@@ -172,7 +191,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendanceList;
     }
 
-
     @Override
     public AttendanceCreateResponseDTO updateAttendanceStatusAndCheckoutDetails(AttendanceUpdateRequestDTO requestDTO) {
         Long attendanceId = requestDTO.getAttendanceId();
@@ -181,14 +199,46 @@ public class AttendanceServiceImpl implements AttendanceService {
         AttendanceModel attendance = attendanceRepository.findById(attendanceId)
                 .orElseThrow(() -> new NotFoundException("Attendance not found with id: " + attendanceId));
 
-        // Update the attendance status to "ONTIME"
-        attendance.setStatus(AttendanceStatus.ONTIME);
 
-        // Update checkout details
+        // Update the checkout details
         attendance.setClock_out(requestDTO.getClockOut());
         attendance.setLocation_lat_Out(requestDTO.getLocationLatOut());
         attendance.setLocation_Long_Out(requestDTO.getLocationLongOut());
         attendance.setSelfieUrlCheckOut(requestDTO.getSelfieUrlCheckOut());
+
+        // Calculate the attendance state based on the clock-in and clock-out times
+        if (attendance.getClock_in() != null && attendance.getClock_out() != null) {
+            LocalTime shiftStartTime = attendance.getSchedule().getShift().getStart_time();
+            LocalTime shiftEndTime = attendance.getSchedule().getShift().getEnd_time();
+            LocalTime clockInTime = attendance.getClock_in().toLocalTime();
+            LocalTime clockOutTime = attendance.getClock_out().toLocalTime();
+
+            if (clockInTime.isBefore(shiftStartTime.minusMinutes(15))) {
+                attendance.setAttendanceState(AttendanceState.LATE);
+            } else if (clockInTime.isBefore(shiftStartTime) || clockOutTime.isAfter(shiftEndTime.plusMinutes(30))) {
+                attendance.setAttendanceState(AttendanceState.ON_TIME);
+            } else {
+                attendance.setAttendanceState(AttendanceState.LATE);
+            }
+
+            // Check if clock out is more than 4 hours after shift end
+            if (clockOutTime.isAfter(shiftEndTime.plusHours(4))) {
+                attendance.setAttendanceState(AttendanceState.ABSENT);
+            } else {
+                attendance.setStatus(AttendanceStatus.CheckOut);
+            }
+        } else if (attendance.getClock_in() != null) {
+            LocalTime shiftStartTime = attendance.getSchedule().getShift().getStart_time();
+            LocalTime clockInTime = attendance.getClock_in().toLocalTime();
+
+            if (clockInTime.isBefore(shiftStartTime.plusHours(1))) {
+                attendance.setAttendanceState(AttendanceState.ABSENT);
+            } else {
+                attendance.setAttendanceState(AttendanceState.LATE);
+            }
+        } else {
+            attendance.setAttendanceState(AttendanceState.ABSENT);
+        }
 
         // Save the updated attendance record
         AttendanceModel updatedAttendance = attendanceRepository.save(attendance);
@@ -196,8 +246,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         // Map the updated attendance record to AttendanceCreateResponseDTO
         AttendanceCreateResponseDTO responseDTO = modelMapper.map(updatedAttendance, AttendanceCreateResponseDTO.class);
 
+        // Set the attendanceState and status in the responseDTO
+        responseDTO.setAttendanceState(updatedAttendance.getAttendanceState());
+        responseDTO.setStatus(updatedAttendance.getStatus());
+
         return responseDTO;
     }
+
 
 
     private ShiftResponseDTO mapShiftToShiftResponseDTO(ShiftModel shift) {
@@ -297,6 +352,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         return new ArrayList<>(scheduleIdMap.values());
     }
 
+
+    // To do : tambah by id untuk filter
     @Override
     public List<AttendanceScheduleIdDTO> filterAttendances(AttendanceFilterDTO filterDTO) {
         List<AttendanceModel> filteredAttendances = attendanceRepository.findAll().stream()
@@ -312,23 +369,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             dto.setScheduleId(scheduleId);
 
             // Create the AttendanceCreateResponseDTO and manually set the values
-            AttendanceCreateResponseDTO attendanceDTO = new AttendanceCreateResponseDTO();
-            attendanceDTO.setAttendanceId(attendance.getAttendance_id());
-            attendanceDTO.setScheduleId(scheduleId);
-            attendanceDTO.setEmployee(mapEmployeeToCreateEmployeeResponseDTO(attendance.getEmployees().get(0)));
-            attendanceDTO.setScheduleDate(attendance.getAttendance_date());
-            attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
-            attendanceDTO.setStatus(attendance.getStatus());
-            attendanceDTO.setAttendanceType(attendance.getAttendanceType());
-            attendanceDTO.setClockIn(attendance.getClock_in());
-            attendanceDTO.setClockOut(attendance.getClock_out());
-            attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
-            attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
-            attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
-            attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
-            attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
-            attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
-
+            AttendanceCreateResponseDTO attendanceDTO = createAttendanceDTO(attendance);
             dto.getAttendances().add(attendanceDTO);
 
             scheduleIdToDtoMap.put(scheduleId, dto);
@@ -338,15 +379,41 @@ public class AttendanceServiceImpl implements AttendanceService {
         return result;
     }
 
+    private AttendanceCreateResponseDTO createAttendanceDTO(AttendanceModel attendance) {
+        AttendanceCreateResponseDTO attendanceDTO = new AttendanceCreateResponseDTO();
+        attendanceDTO.setAttendanceId(attendance.getAttendance_id());
+        attendanceDTO.setScheduleId(attendance.getSchedule().getSchedule_id());
+        attendanceDTO.setEmployee(mapEmployeeToCreateEmployeeResponseDTO(attendance.getEmployees().get(0)));
+        attendanceDTO.setScheduleDate(attendance.getAttendance_date());
+        attendanceDTO.setShift(mapShiftToShiftResponseDTO(attendance.getSchedule().getShift()));
+        attendanceDTO.setStatus(attendance.getStatus());
+        attendanceDTO.setAttendanceType(attendance.getAttendanceType());
+        attendanceDTO.setClockIn(attendance.getClock_in());
+        attendanceDTO.setClockOut(attendance.getClock_out());
+        attendanceDTO.setLocationLatIn(attendance.getLocation_lat_In());
+        attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
+        attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
+        attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
+        attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
+        attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
+        attendanceDTO.setAttendanceState(attendance.getAttendanceState());
+        return attendanceDTO;
+    }
+
+
 
     private boolean matchesFilter(AttendanceModel attendance, AttendanceFilterDTO filterDTO) {
         return (filterDTO.getEmployeeName() == null || attendance.getEmployees().stream()
                 .anyMatch(employee -> employee.getName().contains(filterDTO.getEmployeeName())))
+                && (filterDTO.getEmployeeId() == null || attendance.getEmployees().stream()
+                .anyMatch(employee -> employee.getEmployee_id().equals(filterDTO.getEmployeeId())))
                 && (filterDTO.getScheduleDate() == null || filterDTO.getScheduleDate().equals(attendance.getSchedule().getSchedule_date()))
                 && (filterDTO.getShiftId() == null || filterDTO.getShiftId().equals(attendance.getSchedule().getShift().getShift_id()))
                 && (filterDTO.getPlacementName() == null || attendance.getEmployees().stream()
                 .anyMatch(employee -> employee.getPlacement().getName().contains(filterDTO.getPlacementName())));
     }
+
+
 
 
 

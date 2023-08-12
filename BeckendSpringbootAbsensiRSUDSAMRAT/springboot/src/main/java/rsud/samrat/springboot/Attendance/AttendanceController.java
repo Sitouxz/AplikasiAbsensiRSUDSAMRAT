@@ -23,10 +23,15 @@ public class AttendanceController {
     }
 
     @PostMapping("/checkInMasuk")
-    public ResponseEntity<AttendanceCreateResponseDTO> addAttendanceToSchedule(@RequestBody AttendanceCreateRequestDTO requestDTO) {
-        AttendanceCreateResponseDTO responseDTO = attendanceService.addAttendanceToSchedule(requestDTO);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    public ResponseEntity<?> addAttendanceToSchedule(@RequestBody AttendanceCreateRequestDTO requestDTO) {
+        try {
+            AttendanceCreateResponseDTO responseDTO = attendanceService.addAttendanceToSchedule(requestDTO);
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
+
 
     @GetMapping("/date/{attendanceDate}")
     public ResponseEntity<List<AttendanceCreateResponseDTO>> getAttendanceByDate(
@@ -84,12 +89,16 @@ public class AttendanceController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<AttendanceScheduleIdDTO>> filterAttendances(@RequestParam(required = false) String employeeName,
-                                                                         @RequestParam(required = false) String scheduleDate,
-                                                                         @RequestParam(required = false) Long shiftId,
-                                                                         @RequestParam(required = false) String placementName) {
+    public ResponseEntity<List<AttendanceScheduleIdDTO>> filterAttendances(
+            @RequestParam(required = false) String employeeName,
+            @RequestParam(required = false) Long employeeId, // Add employeeId parameter
+            @RequestParam(required = false) String scheduleDate,
+            @RequestParam(required = false) Long shiftId,
+            @RequestParam(required = false) String placementName) {
+
         AttendanceFilterDTO filterDTO = new AttendanceFilterDTO();
         filterDTO.setEmployeeName(employeeName);
+        filterDTO.setEmployeeId(employeeId); // Set the employeeId filter
 
         if (scheduleDate != null) {
             filterDTO.setScheduleDate(LocalDate.parse(scheduleDate));
@@ -106,4 +115,5 @@ public class AttendanceController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }
