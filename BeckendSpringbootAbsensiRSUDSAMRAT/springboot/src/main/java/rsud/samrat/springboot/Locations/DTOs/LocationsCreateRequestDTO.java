@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationsCreateRequestDTO {
-    private String locationName;
-    private Double latitude;
-    private Double longitude;
+        private String locationName;
+        private Double latitude;
+        private Double longitude;
 }
