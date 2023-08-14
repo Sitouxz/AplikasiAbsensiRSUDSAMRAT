@@ -12,7 +12,7 @@ const Attendance = ({navigation}: any) => {
     const [attendanceType, setAttendanceType] = useState('');
 
     useEffect(() => {
-        console.log('attendaceType:', attendanceType)
+        // console.log('attendaceType:', attendanceType)
     }, [])
 
     const handleViewAClick = () => {
