@@ -20,7 +20,7 @@ const AttendanceConfirmation = ({imageData, navigation, attdType}: any) => {
     const [attendanceType, setAttendanceType] = useState(attdType);
 
     useEffect(() => {
-        console.log('attendanceType:', attendanceType)
+        // console.log('attendanceType:', attendanceType)
         const date = String(new Date().getDate()).padStart(2, '0'); 
         const month = String(new Date().getMonth() + 1).padStart(2, '0'); 
         const year = String(new Date().getFullYear()).padStart(2, '0');
@@ -42,10 +42,10 @@ const AttendanceConfirmation = ({imageData, navigation, attdType}: any) => {
     }, [])
 
     const reOpenCamera = () => {
-        navigation?.goBack('OpenCamera');
+        navigation?.replace('OpenCamera', { attendanceType: attendanceType });
     }
 
-    const url = 'http://rsudsamrat.site:9999/api/v1/dev/attendances/checkInMasuk';
+    const url = `http://rsudsamrat.site:9999/api/v1/dev/attendances/checkInMasuk`;
     const data = {
         "scheduleId": scheduleId,
         "employeeId": employeeId,
