@@ -3,12 +3,9 @@ package rsud.samrat.springboot.Employee;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rsud.samrat.springboot.Attendance.AttendanceModel;
+import org.springframework.web.client.RestTemplate;
 import rsud.samrat.springboot.Attendance.AttendanceRepository;
-import rsud.samrat.springboot.Employee.DTOs.AddEmployeeToScheduleRequestDTO;
-import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeRequestDTO;
-import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
-import rsud.samrat.springboot.Employee.DTOs.GetAllEmployeeResponseDTO;
+import rsud.samrat.springboot.Employee.DTOs.*;
 import rsud.samrat.springboot.Exception.NotFoundException;
 import rsud.samrat.springboot.Locations.DTOs.LocationsCreateResponseDTO;
 import rsud.samrat.springboot.Locations.LocationModel;
@@ -30,29 +27,48 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ScheduleRepository scheduleRepository;
     private final AttendanceRepository attendanceRepository;
     private final ModelMapper modelMapper;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, PlacementRepository placementRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, ModelMapper modelMapper) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, PlacementRepository placementRepository, ScheduleRepository scheduleRepository, AttendanceRepository attendanceRepository, ModelMapper modelMapper, RestTemplate restTemplate) {
         this.employeeRepository = employeeRepository;
         this.placementRepository = placementRepository;
         this.scheduleRepository = scheduleRepository;
         this.attendanceRepository = attendanceRepository;
         this.modelMapper = modelMapper;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public CreateEmployeeResponseDTO createEmployee(CreateEmployeeRequestDTO createEmployeeRequestDTO) {
+        // Create employee instance
         EmployeeModel employee = modelMapper.map(createEmployeeRequestDTO, EmployeeModel.class);
 
+        // Find and set placement
         PlacementModel placement = placementRepository.findById(createEmployeeRequestDTO.getPlacementId())
                 .orElseThrow(() -> new NotFoundException("Placement not found with id: " + createEmployeeRequestDTO.getPlacementId()));
-
         employee.setPlacement(placement);
+
+        // Save employee
         EmployeeModel savedEmployee = employeeRepository.save(employee);
+
+        // Create user credentials in the Express backend
+        String registerEndpoint = "http://localhost:3001/api/auth/register";
+        UserRegistrationResponseDTO registrationResponse = restTemplate.postForObject(registerEndpoint, createEmployeeRequestDTO, UserRegistrationResponseDTO.class);
+
+        // Extract the response data
+        String nikFromResponse = registrationResponse.getNik();
+        String passwordFromResponse = registrationResponse.getPassword();
+
+        // Create placement response DTO
         PlacementCreateResponseDTO placementResponseDTO = modelMapper.map(placement, PlacementCreateResponseDTO.class);
+
+        // Create employee response DTO
         CreateEmployeeResponseDTO responseDTO = modelMapper.map(savedEmployee, CreateEmployeeResponseDTO.class);
         responseDTO.setPlacement(placementResponseDTO);
         responseDTO.setEmployeeId(savedEmployee.getEmployee_id());
+        responseDTO.setNik(nikFromResponse); // Set the extracted NIK
+        responseDTO.setPassword(passwordFromResponse); // Set the extracted password
 
         return responseDTO;
     }
@@ -161,6 +177,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 **/
 
+
+@Override
+public CreateEmployeeResponseDTO getEmployeeByNIK(String nik) {
+    EmployeeModel employee = employeeRepository.findByNik(nik);
+    if (employee != null) {
+        CreateEmployeeResponseDTO responseDTO = new CreateEmployeeResponseDTO();
+        responseDTO.setEmployeeId(employee.getEmployee_id());
+        responseDTO.setName(employee.getName());
+        responseDTO.setNik(employee.getNik());
+        responseDTO.setRole(employee.getRole());
+
+        PlacementModel placement = employee.getPlacement();
+        PlacementCreateResponseDTO placementDTO = new PlacementCreateResponseDTO();
+        placementDTO.setPlacement_id(placement.getPlacement_id());
+        // Set other placement properties
+
+        responseDTO.setPlacement(placementDTO);
+
+        return responseDTO;
+    }
+    return null;
+}
 
 
 }

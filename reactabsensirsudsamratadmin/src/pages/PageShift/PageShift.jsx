@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiSearch, HiOutlineTrash, HiChevronDown } from "react-icons/hi";
 import DataTable from "react-data-table-component";
-// import api from '../../config/axios';
 import ModalShift from "./ModalShift";
 import api from "../../config/axios";
 
@@ -24,6 +23,19 @@ export default function PageShift() {
     setIsOpen(!isOpen);
   };
   const columns = [
+    {
+      name: "ID",
+      cell: (row) => (
+        <div>
+          <button
+            type="button"
+            onClick={() => handleShowId(row.scheduleId)}
+          >
+            {row.scheduleId}
+          </button>
+        </div>
+      ),
+    },
     {
       name: "Date",
       selector: (row) => row.scheduleDate,
@@ -69,7 +81,7 @@ export default function PageShift() {
     },
   ];
 
-  const handleEdit = (id) => {
+  const handleShowId = (id) => {
     console.log(`Edit button clicked for row with id: ${id}`);
   };
 
