@@ -21,7 +21,7 @@ const OpenCamera = ({navigation}: any) => {
 
     useEffect(() => {
         checkPermission();
-        console.log("attendance type:", getAttendanceType)
+        // console.log("attendance type:", getAttendanceType)
     }, [])
 
     const checkPermission = async () => {

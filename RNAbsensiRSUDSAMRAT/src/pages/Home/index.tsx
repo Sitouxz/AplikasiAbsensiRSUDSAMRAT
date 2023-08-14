@@ -99,6 +99,6 @@ const styles = StyleSheet.create({
     announcementContainer:{
         marginTop: 20,
         paddingHorizontal: 20,
-        marginBottom: 170
+        marginBottom: 90
     }
 })
