@@ -1,8 +1,10 @@
 package rsud.samrat.springboot.Attendance.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rsud.samrat.springboot.Attendance.AttendanceState;
 import rsud.samrat.springboot.Attendance.AttendanceStatus; // Import the AttendanceStatus enum
 
 import java.time.LocalDate;
@@ -16,9 +18,15 @@ public class AttendanceCreateRequestDTO {
     private Long employeeId;
     private LocalDate attendanceDate;
     private LocalDateTime clockIn;
+    @JsonIgnore
     private LocalDateTime clockOut;
-    private Double locationLat;
-    private Double locationLong;
-    private String selfieUrl;
-    private AttendanceStatus status; // Include the status field in the request
+    private Double locationLatIn;
+    private Double locationLongIn;
+    private Double locationLatOut;
+    private Double locationLongOut;
+    private String selfieUrlCheckIn;
+    private String selfieUrlCheckOut;
+    private AttendanceStatus status;
+    private AttendanceType attendanceType;
+    private AttendanceState attendanceState;
 }
