@@ -24,6 +24,9 @@ public class EmployeeModel {
     private String name;
     private String role;
 
+    private String nik;
+
+
     @ManyToOne
     @JoinColumn(name = "placement_id")
     @JsonBackReference

@@ -12,7 +12,7 @@ const Attendance = ({navigation}: any) => {
     const [attendanceType, setAttendanceType] = useState('');
 
     useEffect(() => {
-        console.log('attendaceType:', attendanceType)
+        // console.log('attendaceType:', attendanceType)
     }, [])
 
     const handleViewAClick = () => {
@@ -81,15 +81,15 @@ const Attendance = ({navigation}: any) => {
                             <Text style={styles.specialButtonText}>WFO</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={[styles.attendanceButton, { backgroundColor: viewCColor, marginTop: 30, marginBottom: 20}]} onPress={handleViewCClick}>
+                    <TouchableOpacity style={[styles.attendanceButton, { backgroundColor: viewCColor, marginTop: 30, marginBottom: 20, height: 52}]} onPress={handleViewCClick}>
                         <Text style={styles.specialButtonText}>Absen Khusus</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.specialButton, { backgroundColor: '#01A7A3', width: '80%',marginTop: 15, marginBottom: 180, height: 100}]} onPress={handleClickCameraButton}>
+                    <TouchableOpacity style={[styles.specialButton, { backgroundColor: '#01A7A3', width: '80%',marginTop: 15, marginBottom: 90, height: 52, flexDirection: 'row'}]} onPress={handleClickCameraButton}>
                         <Image 
                             source={require('./../../assets/icons/IconCamera.png')}
-                            style={{width: 40, height: 40}}
+                            style={{width: 24, height: 24, marginRight: 5}}
                         />
-                        <Text>*Tombol sementara</Text>
+                        <Text style={{fontSize: 16, color: '#fff', fontWeight: '500'}}>Ambil gambar</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
     specialButton:{
         width: 150,
-        height: 45,
+        height: 52,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 12,
