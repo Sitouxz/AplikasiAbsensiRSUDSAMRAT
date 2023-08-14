@@ -16,6 +16,7 @@ import PageAkun from './pages/PageAkun/PageAkun';
 import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
 import LoginPage from './pages/PageLogin/PageLogin';
 import PageShift from './pages/PageShift/PageShift';
+import PageEmployeeSchedule from './pages/PageShift/PageEmployeeSchedule';
 
 export default function App() {
   // make active link
@@ -116,6 +117,11 @@ export default function App() {
                 <Route exact path='/akun' element={<PageAkun />} />
                 <Route exact path='/pengumuman' element={<PagePengumuman />} />
                 <Route exact path='/shift' element={<PageShift />} />
+                <Route
+                  exact
+                  path='/shift/:employeeid'
+                  element={<PageEmployeeSchedule />}
+                />
                 <Route exact path='/login' element={<LoginPage />} />
               </Routes>
             </div>

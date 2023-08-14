@@ -14,6 +14,7 @@ export default function PageShift() {
   const [isOpen, setIsOpen] = useState(false);
   const modalShiftRef = useRef(null);
   const [schedule, setSchedule] = useState([]);
+  const [modalType, setModalType] = useState('location');
   const dummyString = 'null';
 
   const navigate = useNavigate();
@@ -109,6 +110,7 @@ export default function PageShift() {
           console.log('Modal closed');
         }}
         schedule={schedule}
+        type={modalType}
       />
       <h1 className='text-xl font-medium'>Schedule</h1>
       <div className='flex flex-col gap-3'>
@@ -167,7 +169,11 @@ export default function PageShift() {
             </summary>
             <ul className='dropdown-content z-10 menu p-2 gap-2 shadow-xl bg-white rounded-md absolute border w-full'>
               <li>
-                <button onClick={() => modalShiftRef.current.open()}>
+                <button
+                  onClick={() => {
+                    modalShiftRef.current.open();
+                    setModalType('schedule');
+                  }}>
                   Buat jadwal
                 </button>
               </li>
@@ -175,7 +181,13 @@ export default function PageShift() {
                 <a>Buat jadwal THL</a>
               </li>
               <li>
-                <a>Buat Lokasi</a>
+                <button
+                  onClick={() => {
+                    modalShiftRef.current.open();
+                    setModalType('location');
+                  }}>
+                  Buat Lokasi
+                </button>
               </li>
             </ul>
           </details>
