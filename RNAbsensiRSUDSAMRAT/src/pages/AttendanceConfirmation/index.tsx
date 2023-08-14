@@ -45,7 +45,7 @@ const AttendanceConfirmation = ({imageData, navigation, attdType}: any) => {
         navigation?.goBack('OpenCamera');
     }
 
-    const url = 'http://rsudsamrat.site:9999/api/v1/dev/attendances/checkInMasuk';
+    const url = `http://rsudsamrat.site:9999/api/v1/dev/attendances/checkInMasuk`;
     const data = {
         "scheduleId": scheduleId,
         "employeeId": employeeId,
