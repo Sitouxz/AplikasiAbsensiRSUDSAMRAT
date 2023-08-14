@@ -3,6 +3,7 @@ import { HiSearch, HiOutlineTrash, HiChevronDown } from "react-icons/hi";
 import DataTable from "react-data-table-component";
 // import api from '../../config/axios';
 import ModalShift from "./ModalShift";
+import ModalLocation from "./ModalLocation";
 import api from "../../config/axios";
 
 export default function PageShift() {
@@ -12,8 +13,13 @@ export default function PageShift() {
   const [scheduleTime, setscheduleTime] = useState("Shift");
   const [isOpen, setIsOpen] = useState(false);
   const modalShiftRef = useRef(null);
+  const modalLocRef = useRef(null);
   const [schedule, setSchedule] = useState([]);
   const dummyString = "null";
+
+  const filteredScheduleData = schedule.filter((e) =>
+    e.scheduleId.toString().includes(searchTerm)
+  );
 
   const handleOptionClick = (option) => {
     setscheduleTime(option);
@@ -24,6 +30,10 @@ export default function PageShift() {
     setIsOpen(!isOpen);
   };
   const columns = [
+    {
+      name: "ID",
+      selector: (row) => row.scheduleId,
+    },
     {
       name: "Date",
       selector: (row) => row.scheduleDate,
@@ -98,6 +108,14 @@ export default function PageShift() {
 
   return (
     <div>
+      <ModalLocation
+        ref={modalLocRef}
+        onClose={() => {
+          setReloadApi(!reloadApi);
+          // setSelectedAkun(null);
+          console.log("Modal closed");
+        }}
+      />
       <ModalShift
         ref={modalShiftRef}
         onClose={() => {
@@ -105,8 +123,8 @@ export default function PageShift() {
           // setSelectedAkun(null);
           console.log("Modal closed");
         }}
-        schedule={schedule}
       />
+
       <h1 className="text-xl font-medium">Schedule</h1>
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-end">
@@ -118,7 +136,7 @@ export default function PageShift() {
                 defaultValue={new Date().toISOString().slice(0, 10)}
                 className="input input-bordered"
               />
-              <p>-</p>
+              <p>Sampai</p>
               <input
                 type="date"
                 defaultValue={new Date().toISOString().slice(0, 10)}
@@ -133,6 +151,7 @@ export default function PageShift() {
                   {scheduleTime}
                   <HiChevronDown />
                 </button>
+                {/*dropdown*/}
                 <ul
                   className={`dropdown-list absolute z-10 ${
                     isOpen ? "block" : "hidden"
@@ -141,24 +160,25 @@ export default function PageShift() {
                   }`}
                 >
                   <li
-                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-500 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
                     onClick={() => handleOptionClick("Pagi")}
                   >
                     Pagi
                   </li>
                   <li
-                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-500 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
                     onClick={() => handleOptionClick("Siang")}
                   >
                     Siang
                   </li>
                   <li
-                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-500 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
                     onClick={() => handleOptionClick("Malam")}
                   >
                     Malam
                   </li>
                 </ul>
+                {/*dropdown*/}
               </div>
             </div>
           </div>
@@ -174,6 +194,11 @@ export default function PageShift() {
               </li>
               <li>
                 <a>Buat jadwal THL</a>
+              </li>
+              <li>
+                <button onClick={() => modalLocRef.current.open()}>
+                  Create Location
+                </button>
               </li>
             </ul>
           </details>
@@ -193,7 +218,7 @@ export default function PageShift() {
         <div className=" overflow-auto max-h-[60vh]">
           <DataTable
             columns={columns}
-            data={schedule}
+            data={filteredScheduleData}
             customStyles={customStyles}
           />
         </div>
