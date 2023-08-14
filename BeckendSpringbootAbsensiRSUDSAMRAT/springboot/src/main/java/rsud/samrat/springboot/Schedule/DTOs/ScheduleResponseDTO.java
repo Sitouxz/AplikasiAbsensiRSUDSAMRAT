@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleResponseDTO {
-    @JsonProperty("scheduleId")
+
     private Long scheduleId;
     private List<CreateEmployeeResponseDTO> employee;
     private ShiftResponseDTO shift;

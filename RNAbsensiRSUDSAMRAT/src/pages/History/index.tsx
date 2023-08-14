@@ -1,14 +1,56 @@
-import { StyleSheet, Text, View, Button, Alert, SafeAreaView, Image, Dimensions } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, Image, Dimensions } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Calendar } from 'react-native-calendars'
-import { ScreenWidth } from 'react-native-elements/dist/helpers';
+import axios from 'axios';
 
 const History = ({navigation}: any) => {
     const screenWidht = Dimensions.get('window').width;
 
     const status = 'Check-In Pagi (WFO)';
     const location = 'RSUD DR SAM RATULANGI TONDANO, Kembuan, Tondano Utara, Minahasa, Sulawesi Utara';
-    const time = '08:15:40 1-08-2023'
+    const time = '08:15:40 1-08-2023';
+    const [employeeId, setEmployeeId] = useState(2);
+    const [data, setData] = useState([]);
+    const [getMarkedDates, setGetMarkedDates] = useState();
+
+    const url = `http://rsudsamrat.site:9999/api/v1/dev/attendances/filter?employeeId=${employeeId}`;
+
+    useEffect(() => {
+        axios.get(url)
+        .then(function (response) {
+            setData(response.data);
+        })
+        .catch(function (error) {
+            console.log('error:',error);
+        });
+    }, [])
+
+    useEffect(() => {
+        const markedDates = data.reduce((result, schedule) => {
+            schedule.attendances.forEach(attendance => {
+                const { scheduleDate, attendanceState } = attendance;
+                if (scheduleDate) {
+                    result[scheduleDate] = { selected: true, selectedColor:  getColorForAttendanceState(attendanceState)};
+                }
+            });
+            return result;
+        }, {});
+
+        setGetMarkedDates(markedDates);
+    }, [data]);
+
+    const getColorForAttendanceState = (attendanceState) => {
+        switch (attendanceState) {
+            case "ONTIME": // JANGAN LUPA GANTI
+                return "#14F42B";
+            case "UNPRESENT": // JANGAN LUPA GANTI
+                return "#F41414";
+            case "LATE":
+                return "#F0F414";
+            default:
+                return "#302DDF"; // JANGAN LUPA GANTI
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -25,12 +67,7 @@ const History = ({navigation}: any) => {
             onDayPress={day => {
                 console.log('selected day', day);
             }}
-            markedDates={{
-                '2023-08-01': {selected: true, selectedColor: '#14F42B'},
-                '2023-08-02': {selected: true, selectedColor: '#F0F414'},
-                '2023-08-03': {selected: true, selectedColor: '#F41414'},
-                '2023-08-04': {selected: true, selectedColor: '#302DDF'}
-            }}
+            markedDates={getMarkedDates}
         />
         <View>
             <Image 
