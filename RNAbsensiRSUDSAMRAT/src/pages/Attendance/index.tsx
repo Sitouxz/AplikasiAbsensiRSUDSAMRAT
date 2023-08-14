@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const Attendance = ({navigation}: any) => {
     const [date, setDate] = useState('Selasa, 1 Agustus 2023');
@@ -9,15 +9,22 @@ const Attendance = ({navigation}: any) => {
     const [viewAColor, setViewAColor] = useState('#ffffff');
     const [viewBColor, setViewBColor] = useState('#ffffff');
     const [viewCColor, setViewCColor] = useState('#ffffff');
+    const [attendanceType, setAttendanceType] = useState('');
+
+    useEffect(() => {
+        console.log('attendaceType:', attendanceType)
+    }, [])
 
     const handleViewAClick = () => {
         setViewAColor('#01A7A3');
         setViewBColor('#ffffff');
+        setAttendanceType('WFH');
     };
     
     const handleViewBClick = () => {
         setViewAColor('#ffffff');
         setViewBColor('#01A7A3');
+        setAttendanceType('WFO');
     };
 
     const handleViewCClick = () => {
@@ -29,7 +36,7 @@ const Attendance = ({navigation}: any) => {
     };
 
     const handleClickCameraButton = () => {
-
+        navigation.push('OpenCamera', {attendanceType});
     };
 
     return (
@@ -77,7 +84,7 @@ const Attendance = ({navigation}: any) => {
                     <TouchableOpacity style={[styles.attendanceButton, { backgroundColor: viewCColor, marginTop: 30, marginBottom: 20}]} onPress={handleViewCClick}>
                         <Text style={styles.specialButtonText}>Absen Khusus</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.specialButton, { backgroundColor: '#E9E005', marginTop: 30, marginBottom: 180, height: 100}]} onPress={handleClickCameraButton}>
+                    <TouchableOpacity style={[styles.specialButton, { backgroundColor: '#01A7A3', width: '80%',marginTop: 15, marginBottom: 180, height: 100}]} onPress={handleClickCameraButton}>
                         <Image 
                             source={require('./../../assets/icons/IconCamera.png')}
                             style={{width: 40, height: 40}}
