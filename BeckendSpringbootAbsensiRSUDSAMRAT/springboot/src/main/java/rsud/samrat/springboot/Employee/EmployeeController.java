@@ -42,6 +42,21 @@ public class EmployeeController {
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{employeeId}")
+    public ResponseEntity<CreateEmployeeResponseDTO> updateEmployee(@PathVariable Long employeeId, @RequestBody CreateEmployeeRequestDTO updateEmployeeRequestDTO) {
+        CreateEmployeeResponseDTO responseDTO = employeeService.updateEmployee(employeeId, updateEmployeeRequestDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/nik/{nik}")
+    public ResponseEntity<CreateEmployeeResponseDTO> getEmployeeByNIK(@PathVariable String nik) {
+        CreateEmployeeResponseDTO employeeDTO = employeeService.getEmployeeByNIK(nik);
+        if (employeeDTO != null) {
+            return ResponseEntity.ok(employeeDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
 

@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { NotificationSmallImage } from '../../assets/images'
 
-const NotificationCard = ({title, desc, date, time, backgroundColor}: any) => {
+const NotificationCard = ({title, desc, date, time, backgroundColor, onPress}: any) => {
   return (
-    <View style={{...styles.container, backgroundColor: backgroundColor}}>
+    <TouchableOpacity style={{...styles.container, backgroundColor: backgroundColor}} activeOpacity={0.7} onPress={onPress}>
         <View style={styles.secContainer}>
             <View style={styles.smallImageContainer}>
                 <Image
@@ -21,7 +21,7 @@ const NotificationCard = ({title, desc, date, time, backgroundColor}: any) => {
             <Text style={styles.date}>{date}</Text>
             <Text style={styles.time}>{time}</Text>
         </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 

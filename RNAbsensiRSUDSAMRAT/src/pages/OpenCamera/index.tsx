@@ -3,9 +3,12 @@ import React, { useRef, useState, useEffect } from 'react'
 import { Camera, useCameraDevices } from 'react-native-vision-camera'
 import AttendanceConfirmation from '../AttendanceConfirmation';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 const OpenCamera = ({navigation}: any) => {
 
+    const route = useRoute();
+    const {attendanceType} = route.params;
     const newNavigation = useNavigation();
     const devices = useCameraDevices();
     const device = devices.front;
@@ -14,8 +17,11 @@ const OpenCamera = ({navigation}: any) => {
     const [takePhotoClicked, setTakePhotoClicked] = useState(true);
     const [isFrontCamera, setIsFrontCamera] = useState(true);
     const [torch, setTorch] = useState(false);
+    const [getAttendanceType, setGetAttendanceType] = useState(attendanceType);
+
     useEffect(() => {
         checkPermission();
+        // console.log("attendance type:", getAttendanceType)
     }, [])
 
     const checkPermission = async () => {
@@ -131,7 +137,7 @@ const OpenCamera = ({navigation}: any) => {
             ):(
                 <View style={{flex: 1}}>
                     {imageData !== 'x' && (
-                        <AttendanceConfirmation imageData={imageData} navigation={navigation} />
+                        <AttendanceConfirmation imageData={imageData} navigation={navigation} attdType={getAttendanceType} />
                     )}
                 </View>
             )}
