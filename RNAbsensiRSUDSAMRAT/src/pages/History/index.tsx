@@ -7,7 +7,7 @@ const History = ({navigation}: any) => {
     const screenWidht = Dimensions.get('window').width;
 
     const [status, setStatus] = useState('');
-    const [location, setLocation] = useState('RSUD DR SAM RATULANGI TONDANO, Kembuan, Tondano Utara, Minahasa, Sulawesi Utara');
+    const [location, setLocation] = useState('');
     const [time, setTime] = useState('');
     const [date, setDate] = useState('')
     const [employeeId, setEmployeeId] = useState(2);
@@ -75,12 +75,17 @@ const History = ({navigation}: any) => {
                     const formattedClockInTime = clockInTimeString.slice(11, 19);
                     setTime(formattedClockInTime);
                     setDate(selectedData.attendances[0].scheduleDate);
-                    setStatus(selectedData.attendances[0].attendanceType);
+                    setStatus('Check-In Pagi ('+selectedData.attendances[0].attendanceType+')');
                     if(selectedData.attendances[0].location === null){
                         setLocation('RSUD DR SAM RATULANGI TONDANO, Kembuan, Tondano Utara, Minahasa, Sulawesi Utara');
                     } else {
                         setLocation(selectedData.attendances[0].location);
                     }
+                } else {
+                    setTime('');
+                    setDate('-');
+                    setStatus('Tidak ada riwayat pekerjaan pada '+day.dateString);
+                    setLocation('-');
                 }
             }}
             markedDates={getMarkedDates}
@@ -91,7 +96,7 @@ const History = ({navigation}: any) => {
                 style={{width: screenWidht, height: 110, position: 'absolute'}}
                 resizeMode='cover'
             />
-            <Text style={styles.status}>Check-In Pagi ({status})</Text>
+            <Text style={styles.status}>{status}</Text>
             <View style={styles.desc}>
                 <View style={styles.locationContainer}>
                     <Image 
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
     status: {
         fontSize: 25,
         color: '#292F2F',
-        paddingLeft: 27
+        paddingHorizontal: 27
     },
     desc:{
         marginLeft: 15,

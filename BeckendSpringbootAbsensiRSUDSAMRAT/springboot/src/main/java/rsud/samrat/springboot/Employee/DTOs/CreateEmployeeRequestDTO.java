@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateEmployeeRequestDTO {
     private String name;
+    private String nik;
+    private String password;
     private String role;
     private Long placementId;
 }
