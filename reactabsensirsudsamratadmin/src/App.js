@@ -16,6 +16,7 @@ import PageAkun from './pages/PageAkun/PageAkun';
 import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
 import LoginPage from './pages/PageLogin/PageLogin';
 import PageShift from './pages/PageShift/PageShift';
+import PageEmployeeSchedule from './pages/PageShift/PageEmployeeSchedule';
 import PageExample from './pages/PageExample/PageExample';
 import PageExampleClient from './pages/PageExample/PageExample-Client';
 
@@ -120,12 +121,17 @@ export default function App() {
             )}
             <div className={`${activeLink === '/login' ? '' : 'p-3'}`}>
               <Routes>
-                <Route exact path="/" element={<PageDashboard />} />
-                <Route exact path="/absensi" element={<PageAbsensi />} />
-                <Route exact path="/akun" element={<PageAkun />} />
-                <Route exact path="/pengumuman" element={<PagePengumuman />} />
-                <Route exact path="/shift" element={<PageShift />} />
-                <Route exact path="/login" element={<LoginPage />} />
+                <Route exact path='/' element={<PageDashboard />} />
+                <Route exact path='/absensi' element={<PageAbsensi />} />
+                <Route exact path='/akun' element={<PageAkun />} />
+                <Route exact path='/pengumuman' element={<PagePengumuman />} />
+                <Route exact path='/shift' element={<PageShift />} />
+                <Route
+                  exact
+                  path='/shift/:employeeid'
+                  element={<PageEmployeeSchedule />}
+                />
+                <Route exact path='/login' element={<LoginPage />} />
                 <Route exact path="/example" element={<PageExample />} />
                 <Route
                   exact
