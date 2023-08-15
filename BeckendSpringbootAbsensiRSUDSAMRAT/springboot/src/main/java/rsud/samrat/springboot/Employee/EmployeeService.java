@@ -13,6 +13,9 @@ public interface EmployeeService {
     List<GetAllEmployeeResponseDTO> getAllEmployees();
     ScheduleResponseDTO addEmployeeToSchedule(AddEmployeeToScheduleRequestDTO requestDTO);
     CreateEmployeeResponseDTO updateEmployee(Long employeeId, CreateEmployeeRequestDTO updateEmployeeRequestDTO);
-    //void deleteEmployee(Long employeeId);
+
+
+    CreateEmployeeResponseDTO getEmployeeByNIK(String nik);
+
 }
 

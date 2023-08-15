@@ -1,9 +1,46 @@
-import { StyleSheet, Text, View, Button, Alert, Image, SafeAreaView, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, SafeAreaView, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { Ilustration1, Ilustration6 } from '../../assets/images'
 import NotificationCard from '../../components/NotificationCard'
 
 const Notification = ({navigation}: any) => {
+    const [getNotification, setGetNotification] = useState([]);
+    const [clickedNotifications, setClickedNotifications] = useState([]);
+
+    const notification = [
+        {
+            title: 'Announcement!',
+            desc: 'September 1-2 Libur Bersama',
+            date: 'Senin, 1 Agu 2023',
+            time: '12:15:40'
+        },
+        {
+            title: 'Announcement!',
+            desc: 'September 1-2 Libur Bersama',
+            date: 'Selasa, 2 Agu 2023',
+            time: '11:15:40'
+        },
+        {
+            title: 'Announcement!',
+            desc: 'September 1-2 Libur Bersama',
+            date: 'Rabu, 3 Agu 2023',
+            time: '09:15:40'
+        }
+    ];
+
+    const handleNotificationClick = (index) => {
+        if (clickedNotifications.includes(index)) {
+            // setClickedNotifications(clickedNotifications.filter(i => i !== index));
+        } else {
+            setClickedNotifications([...clickedNotifications, index]);
+        }
+    };
+    
+
+    useEffect(() => {
+        setGetNotification(notification);
+    }, [])
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -19,16 +56,17 @@ const Notification = ({navigation}: any) => {
                     />
                 </View>
                 <View style={styles.notificationCard}>
-                    <NotificationCard backgroundColor="#99DCDA" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#fff" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#99DCDA" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#fff" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#99DCDA" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#fff" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#99DCDA" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#fff" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#99DCDA" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
-                    <NotificationCard backgroundColor="#fff" title="Announcement!" desc="September 1-2 Libur Bersama" date="Mon, 1 Aug 2023" time="09:15:40"/>
+                        {getNotification.map((notif, index) =>(
+                            <NotificationCard 
+                                key={index}
+                                backgroundColor={clickedNotifications.includes(index) ? '#fff' : '#99DCDA'}
+                                title={notif.title}
+                                desc={notif.desc}
+                                date={notif.date}
+                                time={notif.time}
+                                onPress={() => handleNotificationClick(index)}
+                            />
+                        ))}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -58,6 +96,6 @@ const styles = StyleSheet.create({
     },
     notificationCard:{
         flex: 1,
-        paddingBottom: 172,
+        paddingBottom: 90,
     },
 })

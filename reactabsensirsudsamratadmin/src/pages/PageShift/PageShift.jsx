@@ -3,8 +3,8 @@ import { HiSearch, HiOutlineTrash, HiChevronDown } from "react-icons/hi";
 import DataTable from "react-data-table-component";
 // import api from '../../config/axios';
 import ModalShift from "./ModalShift";
-import ModalLocation from "./ModalLocation";
 import api from "../../config/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function PageShift() {
   const [reloadApi, setReloadApi] = useState(false);
@@ -15,11 +15,10 @@ export default function PageShift() {
   const modalShiftRef = useRef(null);
   const modalLocRef = useRef(null);
   const [schedule, setSchedule] = useState([]);
+  const [modalType, setModalType] = useState("location");
   const dummyString = "null";
 
-  const filteredScheduleData = schedule.filter((e) =>
-    e.scheduleId.toString().includes(searchTerm)
-  );
+  const navigate = useNavigate();
 
   const handleOptionClick = (option) => {
     setscheduleTime(option);
@@ -30,10 +29,6 @@ export default function PageShift() {
     setIsOpen(!isOpen);
   };
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.scheduleId,
-    },
     {
       name: "Date",
       selector: (row) => row.scheduleDate,
@@ -100,6 +95,7 @@ export default function PageShift() {
       .get("/api/v1/dev/schedule")
       .then((res) => {
         setSchedule(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -123,8 +119,9 @@ export default function PageShift() {
           // setSelectedAkun(null);
           console.log("Modal closed");
         }}
+        schedule={schedule}
+        type={modalType}
       />
-
       <h1 className="text-xl font-medium">Schedule</h1>
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-end">
@@ -145,7 +142,7 @@ export default function PageShift() {
               <div className="relative inline-block text-left w-48">
                 <button
                   type="button"
-                  className="dropdown-button btn h-12 justify-between w-full px-10 text-sm font-medium text-gray-400 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
+                  className="dropdown-button btn h-12 justify-between w-full text-primary-2 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
                   onClick={toggleDropdown}
                 >
                   {scheduleTime}
@@ -153,26 +150,26 @@ export default function PageShift() {
                 </button>
                 {/*dropdown*/}
                 <ul
-                  className={`dropdown-list absolute z-10 ${
+                  className={`dropdown-content absolute z-10 ${
                     isOpen ? "block" : "hidden"
-                  } w-32 py-1 mt-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
+                  } w-full mt-1 p-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
                     isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95"
                   }`}
                 >
                   <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-slate-200 rounded-md"
                     onClick={() => handleOptionClick("Pagi")}
                   >
                     Pagi
                   </li>
                   <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-slate-200 rounded-md"
                     onClick={() => handleOptionClick("Siang")}
                   >
                     Siang
                   </li>
                   <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                    className="block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-slate-200 rounded-md"
                     onClick={() => handleOptionClick("Malam")}
                   >
                     Malam
@@ -183,12 +180,18 @@ export default function PageShift() {
             </div>
           </div>
           <details className="dropdown dropdown-bottom dropdown-end relative">
-            <summary className=" btn bg-primary-2 py-3 px-10 rounded-md font-semibold text-white">
+            <summary className=" btn bg-primary-2 py-3 rounded-md font-semibold text-white">
               Buat sif
+              <HiChevronDown className="inline-block ml-2" />
             </summary>
             <ul className="dropdown-content z-10 menu p-2 gap-2 shadow-xl bg-white rounded-md absolute border w-full">
               <li>
-                <button onClick={() => modalShiftRef.current.open()}>
+                <button
+                  onClick={() => {
+                    modalShiftRef.current.open();
+                    setModalType("schedule");
+                  }}
+                >
                   Buat jadwal
                 </button>
               </li>
@@ -196,8 +199,13 @@ export default function PageShift() {
                 <a>Buat jadwal THL</a>
               </li>
               <li>
-                <button onClick={() => modalLocRef.current.open()}>
-                  Create Location
+                <button
+                  onClick={() => {
+                    modalShiftRef.current.open();
+                    setModalType("location");
+                  }}
+                >
+                  Buat Lokasi
                 </button>
               </li>
             </ul>
@@ -220,6 +228,7 @@ export default function PageShift() {
             columns={columns}
             data={filteredScheduleData}
             customStyles={customStyles}
+            onRowClicked={(row) => navigate(`/shift/${row.scheduleId}`)}
           />
         </div>
       </div>
