@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rsud.samrat.springboot.Attendance.DTOs.*;
 import rsud.samrat.springboot.Exception.NotFoundException;
 
@@ -23,14 +24,17 @@ public class AttendanceController {
     }
 
     @PostMapping("/checkInMasuk")
-    public ResponseEntity<?> addAttendanceToSchedule(@RequestBody AttendanceCreateRequestDTO requestDTO) {
+    public ResponseEntity<?> addAttendanceToSchedule(
+            @RequestParam(value = "selfieCheckInImage", required = false) MultipartFile selfieCheckInImage,
+            @ModelAttribute AttendanceCreateRequestDTO requestDTO) {
         try {
-            AttendanceCreateResponseDTO responseDTO = attendanceService.addAttendanceToSchedule(requestDTO);
+            AttendanceCreateResponseDTO responseDTO =   attendanceService.addAttendanceToSchedule(requestDTO, selfieCheckInImage);
             return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
     @GetMapping("/date/{attendanceDate}")
@@ -47,9 +51,11 @@ public class AttendanceController {
     }
 
     @PostMapping("/updatePulang")
-    public ResponseEntity<String> updateAttendanceStatusAndCheckoutDetails(@RequestBody AttendanceUpdateRequestDTO requestDTO) {
+    public ResponseEntity<String> updateAttendanceStatusAndCheckoutDetails(
+            @RequestParam(value = "selfieCheckOutImage", required = false) MultipartFile selfieCheckOutImage,
+            @ModelAttribute AttendanceUpdateRequestDTO requestDTO) {
         try {
-            attendanceService.updateAttendanceStatusAndCheckoutDetails(requestDTO);
+            attendanceService.updateAttendanceStatusAndCheckoutDetails(requestDTO, selfieCheckOutImage);
             return new ResponseEntity<>("Attendance status and checkout details updated successfully.", HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>("Attendance not found.", HttpStatus.NOT_FOUND);
@@ -57,6 +63,7 @@ public class AttendanceController {
             return new ResponseEntity<>("Error occurred while updating attendance.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("/byDateAndEmployee")
     public ResponseEntity<List<AttendanceCreateResponseDTO>> getAttendanceByDateAndEmployee(

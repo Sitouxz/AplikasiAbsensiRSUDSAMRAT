@@ -3,6 +3,7 @@ package rsud.samrat.springboot.Attendance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import rsud.samrat.springboot.Attendance.DTOs.*;
 import rsud.samrat.springboot.Employee.DTOs.CreateEmployeeResponseDTO;
 import rsud.samrat.springboot.Employee.EmployeeModel;
@@ -16,9 +17,9 @@ import rsud.samrat.springboot.Schedule.ScheduleRepository;
 import rsud.samrat.springboot.Shift.DTOs.ShiftResponseDTO;
 import rsud.samrat.springboot.Shift.ShiftModel;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public AttendanceCreateResponseDTO addAttendanceToSchedule(AttendanceCreateRequestDTO requestDTO) {
+    public AttendanceCreateResponseDTO addAttendanceToSchedule(AttendanceCreateRequestDTO requestDTO, MultipartFile selfieCheckInImage) {
         Long scheduleId = requestDTO.getScheduleId();
         ScheduleModel schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
@@ -99,8 +100,14 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setLocation_long_In(requestDTO.getLocationLongIn());
         attendance.setLocation_lat_Out(null);
         attendance.setLocation_Long_Out(null);
-        attendance.setSelfieUrlCheckIn(requestDTO.getSelfieUrlCheckIn());
-        attendance.setSelfieUrlCheckOut(null);
+        if (selfieCheckInImage != null && !selfieCheckInImage.isEmpty()) {
+            try {
+                attendance.setSelfieCheckIn(selfieCheckInImage.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read selfieCheckInImage data.", e);
+            }
+        }
+        attendance.setSelfieCheckOut(null);
         attendance.setAttendanceType(requestDTO.getAttendanceType());
 
         // Set the default attendance state to null
@@ -122,8 +129,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         responseDTO.setLocationLongIn(savedAttendance.getLocation_long_In());
         responseDTO.setLocationLatOut(savedAttendance.getLocation_lat_Out());
         responseDTO.setLocationLongOut(savedAttendance.getLocation_Long_Out());
-        responseDTO.setSelfieUrlCheckIn(savedAttendance.getSelfieUrlCheckIn());
-        responseDTO.setSelfieUrlCheckOut(savedAttendance.getSelfieUrlCheckOut());
+        responseDTO.setSelfieCheckIn(savedAttendance.getSelfieCheckIn());
+        responseDTO.setSelfieCheckOut(savedAttendance.getSelfieCheckOut());
 
         // Fetch the LocationModel from the schedule
         LocationModel location = schedule.getLocation();
@@ -192,7 +199,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public AttendanceCreateResponseDTO updateAttendanceStatusAndCheckoutDetails(AttendanceUpdateRequestDTO requestDTO) {
+    public AttendanceCreateResponseDTO updateAttendanceStatusAndCheckoutDetails(AttendanceUpdateRequestDTO requestDTO, MultipartFile selfieCheckOutImage) {
         Long attendanceId = requestDTO.getAttendanceId();
 
         // Fetch the AttendanceModel using the provided attendanceId
@@ -204,7 +211,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendance.setClock_out(requestDTO.getClockOut());
         attendance.setLocation_lat_Out(requestDTO.getLocationLatOut());
         attendance.setLocation_Long_Out(requestDTO.getLocationLongOut());
-        attendance.setSelfieUrlCheckOut(requestDTO.getSelfieUrlCheckOut());
+        if (selfieCheckOutImage != null && !selfieCheckOutImage.isEmpty()) {
+            try {
+                attendance.setSelfieCheckOut(selfieCheckOutImage.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read selfieCheckInImage data.", e);
+            }
+        }
 
         // Calculate the attendance state based on the clock-in and clock-out times
         if (attendance.getClock_in() != null && attendance.getClock_out() != null) {
@@ -341,8 +354,8 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
             attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
             attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
-            attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
-            attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
+            attendanceDTO.setSelfieCheckIn(attendance.getSelfieCheckIn());
+            attendanceDTO.setSelfieCheckOut(attendance.getSelfieCheckOut());
 
             scheduleIdDTO.getAttendances().add(attendanceDTO);
 
@@ -394,8 +407,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceDTO.setLocationLongIn(attendance.getLocation_long_In());
         attendanceDTO.setLocationLatOut(attendance.getLocation_lat_Out());
         attendanceDTO.setLocationLongOut(attendance.getLocation_Long_Out());
-        attendanceDTO.setSelfieUrlCheckIn(attendance.getSelfieUrlCheckIn());
-        attendanceDTO.setSelfieUrlCheckOut(attendance.getSelfieUrlCheckOut());
+        attendanceDTO.setSelfieCheckIn(attendance.getSelfieCheckIn());
+        attendanceDTO.setSelfieCheckOut(attendance.getSelfieCheckOut());
         attendanceDTO.setAttendanceState(attendance.getAttendanceState());
         return attendanceDTO;
     }
