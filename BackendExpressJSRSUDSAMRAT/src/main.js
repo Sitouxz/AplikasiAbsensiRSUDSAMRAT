@@ -4,27 +4,24 @@ const ModuleDatabase = require('./modules/database');
 const path = require('path');
 const Config = require('./config/config');
 const MiddlewareVerifyToken = require('./middleware/verify-token');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const RouterApi = express.Router();
 const { Server } = require('socket.io');
-const io = new Server(server);
+// const io = new Server(server);
 
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+app.use(cors());
 app.disable('x-powered-by');
 app.use(express.urlencoded({ limit: '30000kb', extended: true }));
 app.use(express.json({ limit: '30000kb' }));
-
-io.on('connection', (socket) => {
-  console.log('user connected');
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-  socket.on('message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('message', msg);
-  });
-});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './views/index.html'));
@@ -51,6 +48,18 @@ app.use('/api', [], RouterApi);
     });
 
     RouterApi.use('/auth', require('./routes/auth').RouterAdmin);
+
+    io.on('connection', (socket) => {
+      console.log(`user connected : ${socket.id}`);
+      socket.on('message', ({ title, message }) => {
+        console.log('message: ' + title + ' ' + message);
+        // io.emit('message', { title, message });
+        socket.broadcast.emit('recieve_msg', { title, message });
+      });
+      socket.on('disconnect', () => {
+        console.log(`user disconnected: ${socket.id}`);
+      });
+    });
 
     server.listen(Config.HTTP_PORT, () => {
       console.log(`[server_ok] Server berjalan di port ${Config.HTTP_PORT}`);
