@@ -1,6 +1,7 @@
 package rsud.samrat.springboot.Attendance.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,11 @@ public class AttendanceCreateRequestDTO {
     private Double locationLongIn;
     private Double locationLatOut;
     private Double locationLongOut;
-    private String selfieUrlCheckIn;
-    private String selfieUrlCheckOut;
+    @Lob
+    private byte[] selfieCheckIn;
+
+    @Lob
+    private byte[] selfieCheckOut;
     private AttendanceStatus status;
     private AttendanceType attendanceType;
     private AttendanceState attendanceState;
