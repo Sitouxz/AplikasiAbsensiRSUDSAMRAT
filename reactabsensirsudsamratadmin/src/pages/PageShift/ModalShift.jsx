@@ -99,6 +99,10 @@ const ModalShift = forwardRef((props, ref) => {
       });
   }, []);
 
+  const handleHospitalInput = (e) => {
+    setsHospitalName(e);
+  };
+
   const handleOptionClick = (option) => {
     setscheduleTime(option);
     toggleDropdown();
