@@ -49,8 +49,8 @@ public class ModelMapperConfig {
                 .addMapping(AttendanceModel::getLocation_long_In, AttendanceCreateResponseDTO::setLocationLongIn)
                 .addMapping(AttendanceModel::getLocation_lat_Out, AttendanceCreateResponseDTO::setLocationLatOut)
                 .addMapping(AttendanceModel::getLocation_Long_Out, AttendanceCreateResponseDTO::setLocationLongOut)
-                .addMapping(AttendanceModel::getSelfieUrlCheckIn, AttendanceCreateResponseDTO::setSelfieUrlCheckIn)
-                .addMapping(AttendanceModel::getSelfieUrlCheckOut, AttendanceCreateResponseDTO::setSelfieUrlCheckOut);
+                .addMapping(AttendanceModel::getSelfieCheckIn, AttendanceCreateResponseDTO::setSelfieCheckIn)
+                .addMapping(AttendanceModel::getSelfieCheckIn, AttendanceCreateResponseDTO::setSelfieCheckIn);
 
         // Explicitly map properties for LocationModel to LocationsCreateResponseDTO
         modelMapper.createTypeMap(LocationModel.class, LocationsCreateResponseDTO.class)
