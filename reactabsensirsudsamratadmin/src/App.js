@@ -16,8 +16,8 @@ import PageAkun from './pages/PageAkun/PageAkun';
 import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
 import LoginPage from './pages/PageLogin/PageLogin';
 import PageShift from './pages/PageShift/PageShift';
-import PageEmployeeSchedule from './pages/PageEmployeeSchedule/PageEmployeeSchedule';
-import PageExampleClient from './pages/PageExampleClient/PageExampleClient';
+import PageEmployeeSchedule from './pages/PageShift/PageEmployeeSchedule';
+import PageExampleClient from './pages/PageExample/PageExample-Client';
 import PageExample from './pages/PageExample/PageExample';
 
 export default function App() {
