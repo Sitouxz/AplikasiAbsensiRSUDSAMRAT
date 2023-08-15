@@ -1,66 +1,166 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/no-unstable-nested-components */
-import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text} from 'react-native';
-import {
-  HomeIcon,
-  CalendarIcon,
-  UserIcon,
-  DocumentIcon,
-  BellIcon,
-} from 'react-native-heroicons/outline';
-import {Home, History, Attendance, Notification, Profile} from '../pages';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, Text, Image } from 'react-native';
+import { 
+    Attendance, 
+    History, 
+    Home, 
+    Notification, 
+    Profile 
+} from '../pages';
+import React, { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 
-const TabBarItem = ({iconName, focused, label}: any) => (
-  <View style={{justifyContent: 'center', alignItems: 'center'}}>
-    {iconName({size: 38, color: focused ? '#339993' : '#343435'})}
-    <Text style={{color: focused ? '#339993' : '#343435', fontSize: 10}}>
-      {label}
-    </Text>
-  </View>
-);
-
-const tabsConfig = [
-  {name: 'Home', component: Home, icon: HomeIcon, label: 'Beranda'},
-  {name: 'History', component: History, icon: CalendarIcon, label: 'Riwayat'},
-  {name: 'Absen', component: Attendance, icon: DocumentIcon, label: 'Absen'},
-  {
-    name: 'Notifikasi',
-    component: Notification,
-    icon: BellIcon,
-    label: 'Notifikasi',
-  },
-  {name: 'Profile', component: Profile, icon: UserIcon, label: 'Profil'},
-];
-
-const Tabs = () => (
-  <Tab.Navigator
-    screenOptions={{
-      tabBarShowLabel: false,
-      tabBarStyle: {
-        position: 'absolute',
-        elevation: 0.1,
-        backgroundColor: '#EDEFF5',
-        height: 92,
-      },
-    }}>
-    {tabsConfig.map(({name, component, icon, label}) => (
-      <Tab.Screen
-        key={name}
-        name={name}
-        component={component}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({focused}) => (
-            <TabBarItem iconName={icon} focused={focused} label={label} />
-          ),
-        }}
-      />
-    ))}
-  </Tab.Navigator>
-);
+function Tabs() {
+    const [countUnreadNotif, setCountUnreadNotif] = useState(5)
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                tabBarShowLabel: false,
+                tabBarStyle:{
+                    position: 'absolute',
+                    elevation: 0.1,
+                    backgroundColor: '#fff',
+                    height: 74,
+                },
+            }}>
+                <Tab.Screen name="Home" component={Home} options={{
+                    headerShown: false,
+                    tabBarIcon:({focused})=>(
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Image 
+                                source={require('./../assets/icons/Home.png')}
+                                resizeMode= 'contain'
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginBottom: 5,
+                                    tintColor: focused ? '#339993' : '#86869E'
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    color: focused ? '#339993' : '#86869E',
+                                    fontSize: 10,
+                                }}
+                            >Beranda</Text>
+                        </View>
+                    )
+                }}/>
+                <Tab.Screen name="History" component={History} options={{
+                    headerShown: false,
+                    tabBarIcon:({focused})=>(
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Image 
+                                source={require('./../assets/icons/Calendar.png')}
+                                resizeMode= 'contain'
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginBottom: 5,
+                                    tintColor: focused ? '#339993' : '#86869E'
+                                }}
+                                />
+                            <Text
+                                style={{
+                                    color: focused ? '#339993' : '#86869E',
+                                    fontSize: 10
+                                }}
+                                >History</Text>
+                        </View>
+                    )
+                }}/>
+                    <Tab.Screen name="Profile" component={Profile} options={{
+                        headerShown: false,
+                        tabBarIcon:({focused})=>(
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <Image 
+                                    source={require('./../assets/icons/Profile.png')}
+                                    resizeMode= 'contain'
+                                    style={{
+                                        width: 24,
+                                        height: 24,
+                                        marginBottom: 5,
+                                        tintColor: focused ? '#339993' : '#86869E'
+                                    }}
+                                />
+                                <Text
+                                    style={{
+                                        color: focused ? '#339993' : '#86869E',
+                                        fontSize: 10
+                                    }}
+                                >Profile</Text>
+                            </View>
+                        )
+                    }}/>
+                <Tab.Screen name="Absensi" component={Attendance} options={{
+                    headerShown: false,
+                    tabBarIcon:({focused})=>(
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Image 
+                                source={require('./../assets/icons/Attendance.png')}
+                                resizeMode= 'contain'
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginBottom: 5,
+                                    tintColor: focused ? '#339993' : '#86869E'
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    color: focused ? '#339993' : '#86869E',
+                                    fontSize: 10
+                                }}
+                            >Absen</Text>
+                        </View>
+                    )
+                }}/>
+                <Tab.Screen name="Notification" component={Notification} options={{
+                    headerShown: false,
+                    tabBarIcon:({focused})=>(
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            position: 'relative'
+                            // backgroundColor: '#ff0'
+                        }}>
+                            <Image 
+                                source={require('./../assets/icons/Notification.png')}
+                                resizeMode= 'contain'
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginBottom: 5,
+                                    tintColor: focused ? '#3BAE7E' : '#86869E',
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    color: focused ? '#339993' : '#86869E',
+                                    fontSize: 10
+                                    }}
+                            >Notifikasi</Text>
+                            <View style={{width: 12, height: 12, backgroundColor: '#01A7A3', borderRadius: 6, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 0, right: 10}}>
+                                <Text style={{fontSize: 8, color: '#fff'}}>{countUnreadNotif}</Text>
+                            </View>
+                        </View>                    
+                    )
+                }}/>
+        </Tab.Navigator>
+    );
+}
 
 export default Tabs;
