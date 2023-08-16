@@ -29,6 +29,10 @@ export default function PageShift() {
   };
   const columns = [
     {
+      name: 'ID',
+      selector: (row) => row.scheduleId
+    },
+    {
       name: 'Date',
       selector: (row) => row.scheduleDate
     },
