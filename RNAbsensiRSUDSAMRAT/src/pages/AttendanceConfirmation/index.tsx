@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const AttendanceConfirmation = ({imageData, navigation, attdType}: any) => {
 
-    const [scheduleId, setScheduledID] = useState(123);
+    const [scheduleId, setScheduledID] = useState(580);
     const [employeeId, setEmployeeId] = useState(2);
     const [attendanceDate, setAttendaceDate] = useState('');
     const [clockIn, setClockIn] = useState('');

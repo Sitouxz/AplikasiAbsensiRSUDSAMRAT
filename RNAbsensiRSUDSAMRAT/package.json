@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prestart": "npm install",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
@@ -22,8 +21,11 @@
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.12.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     "react-native-heroicons": "^3.2.0",
+=======
+>>>>>>> a2d94d99e610ab8e8fc2c9cea85a3cca6e7b98e8
     "react-native-reanimated": "^3.4.2",
 >>>>>>> cde74084c99b796c2b8cb8f8c680cdca1fd47708
     "react-native-safe-area-context": "^4.7.1",
