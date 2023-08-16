@@ -1,5 +1,6 @@
 package rsud.samrat.springboot.Attendance.DTOs;
 
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,8 @@ public class AttendanceUpdateRequestDTO {
     private LocalDateTime clockOut;
     private Double locationLatOut;
     private Double locationLongOut;
-    private String selfieUrlCheckOut;
+    @Lob
+    private byte[] selfieCheckOut;
     private AttendanceStatus status;
 }
 

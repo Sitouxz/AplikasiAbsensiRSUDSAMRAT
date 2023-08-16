@@ -3,16 +3,17 @@ import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:3001'); // Ganti PORT dengan port server Anda
 
-const PageExample = () => {
+export default function PagExample() {
+
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
 
   const sendMsg = () => {
     //TODO: Save database before send socket
     socket.emit('message', { title, message });
-  };
 
-  return (
+
+ return (
     <div className="w-96 mx-auto my-8 p-4 bg-white rounded shadow">
       <h2 className="text-lg font-semibold mb-4">Formulir Chat</h2>
       <div className="flex">
@@ -39,7 +40,5 @@ const PageExample = () => {
         </button>
       </div>
     </div>
-  );
-};
-
-export default PageExample;
+  )
+}

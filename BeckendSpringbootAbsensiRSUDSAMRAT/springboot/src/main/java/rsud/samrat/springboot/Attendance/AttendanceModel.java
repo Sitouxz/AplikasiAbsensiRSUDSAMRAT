@@ -43,8 +43,11 @@ public class AttendanceModel {
     private Double location_long_In;
     private Double Location_lat_Out;
     private Double Location_Long_Out;
-    private String selfieUrlCheckIn;
-    private String selfieUrlCheckOut;
+    @Lob
+    private byte[] selfieCheckIn;
+
+    @Lob
+    private byte[] selfieCheckOut;
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;

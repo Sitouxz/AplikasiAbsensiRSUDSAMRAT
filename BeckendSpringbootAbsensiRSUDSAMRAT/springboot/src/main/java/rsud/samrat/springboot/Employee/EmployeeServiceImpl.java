@@ -53,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeModel savedEmployee = employeeRepository.save(employee);
 
         // Create user credentials in the Express backend
-        String registerEndpoint = "http://localhost:3001/api/auth/register";
+        String registerEndpoint = "http://rsudsamrat.site:3001/api/auth/register";
         UserRegistrationResponseDTO registrationResponse = restTemplate.postForObject(registerEndpoint, createEmployeeRequestDTO, UserRegistrationResponseDTO.class);
 
         // Extract the response data

@@ -19,9 +19,9 @@ const PageExampleClient = () => {
   }, []); // Menggunakan array dependensi kosong untuk menjalankan useEffect hanya saat mount
 
   return (
-    <div className="w-96 mx-auto my-8 p-4 bg-white rounded shadow">
-      <h2 className="text-lg font-semibold mb-4">Formulir Chat</h2>
-      <div className="mb-4">
+    <div className='p-4 mx-auto my-8 bg-white rounded shadow w-96'>
+      <h2 className='mb-4 text-lg font-semibold'>Formulir Chat</h2>
+      <div className='mb-4'>
         <ul>
           {messageReceived.map((msg, index) => (
             <li key={index}>

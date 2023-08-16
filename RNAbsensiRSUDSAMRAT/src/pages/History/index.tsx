@@ -6,12 +6,15 @@ import axios from 'axios';
 const History = ({navigation}: any) => {
     const screenWidht = Dimensions.get('window').width;
 
-    const status = 'Check-In Pagi (WFO)';
-    const location = 'RSUD DR SAM RATULANGI TONDANO, Kembuan, Tondano Utara, Minahasa, Sulawesi Utara';
-    const time = '08:15:40 1-08-2023';
+    const [status, setStatus] = useState('');
+    const [location, setLocation] = useState('');
+    const [time, setTime] = useState('');
+    const [date, setDate] = useState('')
     const [employeeId, setEmployeeId] = useState(2);
     const [data, setData] = useState([]);
     const [getMarkedDates, setGetMarkedDates] = useState();
+    const [selectedDateData, setSelectedDateData] = useState(null);
+
 
     const url = `http://rsudsamrat.site:9999/api/v1/dev/attendances/filter?employeeId=${employeeId}`;
 
@@ -41,14 +44,14 @@ const History = ({navigation}: any) => {
 
     const getColorForAttendanceState = (attendanceState) => {
         switch (attendanceState) {
-            case "ONTIME": // JANGAN LUPA GANTI
+            case "ONTIME":
                 return "#14F42B";
-            case "UNPRESENT": // JANGAN LUPA GANTI
+            case "ALPHA":
                 return "#F41414";
             case "LATE":
                 return "#F0F414";
             default:
-                return "#302DDF"; // JANGAN LUPA GANTI
+                return "#14F42B";
         }
     }
 
@@ -65,7 +68,25 @@ const History = ({navigation}: any) => {
             }}
             current={'2023-08-01'}
             onDayPress={day => {
-                console.log('selected day', day);
+                const selectedData = data.find(schedule => schedule.attendances?.some(attendance => attendance.scheduleDate === day.dateString));
+                if (selectedData) {
+                    setSelectedDateData(selectedData);
+                    const clockInTimeString = selectedData.attendances[0].clockIn;
+                    const formattedClockInTime = clockInTimeString.slice(11, 19);
+                    setTime(formattedClockInTime);
+                    setDate(selectedData.attendances[0].scheduleDate);
+                    setStatus('Check-In Pagi ('+selectedData.attendances[0].attendanceType+')');
+                    if(selectedData.attendances[0].location === null){
+                        setLocation('RSUD DR SAM RATULANGI TONDANO, Kembuan, Tondano Utara, Minahasa, Sulawesi Utara');
+                    } else {
+                        setLocation(selectedData.attendances[0].location);
+                    }
+                } else {
+                    setTime('');
+                    setDate('-');
+                    setStatus('Tidak ada riwayat pekerjaan pada '+day.dateString);
+                    setLocation('-');
+                }
             }}
             markedDates={getMarkedDates}
         />
@@ -89,7 +110,7 @@ const History = ({navigation}: any) => {
                         source={require('./../../assets/icons/IconTime.png')}
                         style={{width: 33, height: 33, marginRight: 2}}
                     />
-                    <Text style={styles.text}>{time}</Text>
+                    <Text style={styles.text}>{time} {date}</Text>
                 </View>
             </View>
         </View>
@@ -107,7 +128,7 @@ const styles = StyleSheet.create({
     status: {
         fontSize: 25,
         color: '#292F2F',
-        paddingLeft: 27
+        paddingHorizontal: 27
     },
     desc:{
         marginLeft: 15,
