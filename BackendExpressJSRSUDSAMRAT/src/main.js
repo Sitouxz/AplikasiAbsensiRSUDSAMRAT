@@ -53,8 +53,7 @@ app.use('/api', [], RouterApi);
       console.log(`user connected : ${socket.id}`);
       socket.on('message', ({ title, message }) => {
         console.log('message: ' + title + ' ' + message);
-        // io.emit('message', { title, message });
-        socket.broadcast.emit('recieve_msg', { title, message });
+        socket.broadcast.emit('recieve_message', { title, message });
       });
       socket.on('disconnect', () => {
         console.log(`user disconnected: ${socket.id}`);
