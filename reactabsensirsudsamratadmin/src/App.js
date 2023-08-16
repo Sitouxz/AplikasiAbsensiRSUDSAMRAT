@@ -16,6 +16,9 @@ import PageAkun from './pages/PageAkun/PageAkun';
 import PagePengumuman from './pages/PagePengumuman/PagePengumuman';
 import LoginPage from './pages/PageLogin/PageLogin';
 import PageShift from './pages/PageShift/PageShift';
+import PageEmployeeSchedule from './pages/PageShift/PageEmployeeSchedule';
+import PageExampleClient from './pages/PageExample/PageExample-Client';
+import PageExample from './pages/PageExample/PageExample';
 
 export default function App() {
   // make active link
@@ -27,13 +30,13 @@ export default function App() {
 
   return (
     <Router>
-      <div className='flex flex-col justify-start items-stretch h-full overflow-hidden'>
-        <div className='flex flex-row justify-start items-start h-full overflow-hidden relative'>
+      <div className='flex flex-col items-stretch justify-start h-full overflow-hidden'>
+        <div className='relative flex flex-row items-start justify-start h-full overflow-hidden'>
           {/* Left Side */}
           {activeLink === '/login' ? null : (
             <div className='flex flex-col justify-start items-stretch h-screen overflow-hidden p-6 w-[15%] shadow-xl fixed left-0'>
               <img src={logo} alt='logo' className='mb-5' />
-              <div className='flex flex-col flex-2 gap-3 text-slate-600'>
+              <div className='flex flex-col gap-3 flex-2 text-slate-600'>
                 <Link
                   to='/'
                   onClick={() => setActiveLink('/')}
@@ -101,9 +104,9 @@ export default function App() {
                 <img
                   src={headerBg}
                   alt='header-bg'
-                  className='absolute top-0 left-0 overflow-hidden w-full bg-cover h-full z-0'
+                  className='absolute top-0 left-0 z-0 w-full h-full overflow-hidden bg-cover'
                 />
-                <div className='z-10 text-white text-2xl'>
+                <div className='z-10 text-2xl text-white'>
                   <p>Hello, John</p>
                   <p>Selasa, 1 Agustus 2023</p>
                 </div>
@@ -116,7 +119,18 @@ export default function App() {
                 <Route exact path='/akun' element={<PageAkun />} />
                 <Route exact path='/pengumuman' element={<PagePengumuman />} />
                 <Route exact path='/shift' element={<PageShift />} />
+                <Route
+                  exact
+                  path='/shift/:scheduleId'
+                  element={<PageEmployeeSchedule />}
+                />
                 <Route exact path='/login' element={<LoginPage />} />
+                <Route exact path='/example' element={<PageExample />} />
+                <Route
+                  exact
+                  path='/example-client'
+                  element={<PageExampleClient />}
+                />
               </Routes>
             </div>
           </div>
