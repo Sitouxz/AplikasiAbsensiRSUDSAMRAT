@@ -10,8 +10,6 @@ const app = express();
 const server = http.createServer(app);
 const RouterApi = express.Router();
 const { Server } = require('socket.io');
-// const io = new Server(server);
-
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -19,6 +17,7 @@ const io = new Server(server, {
 });
 
 app.use(cors());
+
 app.disable('x-powered-by');
 app.use(express.urlencoded({ limit: '30000kb', extended: true }));
 app.use(express.json({ limit: '30000kb' }));
@@ -51,10 +50,18 @@ app.use('/api', [], RouterApi);
 
     io.on('connection', (socket) => {
       console.log(`user connected : ${socket.id}`);
-      socket.on('message', ({ title, message }) => {
-        console.log('message: ' + title + ' ' + message);
-        // io.emit('message', { title, message });
-        socket.broadcast.emit('recieve_msg', { title, message });
+      socket.on('message', (data) => {
+        console.log(
+          'message: ' +
+            data.title +
+            ' ' +
+            data.desc +
+            ' ' +
+            data.date +
+            ' ' +
+            data.time
+        );
+        socket.broadcast.emit('recieve_message', data);
       });
       socket.on('disconnect', () => {
         console.log(`user disconnected: ${socket.id}`);

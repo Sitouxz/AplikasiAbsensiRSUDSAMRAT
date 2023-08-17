@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import io from 'socket.io-client';
 
-const socket = io.connect('http://localhost:3001'); // Ganti PORT dengan port server Anda
+const socket = io.connect('http://localhost:3001');
 
-const PageExample = () => {
+export default function PagExample() {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
 
@@ -40,6 +40,4 @@ const PageExample = () => {
       </div>
     </div>
   );
-};
-
-export default PageExample;
+}
