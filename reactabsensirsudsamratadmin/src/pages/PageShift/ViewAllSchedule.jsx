@@ -21,6 +21,10 @@ export default function ViewAllSchedule() {
 
   const [schedule, setSchedule] = useState([]);
 
+  const filteredScheduleData = schedule.filter((sch) =>
+    sch.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const navigate = useNavigate();
 
   const handleOptionClick = (option) => {
@@ -89,10 +93,19 @@ export default function ViewAllSchedule() {
   useEffect(() => {
     // Fetch data from API
     api
-      .get("/api/v1/dev/employees")
+      .get("/api/v1/dev/schedule")
       .then((res) => {
-        setSchedule(res.data);
-        console.log(res.data);
+        const allEmployees = [];
+        const dataSchedule = res.data;
+        for (const sch of dataSchedule) {
+          const employees = sch.employees;
+
+          for (const emp of employees) {
+            allEmployees.push(emp);
+          }
+        }
+        setSchedule(allEmployees);
+        console.log(allEmployees);
       })
       .catch((err) => {
         console.log(err);
@@ -101,10 +114,21 @@ export default function ViewAllSchedule() {
 
   return (
     <div>
-      <button className="btn bg-transparent" onClick={() => navigate(`/shift`)}>
-        <HiChevronLeft />
-        Schedule
-      </button>
+      <div className="flex items-end justify-between">
+        <button
+          className="btn bg-transparent border-none"
+          onClick={() => navigate(`/shift`)}
+        >
+          <HiChevronLeft />
+          Schedule
+        </button>
+        <button
+          type="button"
+          className=" gap-2 px-14 py-3 font-semibold text-white rounded-md bg-primary-2"
+        >
+          Print PDF
+        </button>
+      </div>
 
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-end">
@@ -119,7 +143,7 @@ export default function ViewAllSchedule() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="w-fit">
+          <div className="">
             Tanggal:
             <div className="flex justify-center items-center gap-2">
               <input
@@ -143,6 +167,7 @@ export default function ViewAllSchedule() {
                   <HiChevronDown />
                 </button>
                 {/*dropdown*/}
+
                 <ul
                   className={`dropdown-content absolute z-10 ${
                     isOpen ? "block" : "hidden"
@@ -169,6 +194,7 @@ export default function ViewAllSchedule() {
                     Malam
                   </li>
                 </ul>
+
                 {/*dropdown*/}
               </div>
             </div>
@@ -179,7 +205,7 @@ export default function ViewAllSchedule() {
         <div className=" overflow-auto max-h-[60vh]">
           <DataTable
             columns={columns}
-            data={schedule}
+            data={filteredScheduleData}
             customStyles={customStyles}
             onRowClicked={(row) => navigate(`/shift/${row.scheduleId}`)}
           />
