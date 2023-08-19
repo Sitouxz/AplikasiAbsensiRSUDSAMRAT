@@ -4,7 +4,7 @@
 		"name": "Absensi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24571146",
-		"_collection_link": "https://www.postman.com/cloudy-resonance-787941/workspace/rssamrat/collection/24571146-467f07a5-d3b5-4efd-96cf-b383f5fee69e?action=share&creator=24571146&source=collection_link"
+		"_collection_link": "https://www.postman.com/cloudy-resonance-787941/workspace/rssamrat/collection/24571146-467f07a5-d3b5-4efd-96cf-b383f5fee69e?action=share&source=collection_link&creator=24571146"
 	},
 	"item": [
 		{
@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nik\" : \"Test\",\r\n    \"password\" : \"Test12345\"\r\n}",
+							"raw": "{\r\n    \"nik\" : \"Example\",\r\n    \"password\" : \"Example123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -61,6 +61,99 @@
 								"api",
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "Get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nik\" : \"Test\",\r\n    \"password\" : \"Test12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/notification",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nik\" : \"Test\",\r\n    \"password\" : \"Test12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/notification/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notification",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"Test\",\r\n    \"desc\" : \"Test12345\",\r\n    \"date\" : \"19-08-2023\",\r\n    \"time\" : \"10:10:10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/notification",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notification"
 							]
 						}
 					},
