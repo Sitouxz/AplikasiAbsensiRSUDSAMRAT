@@ -47,6 +47,17 @@ app.use('/api', [], RouterApi);
     });
 
     RouterApi.use('/auth', require('./routes/auth').RouterAdmin);
+    RouterApi.use(
+      '/notification',
+      require('./routes/notification').RouterNotification
+    );
+
+    // //Allow this code bellow if you want to use middleware verify token
+    // RouterApi.use(
+    //   '/notification',
+    //   MiddlewareVerifyToken,
+    //   require('./routes/notification').RouterNotification
+    // );
 
     io.on('connection', (socket) => {
       console.log(`user connected : ${socket.id}`);

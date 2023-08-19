@@ -1,9 +1,9 @@
 const { login } = require('./login');
 const { register } = require('./register');
 
-const CtrlrAuth = {
+const ControllerAuth = {
   login,
   register,
 };
 
-module.exports = CtrlrAuth;
+module.exports = ControllerAuth;
