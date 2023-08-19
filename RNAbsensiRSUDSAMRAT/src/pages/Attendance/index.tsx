@@ -1,5 +1,8 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import MapView, { PROVIDER_GOOGLE, Circle } from 'react-native-maps';
+import { request, PERMISSIONS } from 'react-native-permissions';
+import * as geolib from 'geolib';
 
 const Attendance = ({navigation}: any) => {
     const [date, setDate] = useState('Selasa, 1 Agustus 2023');
@@ -10,10 +13,37 @@ const Attendance = ({navigation}: any) => {
     const [viewBColor, setViewBColor] = useState('#ffffff');
     const [viewCColor, setViewCColor] = useState('#ffffff');
     const [attendanceType, setAttendanceType] = useState('');
+    const [userLocation, setUserLocation] = useState(null);
+    const [enabledAttendance, setEnabledAttendance] = useState(false);
+    const [mapRef, setMapRef] = useState(null);
+    const [centerCoordinate, setCenterCoordinate] = useState();
+
+    const circleRadius = 100;
 
     useEffect(() => {
-        // console.log('attendaceType:', attendanceType)
+        // setCenterCoordinate({ latitude: 1.3093163807571013, longitude: 124.91624948476151 });//RSUD SAMRAT
+        setCenterCoordinate({ latitude: 1.3022592741080485, longitude: 124.82832709583698 });//testing area
+        
+        const requestLocationPermission = async () => {
+            try {
+                const granted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+                if (granted === 'granted') {
+                    console.log('Location permission granted');
+                }
+            } catch (error) {
+            console.error('Error requesting location permission:', error);
+            }
+        };
+        requestLocationPermission();
     }, [])
+
+    useEffect(() => {
+        if (userLocation && geolib.isPointWithinRadius(userLocation, centerCoordinate, circleRadius)) {
+            // Jika lokasi pengguna berada dalam radius circle
+            setEnabledAttendance(true);
+            // console.log('Enabled for absent', enabledAttendance);
+        }
+    }, [userLocation]);
 
     const handleViewAClick = () => {
         setViewAColor('#01A7A3');
@@ -36,7 +66,26 @@ const Attendance = ({navigation}: any) => {
     };
 
     const handleClickCameraButton = () => {
-        navigation.push('OpenCamera', {attendanceType});
+        if(enabledAttendance && attendanceType){
+            navigation.push('OpenCamera', {attendanceType});
+        } else {
+            Alert.alert(
+                'ALERT!',
+                'Pastikan anda berada di dalam area yang di tentukan & telah memilih lokasi kerja.',
+                [
+                    {
+                        text: 'OK',
+                        style: 'default',
+                    },
+                ],
+            )
+        }
+    };
+
+    const handleFocusUserLocation = () => {
+        if (userLocation && mapRef) {
+            mapRef.animateCamera({ center: userLocation, zoom: 17 });
+        }
     };
 
     return (
@@ -58,8 +107,27 @@ const Attendance = ({navigation}: any) => {
                         </View>
                     </View>
                 </View>
-                <View style={{height: 480, width: '100%', borderColor: '#ECE7E4', borderBottomWidth: 50, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontSize: 70}}>MAPS MAPS</Text>
+                <View style={{height: 480, width: '100%', borderColor: '#ECE7E4', borderBottomWidth: 2}}>
+                <MapView
+                    ref={(ref) => setMapRef(ref)}
+                    style={{ width: '100%', height: 480 }}
+                    showsUserLocation={true}
+                    showsMyLocationButton={false}
+                    onUserLocationChange={(event) => {
+                        const { coordinate } = event.nativeEvent;
+                        setUserLocation(coordinate);
+                    }}>
+                    <Circle
+                        center={centerCoordinate}
+                        radius={circleRadius}
+                        strokeWidth={2}
+                        strokeColor={'rgba(255, 0, 0, 0.6)'}
+                        fillColor={'rgba(255, 0, 0, 0.2)'}
+                    />
+                </MapView>
+                <TouchableOpacity onPress={handleFocusUserLocation} style={styles.focusButton}>
+                    <Text style={{ color: '#fff', fontSize: 16 }}>Zoom</Text>
+                </TouchableOpacity>
                 </View>
                 <View style={styles.contentContainer}>
                     <View style={{width: 140, height: 3, backgroundColor: '#04837B', marginTop: 16, borderRadius: 10}}></View>
@@ -220,5 +288,14 @@ const styles = StyleSheet.create({
     camera:{
         width: 'auto',
         height: 30
-    }
+    },
+    focusButton: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        backgroundColor: '#333333',
+        padding: 10,
+        opacity: 0.8,
+        borderRadius: 20
+    },
 })
