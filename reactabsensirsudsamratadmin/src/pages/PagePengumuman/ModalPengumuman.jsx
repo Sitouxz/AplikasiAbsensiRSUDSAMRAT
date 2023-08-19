@@ -1,8 +1,9 @@
-import React, { useState, forwardRef, useEffect } from 'react';
+import React, { useState, forwardRef } from 'react';
 import Popup from 'reactjs-popup';
 import modalBg from '../../assets/modal-bg.png';
 import { HiOutlineX } from 'react-icons/hi';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 const socket = io.connect('http://localhost:3001');
 
@@ -10,6 +11,17 @@ const ModalPengumuman = forwardRef((props, ref) => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState(new Date());
+
+  const postToDb = async (data) => {
+    await axios
+      .post('http://localhost:3001/api/notification', data)
+      .then((res) => {
+        props.setRefresh((prev) => !prev);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const postNewPengumuman = () => {
     const data = {
@@ -24,7 +36,9 @@ const ModalPengumuman = forwardRef((props, ref) => {
       }),
     };
 
+    postToDb(data);
     socket.emit('message', data);
+    handleClose();
   };
 
   const handleDateChange = (date) => {
