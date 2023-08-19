@@ -10,31 +10,44 @@ import React, {useEffect, useState} from 'react';
 import {Ilustration1, Ilustration6} from '../../assets/images';
 import NotificationCard from '../../components/NotificationCard';
 import socketService from '../../config/socket/socket';
+import axios from 'axios';
 
-const Notification = ({navigation}: any) => {
+const Notification = () => {
   const [getNotification, setGetNotification] = useState([]);
   const [clickedNotifications, setClickedNotifications] = useState([]);
 
-  const notification = [
-    {
-      title: 'Announcement!',
-      desc: 'September 1-2 Libur Bersama',
-      date: 'Senin, 1 Agu 2023',
-      time: '12:15:40',
-    },
-    {
-      title: 'Announcement!',
-      desc: 'September 1-2 Libur Bersama',
-      date: 'Selasa, 2 Agu 2023',
-      time: '11:15:40',
-    },
-    {
-      title: 'Announcement!',
-      desc: 'September 1-2 Libur Bersama',
-      date: 'Rabu, 3 Agu 2023',
-      time: '09:15:40',
-    },
-  ];
+  const getNotif = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.1.8:3001/api/notification',
+      );
+      console.log(response.data.data);
+      setGetNotification(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const notification = [
+  //   {
+  //     title: 'Announcement!',
+  //     desc: 'September 1-2 Libur Bersama',
+  //     date: 'Senin, 1 Agu 2023',
+  //     time: '12:15:40',
+  //   },
+  //   {
+  //     title: 'Announcement!',
+  //     desc: 'September 1-2 Libur Bersama',
+  //     date: 'Selasa, 2 Agu 2023',
+  //     time: '11:15:40',
+  //   },
+  //   {
+  //     title: 'Announcement!',
+  //     desc: 'September 1-2 Libur Bersama',
+  //     date: 'Rabu, 3 Agu 2023',
+  //     time: '09:15:40',
+  //   },
+  // ];
 
   const handleNotificationClick = index => {
     if (clickedNotifications.includes(index)) {
@@ -43,6 +56,10 @@ const Notification = ({navigation}: any) => {
       setClickedNotifications([...clickedNotifications, index]);
     }
   };
+
+  useEffect(() => {
+    getNotif();
+  }, []);
 
   useEffect(() => {
     socketService.initializeSocket();
@@ -56,6 +73,10 @@ const Notification = ({navigation}: any) => {
     socketService.on('recieve_message', data => {
       setGetNotification(prevMessage => [...prevMessage, data]);
     });
+
+    return () => {
+      socketService.removeListener('recieve_message');
+    };
   }, []);
 
   return (

@@ -158,6 +158,34 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nik\" : \"Test\",\r\n    \"password\" : \"Test12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/notification/64e027cd644d3cd392a40703",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notification",
+								"64e027cd644d3cd392a40703"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
