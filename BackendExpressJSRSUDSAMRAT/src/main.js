@@ -4,27 +4,23 @@ const ModuleDatabase = require('./modules/database');
 const path = require('path');
 const Config = require('./config/config');
 const MiddlewareVerifyToken = require('./middleware/verify-token');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
 const RouterApi = express.Router();
 const { Server } = require('socket.io');
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  },
+});
+
+app.use(cors());
 
 app.disable('x-powered-by');
 app.use(express.urlencoded({ limit: '30000kb', extended: true }));
 app.use(express.json({ limit: '30000kb' }));
-
-io.on('connection', (socket) => {
-  console.log('user connected');
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-  socket.on('message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('message', msg);
-  });
-});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './views/index.html'));
@@ -51,6 +47,37 @@ app.use('/api', [], RouterApi);
     });
 
     RouterApi.use('/auth', require('./routes/auth').RouterAdmin);
+    RouterApi.use(
+      '/notification',
+      require('./routes/notification').RouterNotification
+    );
+
+    // //Allow this code bellow if you want to use middleware verify token
+    // RouterApi.use(
+    //   '/notification',
+    //   MiddlewareVerifyToken,
+    //   require('./routes/notification').RouterNotification
+    // );
+
+    io.on('connection', (socket) => {
+      console.log(`user connected : ${socket.id}`);
+      socket.on('message', (data) => {
+        console.log(
+          'message: ' +
+            data.title +
+            ' ' +
+            data.desc +
+            ' ' +
+            data.date +
+            ' ' +
+            data.time
+        );
+        socket.broadcast.emit('recieve_message', data);
+      });
+      socket.on('disconnect', () => {
+        console.log(`user disconnected: ${socket.id}`);
+      });
+    });
 
     server.listen(Config.HTTP_PORT, () => {
       console.log(`[server_ok] Server berjalan di port ${Config.HTTP_PORT}`);

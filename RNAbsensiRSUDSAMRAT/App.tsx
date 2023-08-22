@@ -42,7 +42,7 @@ const App = () => {
       ))} */}
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <Stack.Screen
+          <Stack.Screen
             name='SplashScreen'
             component={SplashScreen}
             options={{headerShown: false}}
@@ -51,7 +51,7 @@ const App = () => {
             name='Login'
             component={Login}
             options={{headerShown: false}}
-          /> */}
+          />
           <Stack.Screen
             name='Tabs'
             component={Tabs}
