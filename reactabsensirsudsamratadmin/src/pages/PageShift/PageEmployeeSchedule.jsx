@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HiSearch, HiOutlineTrash, HiOutlinePlus } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
-import api from '../../config/axios';
+import {api} from '../../config/axios';
 import { useParams } from 'react-router-dom';
 
 export default function PageEmployeeSchedule() {

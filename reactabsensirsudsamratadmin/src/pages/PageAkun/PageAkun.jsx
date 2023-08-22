@@ -7,7 +7,7 @@ import {
 } from 'react-icons/hi';
 import ModalAkun from './ModalAkun';
 import DataTable from 'react-data-table-component';
-import api from '../../config/axios';
+import { api } from '../../config/axios';
 
 export default function PageAkun() {
   const [modalAkunType, setModalAkunType] = useState(''); // ['create', 'edit']

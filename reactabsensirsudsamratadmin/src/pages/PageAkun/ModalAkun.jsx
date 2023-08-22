@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import modalBg from "../../assets/modal-bg.png";
 import profilePicture from "../../assets/profile-picture.png";
 import { HiUpload, HiEye, HiEyeOff, HiOutlineX } from "react-icons/hi";
-import api from "../../config/axios";
+import { api } from "../../config/axios";
 
 const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
   const [akunData, setAkunData] = useState(null);

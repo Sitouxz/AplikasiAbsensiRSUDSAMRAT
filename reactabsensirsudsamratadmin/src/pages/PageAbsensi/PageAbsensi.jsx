@@ -2,7 +2,7 @@ import React from 'react';
 import { HiSearch, HiOutlineEye } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
-import api from '../../config/axios';
+import { api } from '../../config/axios';
 
 export default function PageAbsensi() {
   const [searchTerm, setSearchTerm] = useState('');
