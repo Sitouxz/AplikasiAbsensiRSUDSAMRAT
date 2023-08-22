@@ -5,17 +5,20 @@ import { useState, useEffect } from 'react';
 import api from '../../config/axios';
 
 export default function PageAbsensi() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [absences, setAbsences] = useState([]);
+  const [filteredAbsences, setFilteredAbsences] = useState([]);
 
-  const filteredData = absences.filter((data) => {
-    const nameLower = data.name.toLowerCase();
-    const searchTermLower = searchTerm.toLowerCase();
-
-    // Menggunakan ekspresi reguler untuk pencocokan yang lebih akurat
-    const searchRegex = new RegExp(searchTermLower, 'g');
-    return nameLower.match(searchRegex);
-  });
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    const newData = absences.filter((item) => {
+      const itemData = `${item.name.toUpperCase()} ${item.category.toUpperCase()}`;
+      const textData = value.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    setFilteredAbsences(newData);
+  };
 
   const columns = [
     {
@@ -71,9 +74,6 @@ export default function PageAbsensi() {
       }
     }
   };
-
-  console.log(filteredData);
-  console.log(searchTerm);
 
   useEffect(() => {
     const fetchAbsences = async () => {
@@ -154,6 +154,32 @@ export default function PageAbsensi() {
     fetchAbsences();
   }, []);
 
+  useEffect(() => {
+    if (startDate === null || endDate === null) {
+      return;
+    }
+
+    const startDateFormatted = startDate.split('-').join('-');
+    const endDateFormatted = endDate.split('-').join('-');
+
+    if (startDate > endDate) {
+      alert('Tanggal awal tidak boleh lebih besar dari tanggal akhir');
+      return;
+    }
+
+    setFilteredAbsences(
+      absences.filter((schedule) => {
+        if (
+          schedule.scheduleDate >= startDateFormatted &&
+          schedule.scheduleDate <= endDateFormatted
+        ) {
+          return schedule;
+        }
+        return null;
+      })
+    );
+  }, [startDate, endDate, absences]);
+
   return (
     <div>
       <h1 className='text-xl font-medium'>Absensi</h1>
@@ -168,6 +194,7 @@ export default function PageAbsensi() {
                   type='date'
                   defaultValue={new Date().toISOString().slice(0, 10)}
                   className='input input-bordered'
+                  onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
             </div>
@@ -180,6 +207,7 @@ export default function PageAbsensi() {
                   type='date'
                   defaultValue={new Date().toISOString().slice(0, 10)}
                   className='input input-bordered'
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
             </div>
@@ -197,15 +225,14 @@ export default function PageAbsensi() {
             type='text'
             placeholder='Cari...'
             className='w-full pl-10 input input-bordered'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
           />
         </div>
         <p className='text-xs text-slate-500'>{absences.length} Absen</p>
         <div>
           <DataTable
             columns={columns}
-            data={filteredData}
+            data={filteredAbsences}
             customStyles={customStyles}
           />
         </div>
