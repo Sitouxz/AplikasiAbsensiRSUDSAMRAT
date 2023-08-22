@@ -1,25 +1,29 @@
 import React, { useState, useRef, useEffect } from "react";
-import { HiSearch, HiOutlineTrash, HiChevronDown } from "react-icons/hi";
+import {
+  HiSearch,
+  HiChevronDown,
+  HiDownload,
+  HiOutlinePencil,
+  HiChevronLeft,
+} from "react-icons/hi";
 import DataTable from "react-data-table-component";
-import ModalShift from "./ModalShift";
-<<<<<<< HEAD
-import {api} from "../../config/axios";
-=======
+// import api from '../../config/axios';
+
 import api from "../../config/axios";
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 import { useNavigate } from "react-router-dom";
 
-export default function PageShift() {
+export default function ViewAllSchedule() {
   const [reloadApi, setReloadApi] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   // const [absences, setAbsences] = useState([]);
   const [scheduleTime, setscheduleTime] = useState("Shift");
   const [isOpen, setIsOpen] = useState(false);
-  const modalShiftRef = useRef(null);
-  const modalLocRef = useRef(null);
+
   const [schedule, setSchedule] = useState([]);
-  const [modalType, setModalType] = useState("location");
-  const dummyString = "null";
+
+  const filteredScheduleData = schedule.filter((sch) =>
+    sch.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const navigate = useNavigate();
 
@@ -31,39 +35,23 @@ export default function PageShift() {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.scheduleId,
+      name: "Nama",
+      selector: (row) => row.name,
     },
     {
-      name: "Date",
-      selector: (row) => row.scheduleDate,
+      name: "Password",
+      selector: (row) => row.password,
     },
     {
-      name: "Shift",
-      cell: (row) => {
-        const startTime = row.shift.start_time;
-        let shiftLabel = "";
-
-        if (startTime === "08:00:00") {
-          shiftLabel = "Pagi";
-        } else if (startTime === "14:00:00") {
-          shiftLabel = "Siang";
-        } else if (startTime === "16:00:00") {
-          shiftLabel = "Malam";
-        }
-
-        return <span>{shiftLabel}</span>;
-      },
+      name: "NIK",
+      selector: (row) => row.nik,
     },
     {
-      name: "Time",
-      cell: (row) => `${row.shift.start_time} - ${row.shift.end_time}`,
-    },
-    {
-      name: "Location",
-      cell: (row) => row.location ?? dummyString,
+      name: "Bidang/Jabatan",
+      selector: (row) => row.role,
     },
     {
       name: "Action",
@@ -71,17 +59,22 @@ export default function PageShift() {
         <div>
           <button
             type="button"
-            className="text-white bg-red-600 btn btn-sm hover:bg-red-700"
-            onClick={() => handleDelete(row.id)}
+            className="mr-2 text-white btn btn-sm bg-primary-2 hover:bg-primary-3"
           >
-            <HiOutlineTrash />
+            <HiDownload />
+          </button>
+          <button
+            type="button"
+            className=" mr-2 btn btn-sm text-white bg-primary-2 hover:bg-primary-3"
+          >
+            <HiOutlinePencil />
           </button>
         </div>
       ),
     },
   ];
 
-  const handleShowId = (id) => {
+  const handleEdit = (id) => {
     console.log(`Edit button clicked for row with id: ${id}`);
   };
 
@@ -96,13 +89,23 @@ export default function PageShift() {
       },
     },
   };
+
   useEffect(() => {
     // Fetch data from API
     api
       .get("/api/v1/dev/schedule")
       .then((res) => {
-        setSchedule(res.data);
-        console.log(res.data);
+        const allEmployees = [];
+        const dataSchedule = res.data;
+        for (const sch of dataSchedule) {
+          const employees = sch.employees;
+
+          for (const emp of employees) {
+            allEmployees.push(emp);
+          }
+        }
+        setSchedule(allEmployees);
+        console.log(allEmployees);
       })
       .catch((err) => {
         console.log(err);
@@ -111,20 +114,36 @@ export default function PageShift() {
 
   return (
     <div>
-      <ModalShift
-        ref={modalShiftRef}
-        onClose={() => {
-          setReloadApi(!reloadApi);
-          // setSelectedAkun(null);
-          console.log("Modal closed");
-        }}
-        schedule={schedule}
-        type={modalType}
-      />
-      <h1 className="text-xl font-medium">Schedule</h1>
+      <div className="flex items-end justify-between">
+        <button
+          className="btn bg-transparent border-none"
+          onClick={() => navigate(`/shift`)}
+        >
+          <HiChevronLeft />
+          Schedule
+        </button>
+        <button
+          type="button"
+          className=" gap-2 px-14 py-3 font-semibold text-white rounded-md bg-primary-2"
+        >
+          Print PDF
+        </button>
+      </div>
+
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-end">
-          <div className="w-fit">
+          {/* Search Bar */}
+          <div className="flex items-center relative w-full mr-4">
+            <HiSearch className="absolute left-4" />
+            <input
+              type="text"
+              placeholder="Cari..."
+              className="w-full pl-10 input input-bordered"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="">
             Tanggal:
             <div className="flex justify-center items-center gap-2">
               <input
@@ -132,7 +151,7 @@ export default function PageShift() {
                 defaultValue={new Date().toISOString().slice(0, 10)}
                 className="input input-bordered"
               />
-              <p>Sampai</p>
+              <p>-</p>
               <input
                 type="date"
                 defaultValue={new Date().toISOString().slice(0, 10)}
@@ -175,60 +194,18 @@ export default function PageShift() {
                     Malam
                   </li>
                 </ul>
+
                 {/*dropdown*/}
               </div>
             </div>
           </div>
-          <details className="dropdown dropdown-bottom dropdown-end relative">
-            <summary className=" btn bg-primary-2 py-3 rounded-md font-semibold text-white">
-              Buat sif
-              <HiChevronDown className="inline-block ml-2" />
-            </summary>
-            <ul className="dropdown-content z-10 menu p-2 gap-2 shadow-xl bg-white rounded-md absolute border w-full">
-              <li>
-                <button
-                  onClick={() => {
-                    modalShiftRef.current.open();
-                    setModalType("schedule");
-                  }}
-                >
-                  Buat jadwal
-                </button>
-              </li>
-              <li>
-                <button onClick={() => navigate(`/shift/allschedule/`)}>
-                  View All Employee Schedule
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => {
-                    modalShiftRef.current.open();
-                    setModalType("location");
-                  }}
-                >
-                  Buat Lokasi
-                </button>
-              </li>
-            </ul>
-          </details>
         </div>
-        {/* Search Bar */}
-        <div className="flex items-center relative w-full">
-          <HiSearch className="absolute left-4" />
-          <input
-            type="text"
-            placeholder="Cari..."
-            className="w-full pl-10 input input-bordered"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+
         <p className="text-xs text-slate-500">{schedule.length} sif</p>
         <div className=" overflow-auto max-h-[60vh]">
           <DataTable
             columns={columns}
-            data={schedule}
+            data={filteredScheduleData}
             customStyles={customStyles}
             onRowClicked={(row) => navigate(`/shift/${row.scheduleId}`)}
           />

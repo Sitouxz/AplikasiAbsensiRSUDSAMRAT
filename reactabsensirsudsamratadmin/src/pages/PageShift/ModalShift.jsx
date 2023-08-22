@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-const ModalShift = forwardRef((schedule, ref) => {
+const ModalShift = forwardRef((props, ref) => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [dateSchedule, setDateSchedule] = useState("");
@@ -161,157 +161,163 @@ const ModalShift = forwardRef((schedule, ref) => {
       ref={ref}
       modal
       onClose={closeModal}
-      contentStyle={{ borderRadius: "12px", padding: "0", width: "70rem" }}
+      contentStyle={{ borderRadius: "12px", padding: "0", width: "28rem" }}
     >
       {(close) => (
         <div className="relative p-6 overflow-hidden">
-          <div className="flex mb-8 items-center justify-between">
-            {/* create location*/}
-            <div className="flex gap-4 mb-2 mt-4 items-center justify-between flex-col">
-              <h1>Create Location</h1>
-              <MapContainer
-                center={[1.3089757786697331, 124.91652488708498]}
-                zoom={17}
-                style={{ height: "20rem", width: "30rem" }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {markerPosition && <Marker position={markerPosition} />}
-                <LocationMarker />
-              </MapContainer>
-              <input
-                type="text"
-                name="name"
-                placeholder="Location Name"
-                className="w-full input input-bordered"
-                onChange={handleHospitalInput}
-              />
-              <button
-                onClick={() => {
-                  postLocationData();
-                }}
-                className="text-white btn bg-primary-2 hover:bg-primary-3 w-full"
-              >
-                Create Location
-              </button>
-            </div>
-            {/* create schedule*/}
-            <div className="flex gap-4 mb-2 mt-4 items-center flex-col">
-              <h1>Create Schedule</h1>
-              <div className="relative inline-block text-left w-96">
+          <div className="flex mb-8 items-center justify-center">
+            <button
+              className="absolute block cursor-pointer top-1 right-1"
+              onClick={close}
+            >
+              <HiOutlineX className="text-2xl text-gray-500" />
+            </button>
+            {props.type === "location" ? (
+              <div className="flex gap-4 mb-2 mt-4 items-center justify-between flex-col">
+                <h1>Create Location</h1>
+                <MapContainer
+                  center={[1.3089757786697331, 124.91652488708498]}
+                  zoom={17}
+                  style={{ height: "20rem", width: "25rem" }}
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  {markerPosition && <Marker position={markerPosition} />}
+                  <LocationMarker />
+                </MapContainer>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Location Name"
+                  className="w-full input input-bordered"
+                  onChange={handleHospitalInput}
+                />
                 <button
-                  type="button"
-                  className="dropdown-button btn h-12 justify-between w-full px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
-                  onClick={toggleLocDropdown}
+                  onClick={() => {
+                    postLocationData();
+                  }}
+                  className="text-white btn bg-primary-2 hover:bg-primary-3 w-full"
                 >
-                  {locId}
-                  <HiChevronDown />
+                  Create Location
                 </button>
-                <ul
-                  className={` overflow-auto max-h-[10rem] dropdown-list absolute z-10 ${
-                    isOpenLocation ? "block" : "hidden"
-                  } w-32 py-1 mt-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
-                    isOpenLocation
-                      ? "opacity-100 scale-y-100"
-                      : "opacity-0 scale-y-95"
-                  }`}
-                >
-                  {options.map((option) => (
-                    <li
-                      key={option.locationId}
-                      className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
-                      onClick={() => handleLocClick(option.locationId)}
+              </div>
+            ) : (
+              <div>
+                {/* create schedule*/}
+                <div className="flex gap-4 mb-2 mt-4 items-center flex-col">
+                  <h1>Create Schedule</h1>
+                  <div className="relative inline-block text-left w-96">
+                    <button
+                      type="button"
+                      className="dropdown-button btn h-12 justify-between w-full px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
+                      onClick={toggleLocDropdown}
                     >
-                      {option.locationId}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="relative inline-block text-left w-96">
-                <button
-                  type="button"
-                  className="dropdown-button btn h-12 justify-between w-full px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
-                  onClick={toggleDropdown}
-                >
-                  {scheduleTime}
-                  <HiChevronDown />
-                </button>
-                <ul
-                  className={`dropdown-list absolute z-10 ${
-                    isOpen ? "block" : "hidden"
-                  } w-32 py-1 mt-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
-                    isOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95"
-                  }`}
-                >
-                  <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
-                    onClick={() => handleOptionClick("Pagi")}
+                      {locId}
+                      <HiChevronDown />
+                    </button>
+                    <ul
+                      className={` overflow-auto max-h-[10rem] dropdown-list absolute z-10 ${
+                        isOpenLocation ? "block" : "hidden"
+                      } w-32 py-1 mt-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
+                        isOpenLocation
+                          ? "opacity-100 scale-y-100"
+                          : "opacity-0 scale-y-95"
+                      }`}
+                    >
+                      {options.map((option) => (
+                        <li
+                          key={option.locationId}
+                          className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                          onClick={() => handleLocClick(option.locationId)}
+                        >
+                          {option.locationId}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="relative inline-block text-left w-96">
+                    <button
+                      type="button"
+                      className="dropdown-button btn h-12 justify-between w-full px-4 py-2 text-sm font-medium text-gray-400 bg-white border border-primary-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-2"
+                      onClick={toggleDropdown}
+                    >
+                      {scheduleTime}
+                      <HiChevronDown />
+                    </button>
+                    <ul
+                      className={`dropdown-list absolute z-10 ${
+                        isOpen ? "block" : "hidden"
+                      } w-32 py-1 mt-2 bg-white border border-gray-300 rounded-md shadow-lg transition ease-in-out duration-200 transform ${
+                        isOpen
+                          ? "opacity-100 scale-y-100"
+                          : "opacity-0 scale-y-95"
+                      }`}
+                    >
+                      <li
+                        className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                        onClick={() => handleOptionClick("Pagi")}
+                      >
+                        Pagi
+                      </li>
+                      <li
+                        className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                        onClick={() => handleOptionClick("Siang")}
+                      >
+                        Siang
+                      </li>
+                      <li
+                        className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
+                        onClick={() => handleOptionClick("Malam")}
+                      >
+                        Malam
+                      </li>
+                    </ul>
+                  </div>
+                  <input
+                    type="date"
+                    onChange={handleDateChangeSchedule}
+                    className="w-full text-gray-400 input input-bordered"
+                  />
+                  {/* create schedule data range*/}
+                  <div className="flex w-96 flex-col items-center gap-2 mb-8">
+                    <h1 className=" self-start">Tanggal</h1>
+                    <button
+                      className="absolute block cursor-pointer top-1 right-1"
+                      onClick={close}
+                    >
+                      <HiOutlineX className="text-2xl text-gray-500" />
+                    </button>
+                    <input
+                      type="date"
+                      onChange={handleDateChangeFrom}
+                      className="w-full text-gray-400 input input-bordered"
+                    />
+                    <HiArrowDown />
+                    <button
+                      className="absolute block cursor-pointer top-1 right-1"
+                      onClick={close}
+                    >
+                      <HiOutlineX className="text-2xl text-gray-500" />
+                    </button>
+                    <input
+                      type="date"
+                      onChange={handleDateChangeTo}
+                      className="w-full text-gray-400 input input-bordered"
+                    />
+                  </div>
+                  <button
+                    onClick={() => {
+                      postScheduleData();
+                      console.log(props.schedule);
+                      console.log(scheduleTime);
+                      console.log(dateFrom + dateTo);
+                    }}
+                    className="text-white btn bg-primary-2 hover:bg-primary-3 w-96"
                   >
-                    Pagi
-                  </li>
-                  <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
-                    onClick={() => handleOptionClick("Siang")}
-                  >
-                    Siang
-                  </li>
-                  <li
-                    className="block px-4 py-2 text-sm text-gray-400 cursor-pointer hover:bg-primary-2 hover:text-white"
-                    onClick={() => handleOptionClick("Malam")}
-                  >
-                    Malam
-                  </li>
-                </ul>
+                    Create Schedule
+                  </button>
+                </div>
               </div>
-              <button
-                className="absolute block cursor-pointer top-1 right-1"
-                onClick={close}
-              >
-                <HiOutlineX className="text-2xl text-gray-500" />
-              </button>
-              <input
-                type="date"
-                onChange={handleDateChangeSchedule}
-                className="w-full text-gray-400 input input-bordered"
-              />
-              {/* create schedule data range*/}
-              <div className="flex w-96 flex-col items-center gap-2 mb-8">
-                <h1 className=" self-start">Tanggal</h1>
-                <button
-                  className="absolute block cursor-pointer top-1 right-1"
-                  onClick={close}
-                >
-                  <HiOutlineX className="text-2xl text-gray-500" />
-                </button>
-                <input
-                  type="date"
-                  onChange={handleDateChangeFrom}
-                  className="w-full text-gray-400 input input-bordered"
-                />
-                <HiArrowDown />
-                <button
-                  className="absolute block cursor-pointer top-1 right-1"
-                  onClick={close}
-                >
-                  <HiOutlineX className="text-2xl text-gray-500" />
-                </button>
-                <input
-                  type="date"
-                  onChange={handleDateChangeTo}
-                  className="w-full text-gray-400 input input-bordered"
-                />
-              </div>
-              <button
-                onClick={() => {
-                  postScheduleData();
-                  console.log(schedule);
-                  console.log(scheduleTime);
-                  console.log(dateFrom + dateTo);
-                }}
-                className="text-white btn bg-primary-2 hover:bg-primary-3 w-96"
-              >
-                Create Schedule
-              </button>
-            </div>
+            )}
           </div>
         </div>
       )}

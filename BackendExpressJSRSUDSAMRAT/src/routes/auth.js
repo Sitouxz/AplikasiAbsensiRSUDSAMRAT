@@ -1,10 +1,10 @@
 const express = require('express');
-const CtrlAdmin = require('../controllers/auth/index');
+const ControllerAdmin = require('../controllers/auth/index');
 const MiddlewareVerifyToken = require('../middleware/verify-token');
 
 const RouterAdmin = express.Router();
 
-RouterAdmin.post('/login', CtrlAdmin.login);
-RouterAdmin.post('/register', CtrlAdmin.register);
+RouterAdmin.post('/login', ControllerAdmin.login);
+RouterAdmin.post('/register', ControllerAdmin.register);
 
 exports.RouterAdmin = RouterAdmin;
