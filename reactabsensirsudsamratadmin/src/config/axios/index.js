@@ -2,8 +2,6 @@
 
 import axios from "axios";
 import Cookies from "js-cookie";
-import store from "../authState/store";
-import { logout } from "../authState/authSlice";
 
 export const api = axios.create({
   baseURL: "http://rsudsamrat.site:9999",
@@ -14,11 +12,11 @@ export const api = axios.create({
 });
 
 export const apiLogin = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "http://rsudsamrat.site:3001",
 });
 
 export const apiCheckToken = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: "http://rsudsamrat.site:3001/api",
   headers: {
     Authorization: `Bearer ${Cookies.get("access_token")}`,
   },

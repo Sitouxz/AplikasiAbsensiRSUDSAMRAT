@@ -1,11 +1,10 @@
 import React from "react";
 import { Route, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 function PrivateRoute({ element, path }) {
-  const accessToken = Cookies.get("access_token");
-
-  return accessToken ? element : <Navigate to="/login" />;
+  const tokenExpired = useSelector((state) => state.auth.tokenExpired);
+  return tokenExpired ? element : <Navigate to="/login" />;
 }
 
 export default PrivateRoute;

@@ -2,9 +2,8 @@ import Logo from '../../assets/LOGORS2.png';
 import bg from '../../assets/abstract_wavy_line_geometric1.png';
 import { apiLogin } from '../../config/axios';
 import React, {useState} from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../../config/authState/authSlice';
-import Cookies from 'js-cookie';
 
 export default function LoginPage() {
   const [nikUser, SetNikUser] = useState("")
@@ -27,37 +26,11 @@ export default function LoginPage() {
       })
       dispatch(loginSuccess({accessToken: response.data.data.access_token}))
       console.log(response.data.message);
-      window.location.href = "/"
+      window.location.href = "/";
     } catch(error) {
       console.log(error);
     }
   }
-
-  // const checkCookies = async () => {
-  //   const accessToken = Cookies.get("access_token");
-  //   if (accessToken) {
-  //     if (accessToken) {
-  //       try {
-  //         const response = await apiLogin.get('/api/ping', {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`
-  //           }
-  //         });
-  
-  //         // Process the response as needed
-  //         console.log("API Response:", response.data);
-  //       } catch (error) {
-  //         console.error("API Error:", error);
-  //       }
-  //     } else {
-  //       console.log("Access token not found in cookies");
-  //     }
-  //     console.log("Access Token:", accessToken);
-  //   } else {
-  //     console.log("Access Token not found in cookies.");
-  //   }
-  // };
-
 
   return (
     <div className="flex bg-white">

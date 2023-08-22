@@ -27,16 +27,22 @@ import PageExampleClient from "./pages/PageExample/PageExample-Client";
 import PageExample from "./pages/PageExample/PageExample";
 import PrivateRoute from "./config/PrivateRoute";
 import Cookies from "js-cookie";
-import { apiCheckToken } from "./config/axios";
+import { useSelector } from "react-redux";
 
 export default function App() {
   // make active link
   const [activeLink, setActiveLink] = React.useState("");
   const accessToken = Cookies.get("access_token");
+  const tokenExpired = useSelector((state) => state.auth.tokenExpired);
 
   React.useEffect(() => {
     setActiveLink(window.location.pathname);
   }, [activeLink]);
+
+  const logOut = () => {
+    Cookies.remove("access_token");
+    window.location.href = "/login";
+  };
 
   return (
     <Router>
@@ -97,17 +103,16 @@ export default function App() {
                   <HiOutlineDocumentAdd />
                   Buat sif THL
                 </Link>
-                {!accessToken && (
-                  <Link
-                    to="/login"
-                    onClick={() => setActiveLink("/login")}
+                {accessToken && (
+                  <button
+                    onClick={logOut}
                     className={`flex items-center gap-3 text-lg ${
                       activeLink === "/login" ? "text-primary-2" : ""
                     }`}
                   >
                     <HiUser />
-                    Login
-                  </Link>
+                    LogOut
+                  </button>
                 )}
               </div>
             </div>
@@ -133,10 +138,10 @@ export default function App() {
             )}
             <div>
               <Routes>
-                {!accessToken ? (
-                  <Route path="/login" element={<LoginPage />} />
-                ) : (
+                {tokenExpired && (
                   <>
+                    <Route path="/login" element={<LoginPage />} />
+
                     <Route
                       path="/"
                       element={<PrivateRoute element={<PageDashboard />} />}
@@ -163,7 +168,7 @@ export default function App() {
                         <PrivateRoute element={<PageEmployeeSchedule />} />
                       }
                     />
-                    <Route path="/login" element={<LoginPage />} />
+
                     <Route
                       path="/example"
                       element={<PrivateRoute element={<PageExample />} />}
