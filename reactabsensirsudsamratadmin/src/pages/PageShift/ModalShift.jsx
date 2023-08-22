@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useEffect } from "react";
 import Popup from "reactjs-popup";
 import { HiOutlineX } from "react-icons/hi";
 import { HiArrowDown, HiChevronDown } from "react-icons/hi";
-import api from "../../config/axios";
+import { api } from "../../config/axios";
 import { MapContainer, TileLayer, useMapEvents, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
