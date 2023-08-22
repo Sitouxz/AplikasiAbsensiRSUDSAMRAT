@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
@@ -7,10 +6,6 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-=======
-import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 import PageDashboard from "./pages/PageDashboard/PageDashboard";
 import PageAbsensi from "./pages/PageAbsensi/PageAbsensi";
 import logo from "./assets/admin-logo.png";
@@ -30,21 +25,15 @@ import PageShift from "./pages/PageShift/PageShift";
 import PageEmployeeSchedule from "./pages/PageShift/PageEmployeeSchedule";
 import PageExampleClient from "./pages/PageExample/PageExample-Client";
 import PageExample from "./pages/PageExample/PageExample";
-<<<<<<< HEAD
 import PrivateRoute from "./config/PrivateRoute";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-=======
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 
 export default function App() {
   // make active link
   const [activeLink, setActiveLink] = React.useState("");
-<<<<<<< HEAD
   const accessToken = Cookies.get("access_token");
   const tokenExpired = useSelector((state) => state.auth.tokenExpired);
-=======
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 
   React.useEffect(() => {
     setActiveLink(window.location.pathname);
@@ -114,7 +103,6 @@ export default function App() {
                   <HiOutlineDocumentAdd />
                   Buat sif THL
                 </Link>
-<<<<<<< HEAD
                 {accessToken && (
                   <button
                     onClick={logOut}
@@ -126,18 +114,6 @@ export default function App() {
                     LogOut
                   </button>
                 )}
-=======
-                <Link
-                  to="/login"
-                  onClick={() => setActiveLink("/login")}
-                  className={`flex items-center gap-3 text-lg ${
-                    activeLink === "/login" ? "text-primary-2" : ""
-                  }`}
-                >
-                  <HiUser />
-                  Login
-                </Link>
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
               </div>
             </div>
           )}
@@ -160,7 +136,6 @@ export default function App() {
                 </div>
               </div>
             )}
-<<<<<<< HEAD
             <div>
               <Routes>
                 {tokenExpired && (
@@ -204,32 +179,6 @@ export default function App() {
                     />
                   </>
                 )}
-=======
-            <div className={`${activeLink === "/login" ? "" : "p-3"}`}>
-              <Routes>
-                <Route exact path="/" element={<PageDashboard />} />
-                <Route exact path="/absensi" element={<PageAbsensi />} />
-                <Route exact path="/akun" element={<PageAkun />} />
-                <Route exact path="/pengumuman" element={<PagePengumuman />} />
-                <Route exact path="/shift" element={<PageShift />} />
-                <Route
-                  exact
-                  path="/shift/allschedule"
-                  element={<ViewAllSchedule />}
-                />
-                <Route
-                  exact
-                  path="/shift/:scheduleId"
-                  element={<PageEmployeeSchedule />}
-                />
-                <Route exact path="/login" element={<LoginPage />} />
-                <Route exact path="/example" element={<PageExample />} />
-                <Route
-                  exact
-                  path="/example-client"
-                  element={<PageExampleClient />}
-                />
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
               </Routes>
             </div>
           </div>

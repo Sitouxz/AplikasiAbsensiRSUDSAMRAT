@@ -2,11 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { HiSearch, HiOutlineTrash, HiChevronDown } from "react-icons/hi";
 import DataTable from "react-data-table-component";
 import ModalShift from "./ModalShift";
-<<<<<<< HEAD
 import {api} from "../../config/axios";
-=======
-import api from "../../config/axios";
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 import { useNavigate } from "react-router-dom";
 
 export default function PageShift() {

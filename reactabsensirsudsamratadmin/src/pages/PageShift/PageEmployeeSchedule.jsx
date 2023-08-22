@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HiSearch, HiOutlineTrash, HiOutlinePlus } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
-<<<<<<< HEAD
 import {api} from '../../config/axios';
-import { useParams } from 'react-router-dom';
-=======
-import api from '../../config/axios';
->>>>>>> 553285405220d045b122c8c48cf6e4be8e5a9b85
 
 export default function PageEmployeeSchedule() {
   const [searchTerm, setSearchTerm] = useState('');
