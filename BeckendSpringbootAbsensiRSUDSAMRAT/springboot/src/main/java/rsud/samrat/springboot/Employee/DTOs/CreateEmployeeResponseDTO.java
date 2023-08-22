@@ -11,6 +11,9 @@ import rsud.samrat.springboot.Placement.DTOs.PlacementCreateResponseDTO;
 public class CreateEmployeeResponseDTO {
     private Long employeeId;
     private String name;
+    private String nik;
     private String role;
+    private String password;
     private PlacementCreateResponseDTO placement;
+
 }

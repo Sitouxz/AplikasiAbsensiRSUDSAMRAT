@@ -10,19 +10,21 @@ import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import rsud.samrat.springboot.Attendance.AttendanceModel;
 import rsud.samrat.springboot.Employee.EmployeeModel;
+import rsud.samrat.springboot.Locations.LocationModel;
 import rsud.samrat.springboot.Shift.ShiftModel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "schedule")
-
 public class ScheduleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +36,7 @@ public class ScheduleModel {
             joinColumns = @JoinColumn(name = "schedule_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
-    @JsonBackReference // Prevents infinite recursion during JSON serialization
+    @JsonBackReference
     private List<EmployeeModel> employees;
 
     @ManyToOne
@@ -43,11 +45,14 @@ public class ScheduleModel {
 
     private LocalDate schedule_date;
 
-    @OneToMany(mappedBy = "schedule")
-    @JsonIgnoreProperties("schedule") // Ignore the 'schedule' property in AttendanceModel during serialization
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("schedule")
     private List<AttendanceModel> attendances = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "schedule", fetch = FetchType.EAGER)
+    private LocationModel location;
 
 }
+
 
 
