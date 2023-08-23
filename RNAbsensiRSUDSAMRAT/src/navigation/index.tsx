@@ -7,12 +7,33 @@ import {
     Notification, 
     Profile 
 } from '../pages';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 
 function Tabs() {
     const [countUnreadNotif, setCountUnreadNotif] = useState(5)
+    const [accesToken, setAccessToken] = useState('');
+
+    const getToken = async () => {
+        try {
+            const token = await AsyncStorage.getItem('access_token');
+            if (token !== null) {
+                setAccessToken(token);
+            } else {
+                console.log('Token tidak ditemukan.');
+            }
+        } catch (error) {
+            console.log('Gagal mengambil token:', error);
+        }
+    };
+    
+    useEffect(() => {
+        getToken();
+    }, [])
+    
+    // console.log('Token ditemukan:', accesToken);
     return (
         <Tab.Navigator
             screenOptions={{

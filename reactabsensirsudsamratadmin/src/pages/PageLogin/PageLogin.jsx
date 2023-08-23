@@ -1,8 +1,37 @@
 import Logo from '../../assets/LOGORS2.png';
 import bg from '../../assets/abstract_wavy_line_geometric1.png';
-import React from 'react';
+import { apiLogin } from '../../config/axios';
+import React, {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../../config/authState/authSlice';
 
 export default function LoginPage() {
+  const [nikUser, SetNikUser] = useState("")
+  const [password, setPassowrd] = useState("");
+  const dispatch = useDispatch();
+
+  const handleChangeUserNik = (e) => {
+    SetNikUser(e.target.value);
+  }
+
+  const handleChangePassword = (e) => {
+    setPassowrd(e.target.value);
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const response = await apiLogin.post('/api/auth/login', {
+        nik: nikUser,
+        password: password
+      })
+      dispatch(loginSuccess({accessToken: response.data.data.access_token}))
+      console.log(response.data.message);
+      window.location.href = "/";
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="flex bg-white">
       <div className="flex justify-center items-center w-4/6 h-screen ">
@@ -26,13 +55,16 @@ export default function LoginPage() {
           <div className="hero-overlay"></div>
           <div className="hero-content min-w-full text-center text-neutral-content ">
             <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-white">
-              <div className="card-body">
+            
+            <div className="card-body">
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text text-black">NIK</span>
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    value={nikUser}
+                    onChange={handleChangeUserNik}
                     className="input bg-transparent rounded-none focus:outline-none input-ghost border-b-black border-l-white border-r-white border-t-white"
                   />
                 </div>
@@ -42,27 +74,28 @@ export default function LoginPage() {
                   </label>
                   <input
                     type="password"
+                    value={password}
+                    onChange={handleChangePassword}
                     className="input focus:outline-none rounded-none border-b-black border-l-white border-r-white border-t-white  bg-transparent"
                   />
-                  <button
-                    type="button"
-                    class="absolute top-1/2 transform -translate-y-1/2 right-2"
-                    onclick="togglePasswordVisibility()"
-                  >
-                    <i class="fas fa-eye" id="togglePasswordIcon"></i>
-                  </button>
+
                 </div>
                 <div className="form-control mt-6">
                   <button
                     className="btn bg-[#01A7A3] border-none text-white"
-                    onClick={() => {
-                      window.location.href = '/';
-                    }}
+                    onClick={handleSubmit}
+                    // onClick={() => {
+                    //   window.location.href = '/';
+                    // }}
                   >
                     Log in
                   </button>
+                  {/* <button className='btn btn-primary' onClick={checkCookies}>
+                    Check Cookies
+                  </button> */}
                 </div>
-              </div>
+              </div> 
+                  
             </div>
           </div>
         </div>
