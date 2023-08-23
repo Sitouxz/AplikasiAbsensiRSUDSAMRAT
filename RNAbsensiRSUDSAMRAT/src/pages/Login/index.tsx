@@ -16,7 +16,7 @@ const Login = ({navigation}: any) => {
     const imageWidth = screenWidth * 1;
     const imageHeight = imageWidth * (2 / 1);
     
-    const url = 'http://192.168.142.208:3001/api/auth/login'; //local
+    const url = 'http://rsudsamrat.site:3001/api/auth/login';
     const data = {
         "nik": nik,
         "password": password

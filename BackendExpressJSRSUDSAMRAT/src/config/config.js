@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 class Config {
-  static DATABASE_URL = `${process.env.DATABASE_URL}`;
+  static DATABASE_URL = `mongodb://localhost:27017/Absensi`;
   static HOSTNAME = `${process.env.HOSTNAME}`;
   static HTTP_PORT = `${process.env.HTTP_PORT || 9595}`;
 
