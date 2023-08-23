@@ -1,5 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import PageDashboard from "./pages/PageDashboard/PageDashboard";
 import PageAbsensi from "./pages/PageAbsensi/PageAbsensi";
 import logo from "./assets/admin-logo.png";
@@ -19,14 +25,24 @@ import PageShift from "./pages/PageShift/PageShift";
 import PageEmployeeSchedule from "./pages/PageShift/PageEmployeeSchedule";
 import PageExampleClient from "./pages/PageExample/PageExample-Client";
 import PageExample from "./pages/PageExample/PageExample";
+import PrivateRoute from "./config/PrivateRoute";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 export default function App() {
   // make active link
   const [activeLink, setActiveLink] = React.useState("");
+  const accessToken = Cookies.get("access_token");
+  const tokenExpired = useSelector((state) => state.auth.tokenExpired);
 
   React.useEffect(() => {
     setActiveLink(window.location.pathname);
   }, [activeLink]);
+
+  const logOut = () => {
+    Cookies.remove("access_token");
+    window.location.href = "/login";
+  };
 
   return (
     <Router>
@@ -87,16 +103,17 @@ export default function App() {
                   <HiOutlineDocumentAdd />
                   Buat sif THL
                 </Link>
-                <Link
-                  to="/login"
-                  onClick={() => setActiveLink("/login")}
-                  className={`flex items-center gap-3 text-lg ${
-                    activeLink === "/login" ? "text-primary-2" : ""
-                  }`}
-                >
-                  <HiUser />
-                  Login
-                </Link>
+                {accessToken && (
+                  <button
+                    onClick={logOut}
+                    className={`flex items-center gap-3 text-lg ${
+                      activeLink === "/login" ? "text-primary-2" : ""
+                    }`}
+                  >
+                    <HiUser />
+                    LogOut
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -119,30 +136,49 @@ export default function App() {
                 </div>
               </div>
             )}
-            <div className={`${activeLink === "/login" ? "" : "p-3"}`}>
+            <div>
               <Routes>
-                <Route exact path="/" element={<PageDashboard />} />
-                <Route exact path="/absensi" element={<PageAbsensi />} />
-                <Route exact path="/akun" element={<PageAkun />} />
-                <Route exact path="/pengumuman" element={<PagePengumuman />} />
-                <Route exact path="/shift" element={<PageShift />} />
-                <Route
-                  exact
-                  path="/shift/allschedule"
-                  element={<ViewAllSchedule />}
-                />
-                <Route
-                  exact
-                  path="/shift/:scheduleId"
-                  element={<PageEmployeeSchedule />}
-                />
-                <Route exact path="/login" element={<LoginPage />} />
-                <Route exact path="/example" element={<PageExample />} />
-                <Route
-                  exact
-                  path="/example-client"
-                  element={<PageExampleClient />}
-                />
+                {tokenExpired && (
+                  <>
+                    <Route path="/login" element={<LoginPage />} />
+
+                    <Route
+                      path="/"
+                      element={<PrivateRoute element={<PageDashboard />} />}
+                    />
+                    <Route
+                      path="/absensi"
+                      element={<PrivateRoute element={<PageAbsensi />} />}
+                    />
+                    <Route
+                      path="/akun"
+                      element={<PrivateRoute element={<PageAkun />} />}
+                    />
+                    <Route
+                      path="/pengumuman"
+                      element={<PrivateRoute element={<PagePengumuman />} />}
+                    />
+                    <Route
+                      path="/shift"
+                      element={<PrivateRoute element={<PageShift />} />}
+                    />
+                    <Route
+                      path="/shift/:scheduleId"
+                      element={
+                        <PrivateRoute element={<PageEmployeeSchedule />} />
+                      }
+                    />
+
+                    <Route
+                      path="/example"
+                      element={<PrivateRoute element={<PageExample />} />}
+                    />
+                    <Route
+                      path="/example-client"
+                      element={<PrivateRoute element={<PageExampleClient />} />}
+                    />
+                  </>
+                )}
               </Routes>
             </div>
           </div>
