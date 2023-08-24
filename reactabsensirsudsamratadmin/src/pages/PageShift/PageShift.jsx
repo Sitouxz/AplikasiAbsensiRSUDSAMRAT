@@ -274,6 +274,7 @@ export default function PageShift() {
           <DataTable
             columns={columns}
             data={filteredSchedule}
+            highlightOnHover
             customStyles={customStyles}
             onRowClicked={(row) => navigate(`/shift/${row.scheduleId}`)}
           />
