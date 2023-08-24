@@ -1,4 +1,1 @@
-<svg width="33" height="40" viewBox="0 0 33 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M27.1252 34.0785C26.4985 31.9521 25.1175 30.0732 23.1964 28.7331C21.2753 27.393 18.9215 26.6667 16.5 26.6667C14.0785 26.6667 11.7247 27.393 9.80363 28.7331C7.88254 30.0732 6.50154 31.9521 5.87482 34.0785" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-<ellipse cx="16.5" cy="13.3333" rx="5.5" ry="6.66667" stroke="white" stroke-opacity="0.5" stroke-width="2" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="33" height="40" fill="none" viewBox="0 0 33 40"><path stroke="#fff" stroke-linecap="round" stroke-opacity=".5" stroke-width="2" d="M27.1252 34.0785C26.4985 31.9521 25.1175 30.0732 23.1964 28.7331C21.2753 27.393 18.9215 26.6667 16.5 26.6667C14.0785 26.6667 11.7247 27.393 9.80363 28.7331C7.88254 30.0732 6.50154 31.9521 5.87482 34.0785"/><ellipse cx="16.5" cy="13.333" stroke="#fff" stroke-linecap="round" stroke-opacity=".5" stroke-width="2" rx="5.5" ry="6.667"/></svg>
