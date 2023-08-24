@@ -136,7 +136,7 @@ export default function App() {
                 </div>
               </div>
             )}
-            <div>
+            <div className='p-3'>
               <Routes>
                 {tokenExpired && (
                   <>
