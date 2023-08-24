@@ -15,13 +15,25 @@ const Home = () => {
             const getUserData = () => {
                 console.log(nik)
                 axios.get(`http://rsudsamrat.site:9999/api/v1/dev/employees/nik/${nik}`)
-                .then(function(response){
+                .then(function (response){
                     setName(response.data.name);
+                    const getEmployeeId = response.data.employeeId;
+                    const conEmployeeId = getEmployeeId.toString();
+                    setEmployeeId(conEmployeeId);
                 })
             }
             getUserData();
         } catch (error) {
             console.log('Gagal mengambil nik: ', error)
+        }
+    }
+
+    const setEmployeeId = async (employeeId) => {
+        try {
+            await AsyncStorage.setItem('employeeId', employeeId);
+            console.log('berhasil menyimpan employee id :', employeeId);
+        } catch (error) {
+            console.log('error:', error);
         }
     }
 

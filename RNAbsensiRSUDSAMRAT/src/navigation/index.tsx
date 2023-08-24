@@ -19,7 +19,6 @@ function Tabs({navigation}) {
     const [nik, setNik] = useState('');
 
     const getTokenNik = async () => {
-        console.log('klik tabs')
         try {
             const token = await AsyncStorage.getItem('access_token');
             const nik = await AsyncStorage.getItem('nik');
