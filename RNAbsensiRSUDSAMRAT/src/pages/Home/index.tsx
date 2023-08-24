@@ -1,12 +1,25 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Ilustration1, ProfilePicture } from '../../assets/images'
 import AttendanceCard from '../../components/AttendanceCard';
 import AnnouncementCard from '../../components/AnnouncementCard';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
 
     const [name, setName] = useState('Leonardo Polandos, S.Kom');
+
+    const getUserData = () => {
+        axios.get(`http://rsudsamrat.site:9999/api/v1/dev/employees/nik/6695`)
+        .then(function(response){
+            setName(response.data.name);
+        })
+    }
+
+    useEffect(() => {
+        getUserData();
+    }, [])
 
     return (
         <SafeAreaView style={styles.page}>
