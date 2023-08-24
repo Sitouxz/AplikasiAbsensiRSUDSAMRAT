@@ -7,7 +7,7 @@ import {
 } from 'react-icons/hi';
 import ModalAkun from './ModalAkun';
 import DataTable from 'react-data-table-component';
-import api from '../../config/axios';
+import { api } from '../../config/axios';
 
 export default function PageAkun() {
   const [modalAkunType, setModalAkunType] = useState(''); // ['create', 'edit']
@@ -57,7 +57,7 @@ export default function PageAkun() {
           <button
             type="button"
             className="text-white bg-red-600 btn btn-sm hover:bg-red-700"
-            onClick={() => handleDelete(row.id)}
+            onClick={() => handleDelete(row.employeeId)}
           >
             <HiOutlineTrash />
           </button>
@@ -88,6 +88,7 @@ export default function PageAkun() {
   };
 
   const handleDelete = (id) => {
+    // api.delete(`http://rsudsamrat.site:9999/api/v1/dev/employees/${id}`)
     console.log(`Delete button clicked for row with id: ${id}`);
   };
 
@@ -114,7 +115,7 @@ export default function PageAkun() {
                 setModalAkunType('create');
                 modalAkun.current.open();
               }}
-              className="flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-primary-2"
+              className="btn btn-primary flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-primary-2"
             >
               <HiOutlinePlusSm />
               Buat Akun
