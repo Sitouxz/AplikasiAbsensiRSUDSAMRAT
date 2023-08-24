@@ -7,18 +7,26 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
+    const [name, setName] = useState('');
 
-    const [name, setName] = useState('Leonardo Polandos, S.Kom');
-
-    const getUserData = () => {
-        axios.get(`http://rsudsamrat.site:9999/api/v1/dev/employees/nik/6695`)
-        .then(function(response){
-            setName(response.data.name);
-        })
+    const getNik = async () => {
+        try {
+            const nik = await AsyncStorage.getItem('nik');
+            const getUserData = () => {
+                console.log(nik)
+                axios.get(`http://rsudsamrat.site:9999/api/v1/dev/employees/nik/${nik}`)
+                .then(function(response){
+                    setName(response.data.name);
+                })
+            }
+            getUserData();
+        } catch (error) {
+            console.log('Gagal mengambil nik: ', error)
+        }
     }
 
     useEffect(() => {
-        getUserData();
+        getNik();
     }, [])
 
     return (
