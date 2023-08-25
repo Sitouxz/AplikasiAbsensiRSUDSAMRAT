@@ -1,13 +1,63 @@
-import React, { useState, forwardRef, useEffect } from "react";
+import React, { useState, forwardRef, useEffect, useRef } from "react";
 import Popup from "reactjs-popup";
 import modalBg from "../../assets/modal-bg.png";
 import profilePicture from "../../assets/profile-picture.png";
 import { HiUpload, HiEye, HiEyeOff, HiOutlineX } from "react-icons/hi";
 import { api } from "../../config/axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
-  const [akunData, setAkunData] = useState(null);
+  const [akunData, setAkunData] = useState(data);
   const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [nik, setNik] = useState("");
+  const [jabatan, setJabatan] = useState(data?.role);
+  const [name, setName] = useState(data?.name);
+
+  const allFieldsFilled = () => {
+    return jabatan && name;
+  };
+
+  const editSuccess = () =>
+    toast("Akun berhasil di edit", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+      progressStyle: { background: "green" },
+    });
+
+  const createSuccess = () =>
+    toast("Akun berhasil dibuat", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+      progressStyle: { background: "green" },
+    });
+
+  const editFailed = () =>
+    toast("Eror, Akun tidak berhasil di edit", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+      progressStyle: { background: "red" },
+    });
+
+  const createFailed = () =>
+    toast("Eror, Akun tidak berhasil dibuat", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: "light",
+      progressStyle: { background: "red" },
+    });
 
   const handlePasswordLogo = () => {
     setShowPassword(!showPassword);
@@ -15,19 +65,41 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
 
   useEffect(() => {
     if (type === "edit") {
+      setName(data?.name);
+      setJabatan(data?.role);
       setAkunData(data);
     }
   }, [data, type]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAkunData({ ...akunData, [name]: value });
+  const handleCloseModal = () => {
+    setJabatan("");
+    setName("");
+    onClose();
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleNikChange = (e) => {
+    setNik(e.target.value);
+  };
+  const handleJabatanChange = (e) => {
+    setJabatan(e.target.value);
+    console.log(jabatan);
+  };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
 
   const postAkunData = () => {
     const data = {
-      name: akunData?.name,
-      role: akunData?.role,
+      name: name,
+      role: jabatan,
+      placementId: akunData?.placement_id ?? 1,
+    };
+    const dataEdit = {
+      name: name,
+      role: jabatan,
       placementId: akunData?.placement?.placement_id ?? 1,
     };
     if (type === "create") {
@@ -35,18 +107,22 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
         .post("/api/v1/dev/employees", data)
         .then((res) => {
           console.log(res);
+          createSuccess();
         })
         .catch((err) => {
           console.log(err);
+          createFailed();
         });
     } else if (type === "edit") {
       api
-        .put(`/api/v1/dev/employees/${akunData?.employeeId}`, data)
+        .put(`/api/v1/dev/employees/${akunData.employeeId}`, dataEdit)
         .then((res) => {
           console.log(res);
+          editSuccess();
         })
         .catch((err) => {
           console.log(err);
+          editFailed();
         });
     }
   };
@@ -55,7 +131,7 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
     <Popup
       ref={ref}
       modal
-      onClose={onClose}
+      onClose={handleCloseModal}
       contentStyle={{ borderRadius: "12px", padding: "0" }}
     >
       {(close) => (
@@ -68,7 +144,7 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
           />
           <button
             className="absolute block cursor-pointer top-1 right-1"
-            onClick={close}
+            onClick={handleCloseModal}
           >
             <HiOutlineX className="text-2xl text-gray-500" />
           </button>
@@ -83,8 +159,8 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
                   name="name"
                   placeholder="Username"
                   className="w-full input input-bordered"
-                  defaultValue={akunData?.name}
-                  onChange={handleInputChange}
+                  defaultValue={name}
+                  onChange={handleNameChange}
                 />
                 <input
                   type="number"
@@ -92,15 +168,15 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
                   placeholder="NIK"
                   className="w-full input input-bordered"
                   defaultValue={akunData?.nik}
-                  // onChange={handleInputChange}
+                  onChange={handleNikChange}
                 />
                 <input
                   type="text"
                   name="role"
                   placeholder="Bidang / Jabatan"
                   className="w-full input input-bordered"
-                  defaultValue={akunData?.role}
-                  onChange={handleInputChange}
+                  defaultValue={jabatan}
+                  onChange={handleJabatanChange}
                 />
                 <div className="relative flex flex-col gap-5">
                   <input
@@ -109,7 +185,7 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
                     placeholder="Password"
                     className="w-full input input-bordered"
                     defaultValue={akunData?.password}
-                    // onChange={handleInputChange}
+                    onChange={handlePasswordChange}
                   />
                   <button
                     onClick={handlePasswordLogo}
@@ -139,6 +215,7 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
                 postAkunData();
                 onClose();
               }}
+              disabled={!allFieldsFilled()}
               className="text-white btn bg-primary-2 hover:bg-primary-3"
             >
               {type === "create" ? "Buat" : "Edit"}
