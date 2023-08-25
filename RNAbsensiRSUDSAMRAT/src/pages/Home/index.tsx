@@ -47,7 +47,7 @@ const Home = () => {
                 <Image source={Ilustration1} style={styles.ilustration}/>
                 <View style={styles.header}>
                     <View style={styles.profilePicture}>
-                        <Image source={ProfilePicture}/>
+                        <Image source={ProfilePicture} style={{width: 86, height: 86, borderRadius: 43}} />
                     </View>
                     <View>
                         <Text style={styles.greeting}>Holla,</Text>
@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     ilustration:{
-        position: 'absolute'
+        position: 'absolute',
+
     },
     header:{
         marginTop: 50,
@@ -96,10 +97,6 @@ const styles = StyleSheet.create({
     profilePicture:{
         width: 86,
         height: 86,
-        borderRadius: 45,
-        borderWidth: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
         marginRight: 14,
         marginBottom: 11,
     },
