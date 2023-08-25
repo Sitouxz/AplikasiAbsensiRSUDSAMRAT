@@ -41,20 +41,7 @@ export default function PageShift() {
     },
     {
       name: 'Shift',
-      cell: (row) => {
-        const startTime = row.shift.start_time;
-        let shiftLabel = '';
-
-        if (startTime === '08:00:00') {
-          shiftLabel = 'Pagi';
-        } else if (startTime === '14:00:00') {
-          shiftLabel = 'Siang';
-        } else if (startTime === '16:00:00') {
-          shiftLabel = 'Malam';
-        }
-
-        return <span>{shiftLabel}</span>;
-      }
+      cell: (row) => row.shift.name
     },
     {
       name: 'Time',
@@ -287,6 +274,7 @@ export default function PageShift() {
           <DataTable
             columns={columns}
             data={filteredSchedule}
+            highlightOnHover
             customStyles={customStyles}
             onRowClicked={(row) => navigate(`/shift/${row.scheduleId}`)}
           />
