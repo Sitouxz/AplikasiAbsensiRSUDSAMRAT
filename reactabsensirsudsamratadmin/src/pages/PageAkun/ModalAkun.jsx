@@ -132,16 +132,21 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
       ref={ref}
       modal
       onClose={handleCloseModal}
-      contentStyle={{ borderRadius: "12px", padding: "0" }}
+      contentStyle={{
+        borderRadius: "12px",
+        padding: "0",
+        minHeight: "35rem",
+        width: "25rem",
+      }}
     >
       {(close) => (
-        <div className="relative p-6 overflow-hidden h-[500px]">
-          <img
+        <div className="p-6 overflow-hidden">
+          {/* <img
             src={modalBg}
             alt="modal-background"
             className="absolute bottom-0 -translate-x-1/2 -z-10 left-1/2"
             width="70%"
-          />
+          /> */}
           <button
             className="absolute block cursor-pointer top-1 right-1"
             onClick={handleCloseModal}
@@ -152,74 +157,92 @@ const ModalAkun = forwardRef(({ data, type, onClose }, ref) => {
             {type === "create" ? "Buat Akun" : "Edit Akun"}
           </h3>
           <div className="flex gap-2 mb-2">
-            <div className="flex justify-between flex-1">
-              <div className="grid flex-1 w-full gap-5">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Username"
-                  className="w-full input input-bordered"
-                  defaultValue={name}
-                  onChange={handleNameChange}
-                />
-                <input
-                  type="number"
-                  name="nik"
-                  placeholder="NIK"
-                  className="w-full input input-bordered"
-                  defaultValue={akunData?.nik}
-                  onChange={handleNikChange}
-                />
-                <input
-                  type="text"
-                  name="role"
-                  placeholder="Bidang / Jabatan"
-                  className="w-full input input-bordered"
-                  defaultValue={jabatan}
-                  onChange={handleJabatanChange}
-                />
-                <div className="relative flex flex-col gap-5">
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="w-full input input-bordered"
-                    defaultValue={akunData?.password}
-                    onChange={handlePasswordChange}
+            <div className="flex flex-col justify-between flex-1">
+              <div className="flex flex-col items-center justify-center flex-1 gap-3">
+                <div className="relative">
+                  <img
+                    src={profilePicture}
+                    className="w-24 h-24 rounded-full"
+                    alt="Profile"
                   />
                   <button
-                    onClick={handlePasswordLogo}
-                    className="absolute -translate-y-1/2 right-4 top-1/2"
+                    type="button"
+                    className="absolute p-1 text-2xl text-white rounded-full bg-primary-2 bottom-1 right-1"
                   >
-                    {showPassword ? <HiEyeOff /> : <HiEye />}
+                    <HiUpload />
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center flex-1 gap-3">
-                <img src={profilePicture} className="w-52 h-52" alt="Profile" />
-                <button
-                  type="button"
-                  className="p-2 text-2xl text-white rounded-full bg-primary-2"
-                >
-                  <HiUpload />
-                </button>
+              <div className="grid flex-1 w-full gap-2">
+                <div className="flex flex-col justify-start gap-1">
+                  <h3>Nama</h3>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Username"
+                    className="w-full input input-bordered"
+                    defaultValue={name}
+                    onChange={handleNameChange}
+                  />
+                </div>
+                <div className="flex flex-col justify-start gap-1">
+                  <h3>NIK</h3>
+                  <input
+                    type="number"
+                    name="nik"
+                    placeholder="NIK"
+                    className="w-full input input-bordered"
+                    defaultValue={akunData?.nik}
+                    onChange={handleNikChange}
+                  />
+                </div>
+                <div className="flex flex-col justify-start gap-1">
+                  <h3>Bidang/Jabatan</h3>
+                  <input
+                    type="text"
+                    name="role"
+                    placeholder="Bidang / Jabatan"
+                    className="w-full input input-bordered"
+                    defaultValue={jabatan}
+                    onChange={handleJabatanChange}
+                  />
+                </div>
+                <div className="flex flex-col justify-start gap-1">
+                  <h3>Password</h3>
+                  <div className="relative flex flex-col gap-5">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      className="w-full input input-bordered"
+                      defaultValue={akunData?.password}
+                      onChange={handlePasswordChange}
+                    />
+                    <button
+                      onClick={handlePasswordLogo}
+                      className="absolute -translate-y-1/2 right-4 top-1/2"
+                    >
+                      {showPassword ? <HiEyeOff /> : <HiEye />}
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <button
+                    onClick={() => {
+                      if (type === "create") {
+                        setAkunData({ ...akunData, placementId: 1 });
+                      }
+                      postAkunData();
+                      onClose();
+                    }}
+                    disabled={!allFieldsFilled()}
+                    className="text-white btn bg-primary-2 hover:bg-primary-3 w-full"
+                  >
+                    {type === "create" ? "Buat" : "Edit"}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="absolute bottom-6 right-6">
-            <button
-              onClick={() => {
-                if (type === "create") {
-                  setAkunData({ ...akunData, placementId: 1 });
-                }
-                postAkunData();
-                onClose();
-              }}
-              disabled={!allFieldsFilled()}
-              className="text-white btn bg-primary-2 hover:bg-primary-3"
-            >
-              {type === "create" ? "Buat" : "Edit"}
-            </button>
           </div>
         </div>
       )}
