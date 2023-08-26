@@ -1,11 +1,18 @@
 import { apiCheckToken, apiLogin } from '../../config/axios';
 import Cookies from 'js-cookie';
 import React from 'react';
-import { HiSearch, HiOutlineEye } from 'react-icons/hi';
+import { HiOutlineEye } from 'react-icons/hi';
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { expiredToken } from '../../config/authState/authSlice';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 
 export default function PageDashboard() {
   const [absences, setAbsences] = useState([]);
@@ -67,13 +74,14 @@ export default function PageDashboard() {
     },
     headCells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for head cells
+        paddingLeft: '24px', // override the cell padding for head cells
         paddingRight: '8px',
+        fontWeight: 'bold',
       },
     },
     cells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for data cells
+        paddingLeft: '24px', // override the cell padding for data cells
         paddingRight: '8px',
       },
     },
@@ -122,66 +130,72 @@ export default function PageDashboard() {
       category: '61',
       presence: 'green',
     },
+  ];
+
+  const exampleNotification = [
     {
-      name: 'Herrod Chandler',
-      time: 'Sales Assistant',
-      shift: 'San Francisco',
-      category: '59',
-      presence: 'yellow',
+      name: 'Tiger Nixon',
+      text: 'Hello, how are you ?',
+      time: '26/08/2023',
     },
     {
-      name: 'Rhona Davidson',
-      time: 'Integration Specialist',
-      shift: 'Tokyo',
-      category: '55',
-      presence: 'blue',
+      name: 'Garrett Winters',
+      text: 'Hello, Buddy',
+      time: '26/08/2023',
     },
     {
-      name: 'Colleen Hurst',
-      time: 'Javascript Developer',
-      shift: 'San Francisco',
-      category: '39',
-      presence: 'red',
+      name: 'Ashton Cox',
+      text: 'Hello, how are you guys',
+      time: '26/08/2023',
     },
     {
-      name: 'Sonya Frost',
-      time: 'Software Engineer',
-      shift: 'Edinburgh',
-      category: '23',
-      presence: 'green',
-    },
-    {
-      name: 'Jena Gaines',
-      time: 'Office Manager',
-      shift: 'London',
-      category: '30',
-      presence: 'yellow',
-    },
-    {
-      name: 'Quinn Flynn',
-      time: 'Support Lead',
-      shift: 'Edinburgh',
-      category: '22',
-      presence: 'blue',
-    },
-    {
-      name: 'Charde Marshall',
-      time: 'Regional Director',
-      shift: 'San Francisco',
-      category: '36',
-      presence: 'red',
+      name: 'Cedric Kelly',
+      text: 'Submitt your report now',
+      time: '26/08/2023',
     },
   ];
 
-  const handleSearch = (e) => {
-    const { value } = e.target;
-    const newData = absences.filter((item) => {
-      const itemData = `${item.name.toUpperCase()} ${item.category.toUpperCase()}`;
-      const textData = value.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    setFilteredAbsences(newData);
+  const dataEmployee = {
+    totalEmployee: 321,
+    totalTHL: 143,
+    registeredTHL: 130,
   };
+
+  const labelChart = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  const dataChart = [
+    {
+      Pegawai: 4000,
+      Jumlah_total: 2400,
+    },
+    {
+      Pegawai: 3000,
+      Jumlah_total: 1398,
+    },
+    {
+      Pegawai: 2000,
+      Jumlah_total: 9800,
+    },
+    {
+      Pegawai: 2780,
+      Jumlah_total: 3908,
+    },
+    {
+      Pegawai: 1890,
+      Jumlah_total: 4800,
+    },
+    {
+      Pegawai: 2390,
+      Jumlah_total: 3800,
+    },
+  ];
+
+  const formattedData = dataChart.map((item, index) => {
+    return {
+      ...item,
+      name: labelChart[index],
+    };
+  });
 
   useEffect(() => {
     setAbsences(exampleData);
@@ -192,25 +206,47 @@ export default function PageDashboard() {
   console.log(absences);
 
   return (
-    <div className="flex flex-col">
-      {/* <p>Page Dashboard</p> */}
-      <div className="flex flex-1 flex-row">
-        <div className="flex-1"> Grafik </div>
-        <div>
-          <div className="flex-1">Pemberitahuan</div>
+    <div className="flex flex-col mt-5">
+      <div className="flex flex-1 flex-row gap-8">
+        <div className="flex flex-col gap-4" style={{ flexBasis: '70%' }}>
+          <div className="flex text-xl font-bold">Dasbor</div>
+          <div className="bg-white rounded-xl shadow-lg">
+            <GraphicLine data={formattedData} />
+          </div>
+        </div>
+        <div
+          className="flex flex-row gap-8 items-end"
+          style={{ flexBasis: '30%' }}
+        >
+          <div
+            className="flex flex-col gap-4 items-end"
+            style={{ flexBasis: '10%' }}
+          >
+            {dataEmployee && (
+              <EmployeeCard
+                totalEmployee={dataEmployee.totalEmployee}
+                totalTHL={dataEmployee.totalTHL}
+                registeredTHL={dataEmployee.registeredTHL}
+              />
+            )}
+          </div>
+          <div className="flex flex-col gap-4" style={{ flexBasis: '20%' }}>
+            <div className="flex text-xl font-bold">Pemberitahuan</div>
+            {exampleNotification.slice(0, 3).map((item, index) => (
+              <NotificationCard
+                key={index}
+                name={item.name}
+                message={item.text}
+                date={item.time}
+              />
+            ))}
+          </div>
         </div>
       </div>
-      <div className="flex-1">
-        <div className="flex items-center relative w-full">
-          <HiSearch className="absolute left-4" />
-          <input
-            type="text"
-            placeholder="Cari..."
-            className="w-full pl-10 input input-bordered"
-            onChange={handleSearch}
-          />
+      <div className="flex-1 mt-8">
+        <div className="flex relative w-full font-bold">
+          <p>Riwayat kehadiran pegawai</p>
         </div>
-        <p className="text-xs text-slate-500">3 Absen</p>
         <div>
           <DataTable
             columns={columns}
@@ -222,3 +258,106 @@ export default function PageDashboard() {
     </div>
   );
 }
+
+export const NotificationCard = ({ name, message, date }) => {
+  return (
+    <div
+      className="flex flex-col bg-white rounded-xl p-3 shadow-lg"
+      style={{ width: '256px', height: 'auto' }}
+    >
+      <div className="pb-2">
+        <p>{name}</p>
+        <p>{message}</p>
+      </div>
+      <div className="flex flex-row items-center gap-2 justify-end">
+        <p>{date}</p>
+        <div className="w-3 rounded-full h-3 bg-primary-2" />
+      </div>
+    </div>
+  );
+};
+
+export const EmployeeCard = ({ totalEmployee, totalTHL, registeredTHL }) => {
+  return (
+    <>
+      <div
+        className="flex flex-col bg-primary-2 rounded-xl p-4 shadow-lg justify-center items-center gap-2 text-white"
+        style={{ width: '164px', height: 'auto' }}
+      >
+        <div className="pb-2">
+          <p>Jumlah Pegawai</p>
+        </div>
+        <div className="text-3xl">
+          <p>{totalEmployee}</p>
+        </div>
+      </div>
+      <div
+        className="flex flex-col bg-white rounded-xl p-4 shadow-lg justify-center items-center gap-2"
+        style={{ width: '164px', height: 'auto' }}
+      >
+        <div className="pb-2">
+          <p>Total THL</p>
+        </div>
+        <div className="text-3xl">
+          <p>{totalTHL}</p>
+        </div>
+      </div>
+      <div
+        className="flex flex-col bg-white rounded-xl p-4 shadow-lg justify-center items-center gap-2"
+        style={{ width: '164px', height: 'auto' }}
+      >
+        <div className="pb-2">
+          <p>THL Terdaftar</p>
+        </div>
+        <div className="text-3xl">
+          <p>{registeredTHL}</p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const GraphicLine = ({ data }) => {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <LineChart
+        width={750}
+        height={350}
+        data={data}
+        margin={{
+          top: 20,
+          right: 30,
+          left: 20,
+          bottom: 20,
+        }}
+      >
+        <CartesianGrid strokeDasharray="5 5" />
+        <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+        <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+        <Tooltip
+          contentStyle={{ backgroundColor: '#f0f0f0', border: 'none' }}
+        />
+        <Legend verticalAlign="top" height={36} />
+        <Line
+          yAxisId="left"
+          type="monotone"
+          dataKey="Pegawai"
+          stroke="#26A69A"
+          strokeWidth={2}
+          dot={{ r: 2, fill: '#26A69A' }}
+          activeDot={{ r: 4 }}
+        />
+        <Line
+          yAxisId="left"
+          type="monotone"
+          dataKey="Jumlah_total"
+          stroke="#2bd9c8"
+          strokeWidth={2}
+          dot={{ r: 2, fill: '#2bd9c8' }}
+          activeDot={{ r: 4 }}
+          strokeDasharray="5 5"
+        />
+      </LineChart>
+    </div>
+  );
+};
