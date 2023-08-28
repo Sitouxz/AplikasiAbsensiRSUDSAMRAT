@@ -11,17 +11,27 @@ export default function PageAbsensi() {
   const [endDate, setEndDate] = useState(null);
   const [absences, setAbsences] = useState([]);
   const [filteredAbsences, setFilteredAbsences] = useState([]);
-  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState('');
+  // const dispatch = useDispatch();
 
-  const handleSearch = (e) => {
-    const { value } = e.target;
-    const newData = absences.filter((item) => {
-      const itemData = `${item.name.toUpperCase()} ${item.category.toUpperCase()}`;
-      const textData = value.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    setFilteredAbsences(newData);
-  };
+  // const handleSearch = (e) => {
+  //   const { value } = e.target;
+  //   const newData = absences.filter((item) => {
+  //     const itemData = `${item.name.toUpperCase()} ${item.category.toUpperCase()}`;
+  //     const textData = value.toUpperCase();
+  //     return itemData.indexOf(textData) > -1;
+  //   });
+  //   setFilteredAbsences(newData);
+  // };
+
+  const filteredData = absences.filter((data) => {
+    const nameLower = data.name.toLowerCase();
+    const searchTermLower = searchTerm.toLowerCase();
+
+    // Menggunakan ekspresi reguler untuk pencocokan yang lebih akurat
+    const searchRegex = new RegExp(searchTermLower, 'g');
+    return nameLower.match(searchRegex);
+  });
 
   const columns = [
     {
@@ -81,92 +91,88 @@ export default function PageAbsensi() {
 
   useEffect(() => {
     const fetchAbsences = async () => {
+      // try {
+      //   const response = await apiCheckToken.get('/ping');
+      //   console.log(response.data);
+      //   if (response.data) {
       try {
-        const response = await apiCheckToken.get('/ping');
-        console.log(response.data);
-        if (response.data) {
-          try {
-            const response = await api.get(
-              '/api/v1/dev/attendances/all-with-schedule'
-            );
-            const data = response.data;
+        const response = await api.get(
+          '/api/v1/dev/attendances/all-with-schedule'
+        );
+        const data = response.data;
 
-            const ExtractData = data.map((attendance) => {
-              const shiftStartTime = attendance.shift.start_time;
-              const shiftEndTime = attendance.shift.end_time;
+        const ExtractData = data.map((attendance) => {
+          const shiftStartTime = attendance.shift.start_time;
+          const shiftEndTime = attendance.shift.end_time;
 
-              const clockIn = attendance.attendances[0]?.clockIn
-                ? new Date(attendance.attendances[0].clockIn)
-                : null;
-              const clockOut = attendance.attendances[0]?.clockOut
-                ? new Date(attendance.attendances[0].clockOut)
-                : null;
+          const clockIn = attendance.attendances[0]?.clockIn
+            ? new Date(attendance.attendances[0].clockIn)
+            : null;
+          const clockOut = attendance.attendances[0]?.clockOut
+            ? new Date(attendance.attendances[0].clockOut)
+            : null;
 
-              const formatWaktu = (waktu) => {
-                const options = {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: false,
-                };
-                return waktu.toLocaleTimeString('en-US', options);
-              };
-              const clockInTime = clockIn ? formatWaktu(clockIn) : null;
-              const clockOutTime = clockOut ? formatWaktu(clockOut) : null;
+          const formatWaktu = (waktu) => {
+            const options = {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            };
+            return waktu.toLocaleTimeString('en-US', options);
+          };
+          const clockInTime = clockIn ? formatWaktu(clockIn) : null;
+          const clockOutTime = clockOut ? formatWaktu(clockOut) : null;
 
-              let statusPenilaian = 'red'; // Default: Tidak ada data clock in atau clock out
+          let statusPenilaian = 'red'; // Default: Tidak ada data clock in atau clock out
 
-              if (clockInTime && clockOutTime) {
-                if (
-                  clockInTime <= shiftStartTime &&
-                  clockOutTime >= shiftEndTime
-                ) {
-                  statusPenilaian = 'green'; // Clock in sebelum start_time dan clock out setelah end_time
-                } else if (clockInTime > shiftStartTime) {
-                  statusPenilaian = 'yellow'; // Clock in setelah start_time
-                }
-              } else if (clockInTime) {
-                if (clockInTime > shiftStartTime) {
-                  statusPenilaian = 'yellow'; // Clock in setelah start_time
-                }
-              }
-
-              const employeeNamesString = attendance.attendances
-                .map((attendance) => attendance.employee.name)
-                .join(', ')
-                .replace(
-                  /\w\S*/g,
-                  (txt) =>
-                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-                );
-
-              return {
-                clockInTime: clockInTime,
-                clockOutTime: clockOutTime,
-                shiftStartTime: shiftStartTime,
-                shiftEndTime: shiftEndTime,
-                presence: statusPenilaian,
-                id: attendance.scheduleId,
-                category: attendance.attendances.map(
-                  (attendance) => attendance.attendanceType
-                ),
-                name: employeeNamesString,
-                time: attendance.scheduleDate,
-                shift: attendance.shift.name,
-              };
-            });
-            console.log(ExtractData);
-
-            setAbsences(ExtractData);
-          } catch (error) {
-            console.log(error);
+          if (clockInTime && clockOutTime) {
+            if (clockInTime <= shiftStartTime && clockOutTime >= shiftEndTime) {
+              statusPenilaian = 'green'; // Clock in sebelum start_time dan clock out setelah end_time
+            } else if (clockInTime > shiftStartTime) {
+              statusPenilaian = 'yellow'; // Clock in setelah start_time
+            }
+          } else if (clockInTime) {
+            if (clockInTime > shiftStartTime) {
+              statusPenilaian = 'yellow'; // Clock in setelah start_time
+            }
           }
-        }
+
+          const employeeNamesString = attendance.attendances
+            .map((attendance) => attendance.employee.name)
+            .join(', ')
+            .replace(
+              /\w\S*/g,
+              (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+            );
+
+          return {
+            clockInTime: clockInTime,
+            clockOutTime: clockOutTime,
+            shiftStartTime: shiftStartTime,
+            shiftEndTime: shiftEndTime,
+            presence: statusPenilaian,
+            id: attendance.scheduleId,
+            category: attendance.attendances.map(
+              (attendance) => attendance.attendanceType
+            ),
+            name: employeeNamesString,
+            time: attendance.scheduleDate,
+            shift: attendance.shift.name,
+          };
+        });
+        console.log('----------------------', ExtractData);
+
+        setAbsences(ExtractData);
       } catch (error) {
         console.log(error);
-        dispatch(expiredToken());
       }
     };
+    //   } catch (error) {
+    //     console.log(error);
+    //     // dispatch(expiredToken());
+    //   }
+    // };
 
     fetchAbsences();
   }, []);
@@ -239,18 +245,25 @@ export default function PageAbsensi() {
         {/* Search Bar */}
         <div className="flex items-center relative w-full">
           <HiSearch className="absolute left-4" />
-          <input
+          {/* <input
             type="text"
             placeholder="Cari..."
             className="w-full pl-10 input input-bordered"
             onChange={handleSearch}
+          /> */}
+          <input
+            type="text"
+            placeholder="Cari..."
+            className="w-full pl-10 input input-bordered"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <p className="text-xs text-slate-500">{absences.length} Absen</p>
         <div>
           <DataTable
             columns={columns}
-            data={filteredAbsences}
+            data={filteredData}
             customStyles={customStyles}
           />
         </div>
