@@ -241,7 +241,7 @@ export default function PageShift() {
         }}
       >
         <div className="flex flex-col justify-center items-center gap-4">
-          <h1>apakah anda yakin ingin menghapus schedule ini?</h1>
+          <h1>apakah anda yakin ingin menghapusSchedule ini?</h1>
           <div className="flex gap-4">
             <button
               className=" btn bg-primary-2 w-28"
